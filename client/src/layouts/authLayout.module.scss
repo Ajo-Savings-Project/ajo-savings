@@ -1,0 +1,28 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100dvh;
+
+  &Bg {
+    display: none;
+  }
+
+  &Form {
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    > footer {
+      margin-top: 20px;
+    }
+  }
+  
+  @media screen and (min-width: 62.5rem) {
+    grid-template-columns: 1fr 1fr;
+
+    &Bg {
+      display: block;
+    }
+  }
+}
+
+

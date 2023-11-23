@@ -1,3 +1,64 @@
+@mixin relativeUnit($size) {
+  font-size: calc($size / 16) + rem;
+  font-weight: 400;
+}
+
 .text {
-  color: grey;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.textFont {
+  &Inter {
+    font-family: 'Inter', sans-serif;
+  }
+
+  &Bodoni {
+    font-family: 'Bodoni Moda', serif;
+  }
+}
+
+.textSize {
+  &Heading {
+    @include relativeUnit(48);
+    font-weight: 800;
+  }
+  &Subheading {
+    @include relativeUnit(40);
+    font-weight: 700;
+  }
+  &Subtext {
+    @include relativeUnit(24);
+    font-weight: 700;
+  }
+  &Label {
+    @include relativeUnit(20);
+    font-weight: 600;
+  }
+  &Default {
+    @include relativeUnit(16);
+  }
+  &Small {
+    @include relativeUnit(14);
+  }
+}
+
+.textColor {
+  &Default {
+    color: var(--text-black, #101828);
+  }
+  &Grey {
+    color: var(--text-gray);
+  }
+  &White {
+    color: var(--white);
+  }
+  &Primary {
+    color: var(--primary-600);
+  }
+  &Inherit {
+    color: inherit;
+  }
 }

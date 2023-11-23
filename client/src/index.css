@@ -1,49 +1,132 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /*outline: 1px dotted brown;*/
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  font-family: Inter, sans-serif;
+  /*color-scheme: light dark;*/
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* colors */
+  --white: #fff;
+  --black: #000;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  --primary-50: #ECFDFF;
+  --primary-100: #CFF9FE;
+  --primary-200: #A5F0FC;
+  --primary-500: #06AED4;
+  --primary-600: #088AB2;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --gray-1: #828282;
+  --gray-2: #4F4F4F;
+  --gray-3: #BDBDBD;
+  --gray-50: #F8FAFC;
+  --gray-100: #F2F4F7;
+  --gray-200: #E5E7EB;
+  --gray-300: #D0D5DD;
+  --gray-400: #98A2B3;
+  --gray-500: #667085;
+  --gray-600: #757575;
+  --gray-700: #344054;
+  --gray-800: #1F2937;
+  --gray-900: #101828;
+
+  --mute: #D9D9D9;
+
+  --neutral-50: #F9FAFB;
+  --neutral-200: #EEEEEE;
+  --neutral-400: #9CA3AF;
+  --neutral-500: rgba(100, 116, 139, 1);
+  --neutral-800: rgba(25, 29, 35, 1);
+
+  --bg-skyBlue: rgba(8, 138, 178, 0.10);
+
+  --text-black: #101828;
+  --text-gray: var(--gray-400);
+
+  --green-active: #14B8A6;
+  --Main-primary: #34A853;
+  --green-2: #27AE60;
+  --green-1: #219653;
+  --barChartGreen: rgba(18, 183, 106, 0.72);
+
+  --googleModalHeader: #202124;
+  --goodleNames: #3C4043;
+  --googleMails: #5F6368;
+
+  --google-blue: #1A73E8;
+  --dashboard-blue1: #2F80ED;
+  --notificationBlue: #3772FF;
+  --blue-500: #3B82F6;
+
+  --dashboardIcons: #292D32;
+
+  --red: #EB5757;
+  --red-blocked: #EF4444;
+  --Error-500: #F04438;
+  --dashboardRed: #DD2E44;
+
+  --Side-bar: #292D32;
+
+  --Teal-100: #CCFBF1;
+  --Teal-500: #14B8A6;
+
+  --Light: #FCFCFD;
+  --Light2: #EBEFF7;
+  --Light3: #DFDFE6;
+
+  --Dark3: #484C56;
+  --Dark: #23262F;
+  --Value-Color: #0B1354;
+
+  --barChartYellow: rgba(254, 200, 75, 0.72);
+  --yellow-suspended:  #EAB308;
+
+  /* gradients */
+  --dashboardCharts: linear-gradient(180deg, #088AB2 -63.4%, rgba(255, 255, 255, 0.00) 100%);
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  /* Hide scrollbar for IE, Edge add Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.app-logo {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--primary-600);
+}
+
+.container {
+  width: 100%;
+  max-width: 1278px;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+
+.container-dashboard {
+  margin: 0 0;
+}
+
+
+
+@media screen and (min-width: 900px){
+  .container {
+    padding: 0 20px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    /*color: #213547;*/
+    /*background-color: #ffffff;*/
   }
 }

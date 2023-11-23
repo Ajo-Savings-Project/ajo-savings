@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+
+  > button {
+    background: none;
+    border: none;
+    margin-right: 20px;
+  }
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
