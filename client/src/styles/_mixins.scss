@@ -1,0 +1,9 @@
+@mixin px-to-rem($property, $values...) {
+  $rem-values: ();
+
+  @each $value in $values {
+    $rem-values: append($rem-values, ($value / 16) + rem);
+  }
+
+  #{$property}: $rem-values;
+}

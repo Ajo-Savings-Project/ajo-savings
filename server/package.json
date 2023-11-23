@@ -1,0 +1,14 @@
+{
+  "name": "ajo-backend",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "cd .. && husky install server/.husky",
+    "lint": "echo $PWD"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2",
+    "husky": "^8.0.3"
+  }
+}

@@ -1,0 +1,32 @@
+.playground {
+  padding: 20px;
+  display: grid;
+  gap: 24px;
+
+  section > h2 {
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+
+  section > div {
+    padding: 20px;
+    background-color: lightgrey;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,thead, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th, thead {
+    background-color: white;
+  }
+}

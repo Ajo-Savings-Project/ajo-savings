@@ -1,0 +1,85 @@
+@import '../../../styles/mixins';
+
+.sidebar {
+  position: relative;
+  max-width: 271px;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+
+  @include px-to-rem(padding, 24);
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &Logo {
+    @include px-to-rem(font-size, 32);
+    font-weight: 500;
+    @include px-to-rem(margin-bottom, 24);
+    color: var(--primary-600, #088AB2);
+  }
+
+  &ListHeading {
+    @include px-to-rem(margin-top, 24);
+    @include px-to-rem(margin-bottom, 24);
+    color: var(--grey-600, grey);
+    text-transform: capitalize;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &List {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    text-transform: capitalize;
+    transition: 0.3s;
+
+    &:hover {
+      background-color: var(--primary-500, lighten(#06AED4, 45%));
+    }
+
+    &Content {
+      all: unset;
+      cursor: pointer;
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: none;
+
+      > svg {
+        width: 24px;
+        height: 24px;
+        vertical-align: center;
+      }
+    }
+
+    &IsActive {
+      background-color: var(--primary-600, #088AB2);
+      color: white;
+    }
+
+  }
+}
+
+.scrollable {
+  overflow-y: scroll;
+
+  // 24 padding
+  // top 24 padding bottom
+  // 37 font height
+  max-height: calc(100vh - (24px + 24px + 37px));
+
+  ul:last-child {
+    margin-bottom: 20px;
+  }
+}

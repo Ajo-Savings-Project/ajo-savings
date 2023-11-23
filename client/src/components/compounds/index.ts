@@ -1,2 +1,1 @@
-// export all content within compounds here
-export {}
+export {default as Sidebar} from "./Sidebar"
