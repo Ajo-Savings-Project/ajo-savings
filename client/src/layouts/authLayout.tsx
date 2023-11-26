@@ -10,10 +10,7 @@ const AuthLayout = () => {
   const location = useLocation()
 
   if (isAuth) {
-    let prevPath = ''
-    if (location.state.from) {
-      prevPath = location.state.from.pathname
-    }
+    const prevPath = location.state?.from?.pathname
     return <Navigate to={prevPath || routes.dashboard.root.path} replace />
   }
 

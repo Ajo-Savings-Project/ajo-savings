@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Sidebar } from 'components'
+import { DashboardHeader, Sidebar } from 'components'
 import { useAuth } from 'contexts'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet'
@@ -15,7 +15,6 @@ const DashboardLayout = () => {
   const pageTitle = useLocation().pathname
 
   const [showSidebar, setShowSidebar] = useState(false)
-
 
   if (!isAuth) {
     // Redirect them to the /login page, but save the current location they were
@@ -36,38 +35,39 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className={styles.layout}>
-      <aside>
-        <Sidebar
-          className={classNames(styles.layoutSidebar, {
-            [styles.layoutSidebarActive]: showSidebar,
-          })}
-        />
-        <div
-          role={'presentation'}
-          className={classNames({ [styles.layoutSidebarOverlay]: showSidebar })}
-          onClick={handleToggleSidebar}
-        />
-      </aside>
-      <div>
-        <header className={styles.layoutHeader}>
-          <button onClick={handleToggleSidebar}>T</button>
-          <div>
-            <input type='text' />
-            <div>A</div>
-          </div>
-        </header>
-        <main className={styles.layoutMain}>
-          <Helmet>
-            <meta charSet="utf-8" />
-            <title style={{ textTransform: 'capitalize' }}>
-              {getHeaderTitle(pageTitle)}
-            </title>
-          </Helmet>
-          <Outlet />
-        </main>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title style={{ textTransform: 'capitalize' }}>
+          {getHeaderTitle(pageTitle)}
+        </title>
+      </Helmet>
+      <div className={styles.layout}>
+        <aside>
+          <Sidebar
+            className={classNames(styles.layoutSidebar, {
+              [styles.layoutSidebarActive]: showSidebar,
+            })}
+          />
+          <div
+            role={'presentation'}
+            className={classNames({
+              [styles.layoutSidebarOverlay]: showSidebar,
+            })}
+            onClick={handleToggleSidebar}
+          />
+        </aside>
+        <div>
+          <DashboardHeader
+            onClick={handleToggleSidebar}
+            className={styles.layoutHeader}
+          />
+          <main className={styles.layoutMain}>
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

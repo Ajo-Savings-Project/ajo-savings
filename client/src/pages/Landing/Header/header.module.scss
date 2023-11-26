@@ -5,9 +5,4 @@
   justify-content: space-between;
   align-items: center;
   @include px-to-rem(padding, 24);
-
-  &Logo {
-    @include px-to-rem(font-size, 32);
-    color: var(--primary-600, #088AB2);
-  }
 }

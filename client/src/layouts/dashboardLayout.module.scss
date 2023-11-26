@@ -12,23 +12,6 @@
 
   &Header {
     height: $header-height;
-    display: flex;
-    align-items: center;
-    padding: 0 40px;
-
-    > button {
-      background: none;
-      border: none;
-      margin-right: 20px;
-    }
-
-    & > div {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
   }
 
   &Sidebar {
@@ -43,6 +26,7 @@
 
     &Active {
       transform: translateX(0%);
+      box-shadow: 3px 1px 9px 2px #00000040;
     }
   }
 
@@ -65,11 +49,8 @@
   }
 
   @container (width < 800px) {
-    &Main {
-      padding: 24px;
-    }
-    &Header {
-      padding: 24px;
+    &Main, &Header {
+      padding: 20px;
     }
   }
 }
@@ -85,12 +66,11 @@
     transform: translateX(0%);
   }
 
+  .layoutSidebarActive{
+    box-shadow: none;
+  }
+
   .layoutSidebarOverlay, .layoutHeader > button {
     display: none;
   }
-}
-
-//Remove
-header {
-  background-color: #747bff;
 }

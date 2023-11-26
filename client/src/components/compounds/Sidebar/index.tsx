@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { Text } from 'components/elements'
 import { useAuth } from 'contexts'
-import { HTMLAttributes, ReactElement } from 'react'
+import { Fragment, HTMLAttributes, ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
 import routes from 'router/routes.ts'
 import styles from './sidebar.module.scss'
@@ -60,19 +60,25 @@ const listItems: Array<ListItemsI> = [
   },
 ]
 
-const Sidebar = ({ className }: Pick<HTMLAttributes<HTMLDivElement>, 'className'>) => {
+const Sidebar = ({
+  className,
+}: Pick<HTMLAttributes<HTMLDivElement>, 'className'>) => {
   const { handleClearSession } = useAuth()
 
   return (
     <div className={classNames(styles.sidebar, className)}>
-      <Text className={styles.sidebarLogo} font={'Bodoni'} color={'Primary600'}>
+      <Text
+        className={classNames('app-logo', styles.sidebarLogo)}
+        font={'Bodoni'}
+        color={'Primary'}
+      >
         Ajó Savings
       </Text>
       <div className={styles.scrollable}>
         {listItems.map(({ heading, items }) => {
           return (
-            <>
-              <Text className={styles.sidebarListHeading} color={'Grey400'}>
+            <Fragment key={heading}>
+              <Text className={styles.sidebarListHeading} color={'Gray'}>
                 {heading}
               </Text>
               <ul aria-label={`${heading} list`}>
@@ -85,7 +91,7 @@ const Sidebar = ({ className }: Pick<HTMLAttributes<HTMLDivElement>, 'className'
                           className={styles.sidebarListContent}
                         >
                           {icon}
-                          <p>{name}</p>
+                          <Text color={'Inherit'}>{name}</Text>
                         </button>
                       </li>
                     )
@@ -103,13 +109,13 @@ const Sidebar = ({ className }: Pick<HTMLAttributes<HTMLDivElement>, 'className'
                         }
                       >
                         {icon}
-                        <p>{name}</p>
+                        <Text color={'Inherit'}>{name}</Text>
                       </NavLink>
                     </li>
                   )
                 })}
               </ul>
-            </>
+            </Fragment>
           )
         })}
       </div>
