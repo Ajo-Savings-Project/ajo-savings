@@ -6,7 +6,7 @@ import styles from "./header.module.scss"
 const Header = () => {
   return (
     <div className={classNames("container", styles.header)}>
-      <Text className={styles.headerLogo} font={"Bodoni"} content={"Ajo Savings"}/>
+      <Text className={classNames("app-logo")} color={"none"} font={"Bodoni"} content={"Ajo Savings"}/>
       <Link to='/dashboard' replace>
         <Button text={"Get Started"}/>
       </Link>

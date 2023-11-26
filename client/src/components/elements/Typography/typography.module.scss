@@ -1,10 +1,13 @@
 @mixin relativeUnit($size) {
-  font-size: $size / 16 + rem;
+  font-size: calc($size / 16) + rem;
   font-weight: 400;
 }
 
 .text {
-  color: #000;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .textFont {
@@ -39,5 +42,23 @@
   }
   &Small {
     @include relativeUnit(14);
+  }
+}
+
+.textColor {
+  &Default {
+    color: var(--text-black, #101828);
+  }
+  &Grey {
+    color: var(--text-gray);
+  }
+  &White {
+    color: var(--white);
+  }
+  &Primary {
+    color: var(--primary-600);
+  }
+  &Inherit {
+    color: inherit;
   }
 }
