@@ -1,0 +1,44 @@
+.inputContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &Input {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--gray-300);
+
+    &:focus, &:active {
+      outline: 1px solid var(--gray-400);
+    }
+  }
+
+  $label-margin: 0.5rem;
+  $computed-label-height: 1.125rem;
+
+  &Label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: $label-margin;
+    color: var(--text-black);
+    text-transform: capitalize;
+  }
+
+  $toggle-btn-width: 3.5rem;
+
+  &Password {
+    padding-right: $toggle-btn-width;
+  }
+
+  &PasswordToggle {
+    position: absolute;
+    top: calc($label-margin + $computed-label-height);
+    bottom: 0;
+    right: 0;
+    width: $toggle-btn-width;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}

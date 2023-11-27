@@ -1,0 +1,22 @@
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  &:after {
+    --size: 0.5rem;
+    content: 'v';
+    position: absolute;
+    right: 1rem;
+    pointer-events: none;
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-top: var(--size) solid black;
+    top: 45%;
+  }
+}
+
+/* For IE <= 11 */
+select::-ms-expand {
+  display: none;
+}

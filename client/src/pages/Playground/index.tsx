@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import { Button, Text } from 'components'
-import Input from 'components/elements/TextBox/Input.tsx'
+import { Button, Select, Text } from 'components'
+import { Input } from 'components'
 import styles from './play.module.scss'
 
 const textContent = 'the quick brown fox jumps over the lazy dog'
@@ -97,7 +97,21 @@ const Playground = () => {
       <section>
         <Text level={2} font={'Bodoni'} size={'Subheading'} content={'Input'} />
         <div>
-          <Input />
+          <Input label={'label'} />
+          <Input label={'label'} type={'password'} />
+          <Select
+            label={'Select'}
+            options={[
+              {
+                label:
+                  'label asd fuuaosdh foaipsdhf ausidjf asudjfoiahsdo ifjaosdhf oua dsfo adf sauhdfohfaodshfoi adouhfao sdfh asdhfoahd if aod faoihjdfoiahodshfoahsdoifjaosdh fs  fsdfhsodhfksjdhflosdfjhsd fsd ',
+                value: '1',
+              },
+              { label: 'label', value: '2' },
+              { label: 'label', value: '3' },
+              { label: 'label', value: '4' },
+            ]}
+          />
         </div>
       </section>
     </section>
