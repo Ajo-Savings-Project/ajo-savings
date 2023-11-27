@@ -17,7 +17,7 @@ Please check all that apply.
 #### Frontend Checklist:
 
 -   [ ] Is this responsive and mobile friendly?
--   [ ] Did you follow the ARIA specs
+-   [ ] Did you follow the [ARIA specs](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 
 #### Backend Checklist:
 
