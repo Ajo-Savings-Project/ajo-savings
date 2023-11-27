@@ -3,6 +3,7 @@ const SettingsPage = () => {
   return (
     <div>
       setting page
+
     </div>
   )
 }

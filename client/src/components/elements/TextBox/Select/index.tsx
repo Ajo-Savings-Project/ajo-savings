@@ -25,8 +25,8 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
           props.className
         )}
       >
-        {options.map(({ label, value }) => (
-          <option key={label+value} value={value}>{label}</option>
+        {options.map(({ label, value, disabled }) => (
+          <option key={label + value} value={value} disabled={disabled}>{label}</option>
         ))}
       </select>
     </div>
