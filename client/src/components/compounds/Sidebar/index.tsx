@@ -4,9 +4,9 @@ import { useAuth } from 'contexts'
 import { Fragment, HTMLAttributes, ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
 import routes from 'router/routes.ts'
-import styles from './sidebar.module.scss'
 import DashboardIcon from './icons/dashboard.svg?react'
 import SavingsIcon from './icons/savings.svg?react'
+import styles from './sidebar.module.scss'
 
 interface ListItemsI {
   heading: string

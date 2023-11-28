@@ -2,9 +2,9 @@ import { AuthProvider } from 'contexts/authContext.tsx'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { RouterProvider } from 'react-router-dom'
 import './index.css'
-import { ReactQueryDevtools } from 'react-query/devtools'
 import { pagesRouter } from './router'
 
 const queryClient = new QueryClient()

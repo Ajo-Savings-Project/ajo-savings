@@ -8,12 +8,18 @@ const request = axios.create({
   },
 })
 
-request.interceptors.request.use((req) => req, (error) => {
-  return Promise.reject(error)
-})
+request.interceptors.request.use(
+  (req) => req,
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
-request.interceptors.response.use((response) => response, (error) => {
-  return Promise.reject(error)
-})
+request.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
-export default request;
+export default request

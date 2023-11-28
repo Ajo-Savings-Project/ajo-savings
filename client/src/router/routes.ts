@@ -16,13 +16,13 @@ const routes = createRoutes({
     settings: 'settings',
     savings: 'savings',
   },
-  about:{
-    root: "/about",
-    history:"history",
+  about: {
+    root: '/about',
+    history: 'history',
     anotherNesting: {
-      root: "/anotherNesting",
-      page2: "page2"
-    }
-  }
+      root: '/anotherNesting',
+      page2: 'page2',
+    },
+  },
 })
 export default routes

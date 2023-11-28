@@ -1,20 +1,19 @@
 import viteLogo from '/vite.svg?url'
+import { Button, Text } from 'components'
 import { useState } from 'react'
 import reactLogo from '../../assets/react.svg'
 import Logo from '../../assets/react.svg?react'
-import { Button, Text } from 'components'
 
 const HomePage = () => {
   const [count, setCount] = useState(0)
 
-
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank" rel='noreferrer'>
+        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank" rel='noreferrer'>
+        <a href="https://react.dev" target="_blank" rel="noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
