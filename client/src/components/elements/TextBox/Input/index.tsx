@@ -5,6 +5,7 @@ import styles from './input.module.scss'
 interface InputI extends InputHTMLAttributes<HTMLInputElement> {
   label: string
 }
+
 const Input = ({ name, label, type, ...props }: InputI) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -35,7 +36,7 @@ const Input = ({ name, label, type, ...props }: InputI) => {
           className={classNames(styles.inputContainerPasswordToggle)}
           onClick={toggleShowPass}
         >
-          {showPassword ? "S" : "X"}
+          {showPassword ? 'S' : 'X'}
         </button>
       ) : null}
     </div>

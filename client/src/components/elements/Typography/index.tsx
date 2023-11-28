@@ -10,6 +10,7 @@ interface TypographyProps
   color?: 'Gray' | 'Default' | 'White' | 'Primary' | 'Inherit' | 'none'
   size?: 'Default' | 'Heading' | 'Subheading' | 'Subtext' | 'Label' | 'Small'
 }
+
 const Typography = ({
   level,
   content,

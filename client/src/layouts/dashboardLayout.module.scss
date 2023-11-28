@@ -31,7 +31,7 @@
   }
 
   &SidebarOverlay {
-    transition: .5s;
+    transition: 0.5s;
     width: 100%;
     height: 100%;
     background: #088ab252;
@@ -48,11 +48,12 @@
     background-color: var(--grey-50, #f9fafb);
   }
 
-  @container (width < 800px) {
-    &Main, &Header {
-      padding: 20px;
-    }
+@container (width < 800 px) {
+  &Main,
+  &Header {
+    padding: 20px;
   }
+}
 }
 
 @media screen and (min-width: 65rem) {
@@ -66,11 +67,12 @@
     transform: translateX(0%);
   }
 
-  .layoutSidebarActive{
+  .layoutSidebarActive {
     box-shadow: none;
   }
 
-  .layoutSidebarOverlay, .layoutHeader > button {
+  .layoutSidebarOverlay,
+  .layoutHeader > button {
     display: none;
   }
 }

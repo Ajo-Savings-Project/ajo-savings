@@ -20,13 +20,16 @@
     width: 100%;
   }
 
-  th,thead, td {
+  th,
+  thead,
+  td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
   }
 
-  th, thead {
+  th,
+  thead {
     background-color: white;
   }
 }
