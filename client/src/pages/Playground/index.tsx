@@ -97,8 +97,8 @@ const Playground = () => {
       <section>
         <Text level={2} font={'Bodoni'} size={'Subheading'} content={'Input'} />
         <div>
-          <Input label={'label'} />
-          <Input label={'label'} type={'password'} />
+          <Input label={''} />
+          <Input label={'label'} type={'password'} placeholder='dghhgshgshsjhsnsnm' />
           <Select
             label={'Select'}
             options={[
@@ -113,6 +113,7 @@ const Playground = () => {
             ]}
           />
         </div>
+        <button className={styles.button}>click me</button>
       </section>
     </section>
   )
