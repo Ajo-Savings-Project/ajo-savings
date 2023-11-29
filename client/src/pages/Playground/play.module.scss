@@ -32,4 +32,31 @@
   thead {
     background-color: white;
   }
+  ul  {
+     
+  
+    li{
+      
+      padding: {
+        top:30px;
+       };
+     
+      color: red;
+      list-style: none;
+    }  
+  }
+  h2{
+    ~p{
+      font-size: 5em;
+    }
+  }
+
+ 
+  $rounded-corners: true;
+.button {
+
+  border: 1px solid black;
+  
+  border-radius: if($rounded-corners, 5px, null);
+}
 }
