@@ -47,5 +47,9 @@
       "eslint --fix",
       "prettier --ignore-unknown --write"
     ]
+  },
+  "engines": {
+    "node": ">=18.x",
+    "yarn": "<=2"
   }
 }
