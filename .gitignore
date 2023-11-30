@@ -4,6 +4,10 @@
 
 .DS_Store
 
+node_modules/
+yarn.*
+.yarn/
+
 **/node_modules/
 **/.env
 **/.DS_Store
