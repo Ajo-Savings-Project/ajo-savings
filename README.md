@@ -24,7 +24,9 @@ yarn
 
 1. Follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 2. [Atomic Design pattern]() is used to structure this project
+3. Branch names should follow this format **CU-<task-id>/<task-name>**
 
+--- 
 **Git flow**
 
 ```
