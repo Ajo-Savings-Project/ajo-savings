@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 import { SelectHTMLAttributes } from 'react'
-import styles from '../Input/input.module.scss'
-import selectStyles from './select.module.scss'
+import styles from './select.module.scss'
 
 interface SelectI extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string
@@ -22,7 +21,7 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
         name={name}
         {...props}
         className={classNames(
-          selectStyles.select,
+          styles.select,
           styles.inputContainerInput,
           props.className
         )}
