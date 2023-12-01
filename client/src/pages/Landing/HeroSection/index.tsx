@@ -9,23 +9,21 @@ const HeroSection = () => {
       <div className={classNames('container', styles.heroContent)}>
         <div className={styles.heroContainer}>
           <div className={styles.inner}>
-
-            <Text
-              className={styles.Text}
-              size={'Subheading'}
-            >
+            <Text className={styles.Text} size={'Subheading'}>
               Achieve Financial Success with{' '}
-              <span style={{ color: 'var(--primary-600)' }}>Ajó:</span> The Future of{' '}
-              <span style={{ color: 'var(--primary-600)' }} className={styles.span}>
+              <span style={{ color: 'var(--primary-600)' }}>Ajó:</span> The
+              Future of{' '}
+              <span
+                style={{ color: 'var(--primary-600)' }}
+                className={styles.span}
+              >
                 Smart Savings.
               </span>{' '}
             </Text>
-            <Text
-              className={styles.heroSubText}
-            >
+            <Text className={styles.heroSubText}>
               Experience the convenience of secure group savings and
-              personalized savings plans with Ajó Savings. Take control of
-              your finances and unlock a brighter financial future.
+              personalized savings plans with Ajó Savings. Take control of your
+              finances and unlock a brighter financial future.
             </Text>
             <Button kind="default" text="Get Started" />
           </div>
