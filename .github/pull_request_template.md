@@ -3,7 +3,7 @@
 A brief description of what changes your PR introduces. The better this description, the quicker we can review, exchange
 feedback, and merge!
 
-**Clickup Task**: [ticket code here](link here)
+**ClickUp Task**: [CU-<ticket_id>](link here)
 
 ---
 
