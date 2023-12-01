@@ -1,12 +1,21 @@
 import classNames from 'classnames'
 import { useAuth } from 'contexts'
 import { Helmet } from 'react-helmet'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { routes } from 'router'
 import { getHeaderTitle } from 'utils/getHeaderTitle.ts'
 import { Text } from '../components'
 import { HEADER_TITLE } from '../appConstants'
 import styles from './authLayout.module.scss'
+
+export const AuthLayoutFooter = ({ className }: { className?: string }) => {
+  return (
+    <footer className={classNames(styles.footer, className)}>
+      <Link to={'#'}>Privacy Policy</Link>
+      <Text size={'Small'}>&copy; 2023</Text>
+    </footer>
+  )
+}
 
 const AuthLayout = () => {
   const { isAuth, showAutoLogoutMessage } = useAuth()
@@ -47,7 +56,7 @@ const AuthLayout = () => {
           <section>
             <Outlet />
           </section>
-          <footer>footer</footer>
+          <AuthLayoutFooter />
         </div>
       </div>
     </>
