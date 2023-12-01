@@ -1,6 +1,8 @@
 import classNames from 'classnames'
 import { InputHTMLAttributes, useState } from 'react'
 import styles from './input.module.scss'
+import OpenEyeIcon from './eye.svg?react'
+import CrossedEye from './eye-crossed.svg?react'
 
 interface InputI extends InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -36,7 +38,7 @@ const Input = ({ name, label, type, ...props }: InputI) => {
           className={classNames(styles.inputContainerPasswordToggle)}
           onClick={toggleShowPass}
         >
-          {showPassword ? 'S' : 'X'}
+          {showPassword ? <OpenEyeIcon /> : <CrossedEye />}
         </button>
       ) : null}
     </div>

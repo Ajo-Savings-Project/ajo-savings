@@ -96,8 +96,16 @@ const Playground = () => {
       <section>
         <Text level={2} font={'Bodoni'} size={'Subheading'} content={'Input'} />
         <div>
-          <Input label={'label'} />
-          <Input label={'label'} type={'password'} />
+          <Input
+            label={'Phone Number'}
+            type={'text'}
+            placeholder="Enter your phone nunmber"
+          />
+          <Input
+            label={'Password'}
+            type={'password'}
+            placeholder="*****************"
+          />
           <Select
             label={'Select'}
             options={[

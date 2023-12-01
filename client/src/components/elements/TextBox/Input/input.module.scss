@@ -2,12 +2,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-
+  color: #999;
   &Input {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     border: 1px solid var(--gray-300);
-
+    color: #999;
     &:focus,
     &:active {
       outline: 1px solid var(--gray-400);
@@ -41,5 +41,10 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    > svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--gray-400)
+    }
   }
 }
