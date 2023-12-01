@@ -6,6 +6,7 @@ Take control of your finances and unlock a brighter financial future.
 ## Project Installation
 
 **Setup Client:**
+
 ```bash
 cd client
 yarn
@@ -19,7 +20,26 @@ cd server
 yarn
 ```
 
+**Project Guides**
 
-**Project Guides**  
 1. Follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 2. [Atomic Design pattern]() is used to structure this project
+
+**Git flow**
+
+```
+git checkout main
+git pull origin main
+git checkout <your-branch>
+git pull --rebase origin main  
+git push origin HEAD
+```
+
+**Git flow** _from current branch_ (example with existing commit)
+
+```
+git add .
+git commit --amend --no-edit
+git pull --rebase origin main  
+git push origin HEAD -f
+```

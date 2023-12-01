@@ -17,9 +17,8 @@ const AuthContext = createContext<AuthContextI>({
   handleClearSession: () => {},
 })
 
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  console.log('Context Render', "Env is DEV: " + import.meta.env.DEV)
+  console.log('Context Render', 'Env is DEV: ' + import.meta.env.DEV)
   const [state, setState] = useState<ContextValueT>({
     isAuth: false,
   })
@@ -43,7 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // else log user out
 
   return (
-    <AuthContext.Provider value={{ ...state, handleAuthSession, handleClearSession }}>
+    <AuthContext.Provider
+      value={{ ...state, handleAuthSession, handleClearSession }}
+    >
       {children}
     </AuthContext.Provider>
   )

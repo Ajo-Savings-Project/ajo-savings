@@ -1,13 +1,5 @@
-import FrequencyBtn from "components/compounds/Frquency_Btn"
-
 const SettingsPage = () => {
-  return (
-    <div>
-      setting page
-      <FrequencyBtn />
-
-    </div>
-  )
+  return <div>setting page</div>
 }
 
 export default SettingsPage

@@ -1,10 +1,5 @@
-
 const TransactionsPage = () => {
-  return (
-    <div>
-      Transaction Page
-    </div>
-  )
+  return <div>Transaction Page</div>
 }
 
 export default TransactionsPage

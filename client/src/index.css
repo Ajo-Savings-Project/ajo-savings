@@ -13,79 +13,83 @@
   --white: #fff;
   --black: #000;
 
-  --primary-50: #ECFDFF;
-  --primary-100: #CFF9FE;
-  --primary-200: #A5F0FC;
-  --primary-500: #06AED4;
-  --primary-600: #088AB2;
+  --primary-50: #ecfdff;
+  --primary-100: #cff9fe;
+  --primary-200: #a5f0fc;
+  --primary-500: #06aed4;
+  --primary-600: #088ab2;
 
   --gray-1: #828282;
-  --gray-2: #4F4F4F;
-  --gray-3: #BDBDBD;
-  --gray-50: #F8FAFC;
-  --gray-100: #F2F4F7;
-  --gray-200: #E5E7EB;
-  --gray-300: #D0D5DD;
-  --gray-400: #98A2B3;
+  --gray-2: #4f4f4f;
+  --gray-3: #bdbdbd;
+  --gray-50: #f8fafc;
+  --gray-100: #f2f4f7;
+  --gray-200: #e5e7eb;
+  --gray-300: #d0d5dd;
+  --gray-400: #98a2b3;
   --gray-500: #667085;
   --gray-600: #757575;
   --gray-700: #344054;
-  --gray-800: #1F2937;
+  --gray-800: #1f2937;
   --gray-900: #101828;
 
-  --mute: #D9D9D9;
+  --mute: #d9d9d9;
 
-  --neutral-50: #F9FAFB;
-  --neutral-200: #EEEEEE;
-  --neutral-400: #9CA3AF;
+  --neutral-50: #f9fafb;
+  --neutral-200: #eeeeee;
+  --neutral-400: #9ca3af;
   --neutral-500: rgba(100, 116, 139, 1);
   --neutral-800: rgba(25, 29, 35, 1);
 
-  --bg-skyBlue: rgba(8, 138, 178, 0.10);
+  --bg-skyBlue: rgba(8, 138, 178, 0.1);
 
   --text-black: #101828;
   --text-gray: var(--gray-400);
 
-  --green-active: #14B8A6;
-  --Main-primary: #34A853;
-  --green-2: #27AE60;
+  --green-active: #14b8a6;
+  --Main-primary: #34a853;
+  --green-2: #27ae60;
   --green-1: #219653;
   --barChartGreen: rgba(18, 183, 106, 0.72);
 
   --googleModalHeader: #202124;
-  --goodleNames: #3C4043;
-  --googleMails: #5F6368;
+  --goodleNames: #3c4043;
+  --googleMails: #5f6368;
 
-  --google-blue: #1A73E8;
-  --dashboard-blue1: #2F80ED;
-  --notificationBlue: #3772FF;
-  --blue-500: #3B82F6;
+  --google-blue: #1a73e8;
+  --dashboard-blue1: #2f80ed;
+  --notificationBlue: #3772ff;
+  --blue-500: #3b82f6;
 
-  --dashboardIcons: #292D32;
+  --dashboardIcons: #292d32;
 
-  --red: #EB5757;
-  --red-blocked: #EF4444;
-  --Error-500: #F04438;
-  --dashboardRed: #DD2E44;
+  --red: #eb5757;
+  --red-blocked: #ef4444;
+  --Error-500: #f04438;
+  --dashboardRed: #dd2e44;
 
-  --Side-bar: #292D32;
+  --Side-bar: #292d32;
 
-  --Teal-100: #CCFBF1;
-  --Teal-500: #14B8A6;
+  --Teal-100: #ccfbf1;
+  --Teal-500: #14b8a6;
 
-  --Light: #FCFCFD;
-  --Light2: #EBEFF7;
-  --Light3: #DFDFE6;
+  --Light: #fcfcfd;
+  --Light2: #ebeff7;
+  --Light3: #dfdfe6;
 
-  --Dark3: #484C56;
-  --Dark: #23262F;
-  --Value-Color: #0B1354;
+  --Dark3: #484c56;
+  --Dark: #23262f;
+  --Value-Color: #0b1354;
 
   --barChartYellow: rgba(254, 200, 75, 0.72);
-  --yellow-suspended:  #EAB308;
+  --yellow-suspended: #eab308;
 
   /* gradients */
-  --dashboardCharts: linear-gradient(180deg, #088AB2 -63.4%, rgba(255, 255, 255, 0.00) 100%);
+  --dashboardCharts: linear-gradient(
+    180deg,
+    #088ab2 -63.4%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 body {
@@ -116,9 +120,7 @@ body::-webkit-scrollbar {
   margin: 0 0;
 }
 
-
-
-@media screen and (min-width: 900px){
+@media screen and (min-width: 900px) {
   .container {
     padding: 0 20px;
   }
