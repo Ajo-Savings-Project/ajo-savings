@@ -5,7 +5,7 @@ import selectStyles from './select.module.scss'
 
 interface SelectI extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string
-  options: Array<{ label: string; value: string; disabled?: boolean }>
+  options: Array<{ label: string; value: string; disabled?: boolean; }>
 }
 const Select = ({ name, label, options, ...props }: SelectI) => {
   return (
@@ -26,7 +26,7 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
         )}
       >
         {options.map(({ label, value, disabled }) => (
-          <option key={label + value} value={value} disabled={disabled}>{label}</option>
+          <option key={label + value} value={value} disabled={disabled} >{label}</option>
         ))}
       </select>
     </div>
