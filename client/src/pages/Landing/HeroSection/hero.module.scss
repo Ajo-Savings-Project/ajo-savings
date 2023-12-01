@@ -1,159 +1,40 @@
 @import '../../../styles/mixins';
 
 .hero {
-  background-color: lighten(#088ab2, 60%);
-  min-height: 31.21rem;
-  padding-bottom: 8rem;
-  //  padding: 3rem;
+  background-color: #088ab21a;
 
   @include px-to-rem(padding-top, 80);
+  @include px-to-rem(padding-bottom, 80);
 
   .heroContainer {
-    .heroRight {
-      img {
-        width: 100%;
-        height: auto;
-      }
-    }
-
-    .heroLeft {
-      text-align: center;
-      .heroText {
-        width: 18rem;
-        font-size: 2.3rem;
-      }
-      .heroSubText {
-        width: 18rem;
-        height: 4rem;
-        line-height: 140%;
-        margin-bottom: 10rem;
-      }
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  &SubText {
+    padding: 1.5rem 0;
+    letter-spacing: 0.15px;
+  }
+  &HeroImg {
+    margin: auto;
+    > img {
+      width: 100%;
+      max-width: 400px;
     }
   }
-
-  // Large Mobile Screen
-  @media (min-width: 375px) and (max-width: 767px) {
+  @media screen and (min-width: 56.25rem) {
     .heroContainer {
-      .heroRight {
-        overflow-x: hidden;
-        width: 100%;
-        img {
-          overflow-x: hidden;
-
-          height: auto;
-        }
-      }
-      .heroLeft {
-        overflow-x: hidden;
-
-        .inner {
-          width: 100%;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-
-          .heroText {
-            width: 18rem;
-            font-size: 2.3rem;
-          }
-          .heroSubText {
-            width: 18rem;
-            height: 4rem;
-            line-height: 140%;
-            margin-bottom: 10rem;
-          }
-        }
-      }
+      display: grid;
+      grid-template-columns: minmax(0, 570px) 1fr;
+      align-items: center;
     }
-  }
-  @media (max-width: 800px) {
-    .heroRight {
-      img {
-        width: 100%;
-        height: auto;
 
-        margin-left: 10vw;
+    &HeroImg {
+      > img {
+        max-width: unset;
       }
     }
   }
 
-  //Tablet Screen
 
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .heroContainer {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row-reverse;
-      align-items: start;
-      margin: auto;
-
-      .heroRight {
-        img {
-          width: 100%;
-          height: auto;
-        }
-      }
-      .heroLeft {
-        text-align: start;
-        .heroInner {
-          .heroText {
-            width: 3rem;
-            font-size: 2rem;
-            font-style: normal;
-            font-weight: 800;
-            line-height: 140%;
-            letter-spacing: 0.25px;
-            color: red;
-          }
-        }
-
-        .heroBtn {
-          right: 5rem;
-        }
-      }
-    }
-  }
-  //Desktop && Laptop Screens
-  @media (min-width: 1024px) {
-    .heroContainer {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row-reverse;
-      align-items: start;
-      margin: auto;
-
-      .heroRight {
-        img {
-          width: 100%;
-          height: auto;
-          margin-left: 10vw;
-        }
-      }
-      .heroLeft {
-        text-align: start;
-
-        .inner {
-          .heroText {
-            width: 40rem;
-            font-size: 3rem;
-            font-style: normal;
-            font-weight: 800;
-            line-height: 140%;
-            letter-spacing: 0.25px;
-          }
-          .heroSubText {
-            width: 34.4rem;
-            font-size: 1rem;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 140%; /* 22.4px */
-            letter-spacing: 0.15px;
-            margin-bottom: 1.5rem;
-          }
-        }
-      }
-    }
-  }
 }
