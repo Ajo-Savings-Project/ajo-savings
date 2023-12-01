@@ -4,5 +4,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  @include px-to-rem(padding, 24);
+  @include px-to-rem(padding-top, 24);
+  @include px-to-rem(padding-bottom, 24);
 }

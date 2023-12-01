@@ -9,7 +9,7 @@ const DashboardHeader = ({
   className?: string
 }) => {
   return (
-    <header className={classNames(styles.header, className)}>
+    <header className={classNames('container', styles.header, className)}>
       <button onClick={onClick}>T</button>
       <div>
         <input type="text" />
