@@ -6,6 +6,9 @@ import path from "path";
 import createError, { HttpError } from "http-errors";
 import userRoutes from './routes/users'
 import groupRoutes from './routes/groups'
+import swaggerUi from 'swagger-ui-express'
+import specs from './swagger'
+import { db } from "./config";
 
 
 dotenv.config();
@@ -18,6 +21,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
+db.sync({})
+  .then(() => {
+    console.log("Database is connected");
+  })
+  .catch((err: HttpError) => {
+    console.log(err);
+  });
+
+
 
 app.use('/users', userRoutes);
 app.use('/groups', groupRoutes)
