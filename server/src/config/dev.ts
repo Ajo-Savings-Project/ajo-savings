@@ -1,20 +1,17 @@
+import dotenv from 'dotenv'
 
-
-import dotenv from "dotenv";
-
-dotenv.config();
+dotenv.config()
 
 const { DEV_PORT, DB_HOST, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_PORT } =
-    process.env;
+  process.env
 
 export default {
-    PORT: DEV_PORT,
-    DB_HOST,
-    DB_NAME,
-    DB_USERNAME,
-    DB_PASSWORD,
-    DB_PORT,
-};
-// console.log(DEV_PORT, DB_HOST, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_PORT ); ====>database connection debugging
+  PORT: DEV_PORT,
+  DB_HOST,
+  DB_NAME,
+  DB_USERNAME,
+  DB_PASSWORD,
+  DB_PORT,
+}
 
-console.log("running in development mode");
+console.log('running in development mode')

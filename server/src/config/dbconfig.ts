@@ -1,22 +1,23 @@
-import merge from "lodash.merge"
-import dotenv from "dotenv";
-dotenv.config();
+import merge from 'lodash.merge'
+import dotenv from 'dotenv'
+import prod from './prod'
+import dev from './dev'
+dotenv.config()
 
 const stage: string = process.env.NODE_ENV!
-let config;
+let config
 
-if (stage === "production") {
-    config = require("./prod").default
-} else if (stage === "development") {
-    config = require("./dev").default
+if (stage === 'production') {
+  config = prod
+} else if (stage === 'development') {
+  config = dev
 } else {
-    config = null
+  config = null
 }
 
-
-//   console.log(merge({ stage}, config)); 
-
-
-export default merge({
- stage
-}, config)
+export default merge(
+  {
+    stage,
+  },
+  config
+)
