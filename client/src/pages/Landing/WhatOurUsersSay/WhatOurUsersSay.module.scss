@@ -34,38 +34,8 @@
 .polygon {
   position: absolute;
   bottom: -1.3rem;
-  //   top: 59rem;
-  //   left: 30%;
-  //   background: red;
 }
 
-// .single_feedback::after {
-//   content: url(./../../../assets/svg/Polygon1.svg);
-//   position: absolute;
-//   width: 50px;
-//   height: 50px;
-// }
-
-// .single_feedback::after {
-//   content: '';
-//   position: absolute;
-//   width: 50px;
-//   height: 50px;
-//   background: white;
-//   border: 1px solid white;
-//   transform: rotate(45deg);
-//   border-top: none;
-//   border-right: none;
-//   bottom: -25px;
-//   left: 8rem;
-// }
-
-// .clearfix::after,
-// .clearfix::before {
-//   content: '';
-//   clear: both;
-//   display: table;
-// }
 @media screen and (min-width: 760px) {
   .single_feedback_container {
     float: left;
