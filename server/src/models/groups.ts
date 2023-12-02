@@ -1,64 +1,63 @@
-import { Model, DataTypes, BuildOptions, Sequelize } from "sequelize";
-import { db } from "../config";
-import Users from "./users";
-import Transactions from "./transactions";
+import { Model, DataTypes, BuildOptions, Sequelize } from 'sequelize'
+import { dbConfig } from '../config'
+import Users from './users'
+import Transactions from './transactions'
 
 interface GroupTransactions {
-  transaction_id: string;
-  date_initiated: Date;
-  contributors_id: string;
-  amount: number;
-  transaction_type: string;
+  transaction_id: string
+  date_initiated: Date
+  contributors_id: string
+  amount: number
+  transaction_type: string
 }
 
 enum frequency {
-  DAILY = "Daily",
-  WEEKLY = "Weekly",
-  MONTHLY = "Monthly",
+  DAILY = 'Daily',
+  WEEKLY = 'Weekly',
+  MONTHLY = 'Monthly',
 }
 
 export interface Members {
-  member_picture: string;
-  member_id: string;
-  name: string;
-  amount_contributed: number;
-  amount_withdrawn: number;
+  member_picture: string
+  member_id: string
+  name: string
+  amount_contributed: number
+  amount_withdrawn: number
   date_of_last_contribution: any
-  profilePicture?: string;
+  profilePicture?: string
 }
 export type GroupAttributes = {
-  id: string;
+  id: string
 
-  title: string; //group name
-  description: string; //purpose and goals
-  admin_id: string;
-  group_image?: string;
-  amount_contributed?: number;
-  contribution_amount: number; //contribution amount
-  group_transactions: GroupTransactions[];
-  amount_withdrawn: number;
-  members: Members[];
-  slots: number[];
-  availableSlots: number[];
-  number_of_participants: number; //number of participants
-  frequency: string; //ft
-  duration: string;
-  startDate: Date; //start date
-  endDate: Date; //end date
-  created_at: Date;
+  title: string //group name
+  description: string //purpose and goals
+  admin_id: string
+  group_image?: string
+  amount_contributed?: number
+  contribution_amount: number //contribution amount
+  group_transactions: GroupTransactions[]
+  amount_withdrawn: number
+  members: Members[]
+  slots: number[]
+  availableSlots: number[]
+  number_of_participants: number //number of participants
+  frequency: string //ft
+  duration: string
+  startDate: Date //start date
+  endDate: Date //end date
+  created_at: Date
   // profilePicture?: string;
-
-};
+}
 
 class Groups extends Model<GroupAttributes> {
-  members: any;
-  activities: any;
-  id: any;
-  contribution_amount: any;
-  image: any;
-  group_name: any;
-  title: any;
-  frequency!: string;
+  members: any
+  activities: any
+  id: any
+  contribution_amount: any
+  image: any
+  group_name: any
+  title: any
+  frequency!: string
 }
 
 Groups.init(
@@ -78,14 +77,14 @@ Groups.init(
     },
     description: {
       type: DataTypes.TEXT,
-      field: "Content of the post",
+      field: 'Content of the post',
       allowNull: false,
     },
     admin_id: {
       type: DataTypes.UUID,
       references: {
         model: Users,
-        key: "id",
+        key: 'id',
       },
     },
     group_transactions: {
@@ -149,10 +148,10 @@ Groups.init(
     // },
   },
   {
-    sequelize: db,
-    tableName: "Groups",
-    modelName: "Groups",
+    sequelize: dbConfig,
+    tableName: 'Groups',
+    modelName: 'Groups',
   }
-);
+)
 
-export default Groups;
+export default Groups

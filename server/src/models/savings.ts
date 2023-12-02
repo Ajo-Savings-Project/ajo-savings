@@ -1,40 +1,40 @@
-import { Model, DataTypes, BuildOptions, Sequelize } from "sequelize";
-import { db } from "../config";
-import Users from "./users";
-import Wallets from "./wallets";
+import { Model, DataTypes, BuildOptions, Sequelize } from 'sequelize'
+import { dbConfig } from '../config'
+import Users from './users'
+import Wallets from './wallets'
 
 export enum frequency {
-  DAILY = "Daily",
-  WEEKLY = "Weekly",
-  MONTHLY = "Monthly",
-  ANNUALLY = "Annually"
+  DAILY = 'Daily',
+  WEEKLY = 'Weekly',
+  MONTHLY = 'Monthly',
+  ANNUALLY = 'Annually',
 }
 
 enum category {
-  TRAVEL = "Travel",
-  DREAM_HOME = "Dream_Home",
-  DREAM_CAR = "Dream_Car",
-  RENT = "Rent",
-  GADGETS = "Gadgets",
-  OTHER = "Other"
+  TRAVEL = 'Travel',
+  DREAM_HOME = 'Dream_Home',
+  DREAM_CAR = 'Dream_Car',
+  RENT = 'Rent',
+  GADGETS = 'Gadgets',
+  OTHER = 'Other',
 }
 export type SavingAttributes = {
-  id: string;
-  user_id: string;
-  name: string;
-  target: string;
-  target_amount: number;
-  amount_saved: number;
-  frequency: string;
-  category: string;
-  startDate: string;
-  endDate: string;
-  created_at: Date;
-};
+  id: string
+  user_id: string
+  name: string
+  target: string
+  target_amount: number
+  amount_saved: number
+  frequency: string
+  category: string
+  startDate: string
+  endDate: string
+  created_at: Date
+}
 
 class Savings extends Model<SavingAttributes> {
-    target_amount: any;
-    endDate: any;
+  target_amount: any
+  endDate: any
 }
 
 Savings.init(
@@ -48,7 +48,7 @@ Savings.init(
       type: DataTypes.UUID,
       references: {
         model: Users,
-        key: "id",
+        key: 'id',
       },
     },
     name: {
@@ -74,11 +74,11 @@ Savings.init(
     },
     target_amount: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     amount_saved: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     endDate: {
       type: DataTypes.DATE,
@@ -92,11 +92,10 @@ Savings.init(
     },
   },
   {
-    sequelize: db,
-    tableName: "Savings",
-    modelName: "Savings",
+    sequelize: dbConfig,
+    tableName: 'Savings',
+    modelName: 'Savings',
   }
-);
-
+)
 
 export default Savings

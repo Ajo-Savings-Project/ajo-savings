@@ -1,14 +1,14 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
-import { db } from "../config";
-import Users from "./users";
+import { Model, DataTypes, Sequelize } from 'sequelize'
+import { dbConfig } from '../config'
+import Users from './users'
 
 export class Payment extends Model {
-  public id!: string;
-  public owner_id!: string;
-  public reference!: string;
-  public amount!: number;
-  public email!: string;
-  public fullName!: string;
+  public id!: string
+  public owner_id!: string
+  public reference!: string
+  public amount!: number
+  public email!: string
+  public fullName!: string
 }
 
 Payment.init(
@@ -21,13 +21,12 @@ Payment.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      
     },
     admin_id: {
       type: DataTypes.UUID,
       references: {
         model: Users,
-        key: "id",
+        key: 'id',
       },
     },
     amount: {
@@ -43,10 +42,9 @@ Payment.init(
     },
   },
   {
-    sequelize: db,
+    sequelize: dbConfig,
     tableName: 'payments',
-  
   }
-);
+)
 
-export default Payment;
+export default Payment

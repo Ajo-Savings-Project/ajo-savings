@@ -1,5 +1,4 @@
-import swaggerJsdoc,{ Options, SwaggerDefinition } from 'swagger-jsdoc';
-
+import swaggerJsdoc, { Options, SwaggerDefinition } from 'swagger-jsdoc'
 
 const options = {
   definition: {
@@ -11,9 +10,8 @@ const options = {
     },
   },
   apis: ['src/routes/*.ts'], // Path to your route files
-};
+}
 
+const specs = swaggerJsdoc(options)
 
-const specs = swaggerJsdoc(options);
-
-export default specs;
+export default specs
