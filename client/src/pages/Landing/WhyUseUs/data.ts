@@ -1,7 +1,7 @@
-import user from './users.png'
-import withdraw from './money-withdrawal.png'
-import sheild from './shield-alt.png'
-import wallet from './wallet-alt.png'
+import user from './images/users.png'
+import withdraw from './images/money-withdrawal.png'
+import sheild from './images/shield-alt.png'
+import wallet from './images/wallet-alt.png'
 
 export const data = [
   {

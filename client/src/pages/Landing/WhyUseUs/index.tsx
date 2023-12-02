@@ -1,9 +1,9 @@
-import styles from './why_use_us.module.scss'
-import { Card } from 'components'
-import { Text } from 'components'
+import styles from './whyUseUs.module.scss'
+import { Card, Text } from 'components'
+
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
-import arrow from './Arrow.png'
+import arrow from './images/Arrow.png'
 import { data } from './data'
 
 const WhyUseUs = () => {
