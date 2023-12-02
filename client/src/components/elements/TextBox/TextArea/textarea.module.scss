@@ -1,17 +1,8 @@
 @import "../Input/input.module";
 
 .textarea {
-    min-width: 1200px;
+    
     min-height: 50px;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    border: 1px solid var(--gray-300);
-    resize: none; 
-    margin-top: 10px;
-
-
-    &:focus,
-    &:active {
-      outline: 1px solid var(--gray-400);
-    }       
+    resize: vertical
+          
 }

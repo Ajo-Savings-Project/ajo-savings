@@ -1,5 +1,6 @@
 import { TextareaHTMLAttributes } from 'react'
 import styles from './textarea.module.scss'
+import classNames from 'classnames'
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
@@ -7,11 +8,18 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 const TextArea = ({ label, ...props }: TextareaProps) => {
   return (
-    <div className={styles.container}>
-      <label className={styles.Label} htmlFor="textarea">
+    <div className={styles.inputContainer}>
+      <label
+        className={styles.inputContainerLabel}
+        htmlFor={props.id || label || props.name}
+      >
         {label}
       </label>
-      <textarea {...props} className={styles.textarea} />
+      <textarea
+        {...props}
+        id={props.id || label || props.name}
+        className={classNames(styles.inputContainerInput, styles.textarea)}
+      />
     </div>
   )
 }
