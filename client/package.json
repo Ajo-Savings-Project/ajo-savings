@@ -43,6 +43,9 @@
     "@typescript-eslint/typescript-estree": "^6.12.0"
   },
   "lint-staged": {
+    "*.{css,scss}": [
+      "prettier --ignore-unknown --write"
+    ],
     "*.{ts,tsx,js,jsx}": [
       "eslint --fix",
       "prettier --ignore-unknown --write"
