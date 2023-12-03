@@ -1,7 +1,6 @@
 import classNames from 'classnames'
-import { Button, Input, Select, Text } from 'components'
+import { Button, Input, Select, Text, Textarea } from 'components'
 import styles from './play.module.scss'
-import TextArea from 'components/elements/TextBox/TextArea'
 
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
@@ -115,7 +114,7 @@ const Playground = () => {
               { label: 'label', value: '4' },
             ]}
           />
-          <TextArea label={'discription'} />
+          <Textarea label={'discription'} />
         </div>
       </section>
     </section>
