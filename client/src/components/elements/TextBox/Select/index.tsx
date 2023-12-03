@@ -12,7 +12,7 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
     <div className={styles.inputContainer}>
       <label
         className={classNames(styles.inputContainerLabel)}
-        htmlFor={name ?? label}
+        htmlFor={props.id || name || label}
       >
         {label}
       </label>
@@ -20,6 +20,7 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
       <select
         name={name}
         {...props}
+        id={props.id || name || label}
         className={classNames(
           styles.select,
           styles.inputContainerInput,
