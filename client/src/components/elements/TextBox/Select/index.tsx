@@ -7,7 +7,7 @@ interface SelectI extends SelectHTMLAttributes<HTMLSelectElement> {
   options: Array<{ label: string; value: string | number; disabled?: boolean }>
 }
 
-const Select = ({ name, label, options, ...props }: SelectI) => {
+const Select = ({ name, label, disabled, options, ...props }: SelectI) => {
   return (
     <div className={styles.inputContainer}>
       <label
@@ -28,7 +28,7 @@ const Select = ({ name, label, options, ...props }: SelectI) => {
         )}
       >
         {options.map(({ label, value }) => (
-          <option key={label + value} value={value}>
+          <option key={label + value} value={value} disabled={disabled}>
             {label}
           </option>
         ))}
