@@ -1,7 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { db } from '../config'
-// import Users from "./users";
-// import Transactions from "./transactions";
+import Users from './users'
 
 export enum type {
   GLOBAL = 'Global',
@@ -24,12 +23,7 @@ export type WalletAttributes = {
   total_income: number
 }
 
-class Wallets extends Model<WalletAttributes> {
-  earnings!: Array<{ date: Date; amount: number }> // Add earnings array
-  total_group_savings!: number // this line is throwing error when total_group_savings: number. It should be like this total_group_savings: [] = []. But I used any to stop the error.
-  total_personal_savings!: number
-  total_amount!: number
-}
+class Wallets extends Model<WalletAttributes> {}
 
 Wallets.init(
   {
@@ -40,27 +34,19 @@ Wallets.init(
     },
     user_id: {
       type: DataTypes.UUID,
-      // references: {
-      //   model: Users,
-      //   key: "id",
-      // },
+      references: {
+        model: Users,
+        key: 'id',
+      },
     },
     total_amount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    // total_group_savings: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true
-    // },
     total_income: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    // total_personal_savings: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true
-    // },
     earnings: {
       type: DataTypes.JSON,
       allowNull: true,

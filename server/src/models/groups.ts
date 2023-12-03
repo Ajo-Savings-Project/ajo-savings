@@ -27,24 +27,23 @@ export interface Members {
 }
 export type GroupAttributes = {
   id: string
-  title: string //group name
-  description: string //purpose and goals
+  title: string
+  description: string
   admin_id: string
   group_image?: string
   amount_contributed?: number
-  contribution_amount: number //contribution amount
+  contribution_amount: number
   group_transactions: GroupTransactions[]
   amount_withdrawn: number
   members: Members[]
   slots: number[]
   availableSlots: number[]
-  number_of_participants: number //number of participants
-  frequency: string //ft
+  number_of_participants: number
+  frequency: string
   duration: string
-  startDate: Date //start date
-  endDate: Date //end date
+  startDate: Date
+  endDate: Date
   created_at: Date
-  // profilePicture?: string;
 }
 
 class Groups extends Model<GroupAttributes> {}
@@ -131,10 +130,6 @@ Groups.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    // profilePicture: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    // },
   },
   {
     sequelize: db,

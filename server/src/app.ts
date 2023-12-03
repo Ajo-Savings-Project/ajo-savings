@@ -8,7 +8,7 @@ import userRoutes from './routes/users'
 import groupRoutes from './routes/groups'
 import swaggerUi from 'swagger-ui-express'
 import specs from './swagger'
-import { db } from './config'
+import { db, ENV } from './config'
 
 dotenv.config()
 const app = express()
@@ -47,7 +47,7 @@ app.use(function (err: HttpError, req: Request, res: Response) {
   res.render('error')
 })
 
-const port = process.env.PORT
+const port = ENV.PORT || 5500
 
 app.listen(port, () => {
   console.log(`server running on ${port}`)

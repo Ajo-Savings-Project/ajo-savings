@@ -1,23 +1,17 @@
-import merge from 'lodash.merge'
-import dotenv from 'dotenv'
-import prod from './prod'
-import dev from './dev'
-dotenv.config()
+import { Sequelize } from 'sequelize'
+import ENV from './env'
 
-const stage: string = process.env.NODE_ENV!
-let config
-
-if (stage === 'production') {
-  config = prod
-} else if (stage === 'development') {
-  config = dev
-} else {
-  config = null
-}
-
-export default merge(
+export const db = new Sequelize(
+  ENV.DB_NAME!,
+  ENV.DB_USERNAME!,
+  ENV.DB_PASSWORD as string,
   {
-    stage,
-  },
-  config
+    host: ENV.DB_HOST,
+    port: ENV.DB_PORT as unknown as number,
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+      encrypt: true,
+    },
+  }
 )
