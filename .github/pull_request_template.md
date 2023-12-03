@@ -1,9 +1,7 @@
 **Description of PR**
 
-A brief description of what changes your PR introduces. The better this description, the quicker we can review, exchange
-feedback, and merge!
-
-**ClickUp Task**: [CU-<ticket_id>](link here)
+_A brief description of what changes your PR introduces. The better this description, the quicker we can review, exchange
+feedback, and merge!_
 
 ---
 

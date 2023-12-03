@@ -10,7 +10,8 @@ yarn.*
 
 **/node_modules/
 **/.yarn/
-**/.env
+**/.env*
+!**/.env.sample
 **/.DS_Store
 **/yarn-error.log
 **/dist

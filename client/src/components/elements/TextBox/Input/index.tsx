@@ -19,12 +19,13 @@ const Input = ({ name, label, type, ...props }: InputI) => {
     <div className={styles.inputContainer}>
       <label
         className={classNames(styles.inputContainerLabel)}
-        htmlFor={name ?? label}
+        htmlFor={props.id || name || label}
       >
         {label}
       </label>
       <input
         {...props}
+        id={props.id || name || label}
         name={name}
         className={classNames(
           styles.inputContainerInput,

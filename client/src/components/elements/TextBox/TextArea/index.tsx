@@ -6,7 +6,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
 }
 
-const TextArea = ({ label, ...props }: TextareaProps) => {
+const Textarea = ({ label, ...props }: TextareaProps) => {
   return (
     <div className={styles.inputContainer}>
       <label
@@ -24,4 +24,4 @@ const TextArea = ({ label, ...props }: TextareaProps) => {
   )
 }
 
-export default TextArea
+export default Textarea
