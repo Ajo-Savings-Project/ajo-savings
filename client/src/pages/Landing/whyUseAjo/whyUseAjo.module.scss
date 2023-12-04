@@ -1,0 +1,58 @@
+@import '../../../styles/mixins';
+.gridBox {
+  @include px-to-rem(margin-top, 24);
+  @include px-to-rem(margin-bottom, 24);
+  display: grid;
+  grid-template-columns: 1fr;
+
+  gap: 30px;
+  .card {
+    text-align: center;
+    width: 100%;
+  }
+  .cardTitle {
+    font-weight: 600;
+    line-height: 28px;
+  }
+  .cardText {
+    font-weight: 400;
+    line-height: 22.4px;
+    letter-spacing: 0.15px;
+  }
+}
+.header {
+  @include px-to-rem(margin-top, 24);
+  @include px-to-rem(margin-bottom, 24);
+  text-align: center;
+}
+@media screen and (min-width: 48rem) {
+  .gridBox {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .card {
+      text-align: unset;
+    }
+
+    .cardText {
+      width: 100%;
+      max-width: 19.47rem;
+    }
+  }
+}
+@media screen and (min-width: 64rem) {
+  .gridBox {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    .card {
+      text-align: unset;
+      width: 100%;
+    }
+    .cardText {
+      width: 100%;
+      height: auto;
+      max-height: 4.1rem;
+      max-width: 19.47rem;
+    }
+  }
+}
