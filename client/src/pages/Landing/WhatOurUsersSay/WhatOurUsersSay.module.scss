@@ -8,15 +8,11 @@
   margin-bottom: 2rem;
 }
 
-.single_feedback_container {
-  margin-bottom: 2rem;
+.clearfix {
+  display: grid;
+  gap: 2rem;
 }
-.clearfix::before,
-.clearfix::after {
-  content: '';
-  clear: both;
-  display: table;
-}
+
 .single_feedback {
   background: white;
   border-top: 2px solid #088ab2;
@@ -37,19 +33,13 @@
 }
 
 @media screen and (min-width: 760px) {
-  .single_feedback_container {
-    float: left;
-    width: 50%;
-    padding-right: 2rem;
-    background: #f2f4f7;
-  }
-  .feedback_container {
-    background: #f2f4f7;
+  .clearfix {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .single_feedback_container {
-    width: 33.3%;
+  .clearfix {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
