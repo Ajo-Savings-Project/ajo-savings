@@ -1,9 +1,10 @@
-@import "../Input/input.module";
+@import '../Input/input.module';
 
 .select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  width: 100%;
 
   &:after {
     --size: 0.5rem;
@@ -21,4 +22,12 @@
 /* For IE <= 11 */
 select::-ms-expand {
   display: none;
+}
+.select_icon_select {
+  position: relative;
+}
+.select_icon {
+  position: absolute;
+  top: 0.6rem;
+  right: 2rem;
 }
