@@ -29,22 +29,22 @@ const userFeedback = [
 
 const WhatOurUsersSay = () => {
   return (
-    <section className={styles.feedback_container}>
+    <section className={styles.feedbackContainer}>
       <div className="container">
         <Text
           content="What our users say?"
           size={'Subheading'}
           color={'Primary'}
-          className={styles.what_users_say}
+          className={styles.whatUsersSay}
         />
-        <div className={styles.clearfix}>
+        <div className={styles.singleFeedbackContainer}>
           {userFeedback.map((feed, key) => {
             return (
-              <div key={key} className={styles.single_feedback_container}>
+              <div key={key}>
                 <div style={{ position: 'relative' }}>
                   <Text
                     content={feed.feedback}
-                    className={styles.single_feedback}
+                    className={styles.singleFeedback}
                   />
                   <img className={styles.polygon} src={polygon} alt="" />
                 </div>

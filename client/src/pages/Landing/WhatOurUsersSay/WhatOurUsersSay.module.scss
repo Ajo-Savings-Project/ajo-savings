@@ -1,19 +1,19 @@
-.feedback_container {
+.feedbackContainer {
   text-align: center;
-  padding: 0 2rem;
+  padding: 5rem 2rem;
   background: var(--gray-100);
 }
-.what_users_say {
-  margin-top: 5rem;
+.whatUsersSay {
   margin-bottom: 2rem;
 }
 
-.clearfix {
+.singleFeedbackContainer {
   display: grid;
   gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 
-.single_feedback {
+.singleFeedback {
   background: white;
   border-top: 2px solid #088ab2;
   margin-bottom: 3rem;
@@ -30,16 +30,4 @@
 .polygon {
   position: absolute;
   bottom: -1.3rem;
-}
-
-@media screen and (min-width: 760px) {
-  .clearfix {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .clearfix {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 }
