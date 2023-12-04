@@ -1,0 +1,62 @@
+@import '../../../styles/mixins';
+
+.footer {
+  @include px-to-rem(padding-top, 56);
+  @include px-to-rem(padding-bottom, 56);
+  background-color: var(--primary-600);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  $color: var(--white);
+  .footerEnquiry {
+    .footerEquiryText {
+      margin: 1rem 0;
+      color: $color;
+    }
+    .footerEquirysubText {
+      margin: 1rem 0;
+      color: $color;
+    }
+  }
+  .logo {
+    color: $color;
+  }
+  .socials {
+    display: flex;
+    gap: 30px;
+    margin: 1.5rem 0;
+  }
+  .copy {
+    color: $color;
+    font-size: 0.875rem;
+  }
+}
+@media screen and (min-width: 56.25rem) {
+  .footer {
+    .logo {
+      text-align: center;
+    }
+    $color: var(--white);
+    .footerEnquiry {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      .footerEquiryText {
+        margin: 2.5rem 0;
+
+        color: $color;
+      }
+      .footerEquirysubText {
+        margin: 1rem 0;
+        color: $color;
+      }
+    }
+    .footercopyAndSocial {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
