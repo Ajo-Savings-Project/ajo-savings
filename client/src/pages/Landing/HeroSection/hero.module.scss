@@ -1,10 +1,40 @@
+@import '../../../styles/mixins';
+
 .hero {
-  background-color: lighten(#088ab2, 10%);
+  background-color: #088ab21a;
 
-  // just for illustration, remove
-  min-height: 31.25rem;
+  @include px-to-rem(padding-top, 80);
+  @include px-to-rem(padding-bottom, 80);
 
-  &Content {
-    background-color: green;
+  .heroContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
+  &SubText {
+    padding: 1.5rem 0;
+    letter-spacing: 0.15px;
+  }
+  &HeroImg {
+    margin: auto;
+    > img {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+  @media screen and (min-width: 56.25rem) {
+    .heroContainer {
+      display: grid;
+      grid-template-columns: minmax(0, 570px) 1fr;
+      align-items: center;
+    }
+
+    &HeroImg {
+      > img {
+        max-width: unset;
+      }
+    }
+  }
+
+
 }

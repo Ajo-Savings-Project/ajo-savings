@@ -96,16 +96,8 @@ const Playground = () => {
       <section>
         <Text level={2} font={'Bodoni'} size={'Subheading'} content={'Input'} />
         <div>
-          <Input
-            label={'Phone Number'}
-            type={'text'}
-            placeholder="Enter your phone nunmber"
-          />
-          <Input
-            label={'Password'}
-            type={'password'}
-            placeholder="*****************"
-          />
+          <Input label={''} />
+          <Input label={'label'} type={'password'} placeholder='dghhgshgshsjhsnsnm' />
           <Select
             label={'Select'}
             options={[
@@ -116,6 +108,7 @@ const Playground = () => {
           />
           <Textarea label={'discription'} />
         </div>
+        <button className={styles.button}>click me</button>
       </section>
     </section>
   )
