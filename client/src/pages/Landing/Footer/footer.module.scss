@@ -9,10 +9,7 @@
   gap: 30px;
   $color: var(--white);
   .footerEnquiry {
-    .footerEquiryText {
-      margin: 1rem 0;
-      color: $color;
-    }
+    .footerEquiryText,
     .footerEquirysubText {
       margin: 1rem 0;
       color: $color;
@@ -21,14 +18,16 @@
   .logo {
     color: $color;
   }
-  .socials {
-    display: flex;
-    gap: 30px;
-    margin: 1.5rem 0;
-  }
-  .copy {
-    color: $color;
-    font-size: 0.875rem;
+  .footercopyAndSocial {
+    .socials {
+      display: flex;
+      gap: 30px;
+      margin: 1.5rem 0;
+    }
+    .copy {
+      color: $color;
+      font-size: 0.875rem;
+    }
   }
 }
 @media screen and (min-width: 56.25rem) {
@@ -44,11 +43,6 @@
       gap: 10px;
       .footerEquiryText {
         margin: 2.5rem 0;
-
-        color: $color;
-      }
-      .footerEquirysubText {
-        margin: 1rem 0;
         color: $color;
       }
     }

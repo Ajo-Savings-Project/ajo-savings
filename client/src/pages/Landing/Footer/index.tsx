@@ -26,14 +26,14 @@ const Footer = () => {
           />
         </div>
         <div className={styles.footercopyAndSocial}>
-          <div className={styles.socials}>
-            <a href="http://">
+          <div className={styles.footerSocials}>
+            <a href="#" referrerPolicy="no-referrer">
               <img src={Instagram} alt="Instagram logo" />
             </a>
-            <a href="http://">
+            <a href="#" referrerPolicy="no-referrer">
               <img src={Twitter} alt=" Twitter logo" />
             </a>
-            <a href="http://">
+            <a href="#" referrerPolicy="no-referrer">
               <img src={Youtube} alt=" Youtube logo" />
             </a>
           </div>
