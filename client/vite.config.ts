@@ -11,10 +11,11 @@ export default defineConfig({
       components: '/src/components',
       pages: '/src/pages',
       layouts: '/src/layouts',
-      constants: '/src/constants',
+      appConstants: '/src/appConstants',
       utils: '/src/utils',
       router: '/src/router',
       contexts: '/src/contexts',
+      api: '/src/api',
     },
   },
 })
