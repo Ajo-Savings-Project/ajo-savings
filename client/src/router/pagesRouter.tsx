@@ -1,3 +1,5 @@
+import { createBrowserRouter } from 'react-router-dom'
+
 import LoginPage from 'pages/Auth/Login.tsx'
 import SignupPage from 'pages/Auth/Signup.tsx'
 import GroupsPage from 'pages/Dashboard/Groups.tsx'
@@ -7,9 +9,11 @@ import SettingsPage from 'pages/Dashboard/Settings.tsx'
 import TransactionsPage from 'pages/Dashboard/Transactions.tsx'
 import LandingPage from 'pages/Landing'
 import PlaygroundPage from 'pages/Playground'
-import { createBrowserRouter } from 'react-router-dom'
+import ResetPasswordPage from 'pages/Auth/ResetPassword'
+
 import AuthLayout from '../layouts/authLayout.tsx'
 import DashboardLayout from '../layouts/dashboardLayout.tsx'
+import ResetPasswordLayout from '../pages/Auth/ResetPassword/layout.tsx'
 
 import routes from './routes.ts'
 
@@ -34,6 +38,16 @@ const pagesRouter = createBrowserRouter([
       },
       { path: routes.dashboard.settings.path, element: <SettingsPage /> },
       { path: routes.dashboard.savings.path, element: <SavingsPage /> },
+    ],
+  },
+  {
+    element: <ResetPasswordLayout />,
+    path: routes.auth['reset-password'].abs_path,
+    children: [
+      {
+        index: true,
+        element: <ResetPasswordPage />,
+      },
     ],
   },
   {

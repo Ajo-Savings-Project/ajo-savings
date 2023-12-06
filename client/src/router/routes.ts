@@ -7,7 +7,7 @@ const routes = createRoutes({
     root: '/auth',
     login: 'login',
     signup: 'signup',
-    resetPassword: 'reset-password',
+    'reset-password': 'reset-password',
   },
   dashboard: {
     root: '/dashboard',
