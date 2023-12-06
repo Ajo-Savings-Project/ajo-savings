@@ -10,7 +10,6 @@ const ResetPasswordLayout = () => {
         <title>{getHeaderTitle('Reset password')}</title>
       </Helmet>
       <div>
-        set to middle for reset password
         <Outlet />
       </div>
     </>
