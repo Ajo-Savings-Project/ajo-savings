@@ -99,6 +99,10 @@ body {
   /* Firefox */
 }
 
+img {
+  vertical-align: middle;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
   display: none;
