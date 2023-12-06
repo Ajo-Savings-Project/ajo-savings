@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { Button, Text } from 'components'
 import { Link } from 'react-router-dom'
+import { HEADER_TITLE } from 'appConstants'
 import styles from './header.module.scss'
 
 const Header = () => {
@@ -10,9 +11,9 @@ const Header = () => {
         className={classNames('app-logo')}
         color={'none'}
         font={'Bodoni'}
-        content={'Ajó Savings'}
+        content={HEADER_TITLE}
       />
-      <Link to="/dashboard" replace>
+      <Link to="/dashboard">
         <Button text={'Get Started'} />
       </Link>
     </div>

@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { Text } from 'components'
+import { HEADER_TITLE } from 'appConstants'
 import Instagram from './images/instagram.svg?react'
 import Twitter from './images/twitter.svg?react'
 import Youtube from './images/youtube.svg?react'
@@ -19,7 +20,7 @@ const Footer = () => {
         <Text
           font={'Bodoni'}
           className={classNames('app-logo', styles.footerLogo)}
-          content={'Ajó Savings'}
+          content={HEADER_TITLE}
           color={'White'}
         />
         <div className={styles.footerEnquiry}>

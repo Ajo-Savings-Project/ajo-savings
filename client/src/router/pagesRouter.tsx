@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import LoginPage from 'pages/Auth/Login.tsx'
-import SignupPage from 'pages/Auth/Signup.tsx'
+import LoginPage from 'pages/Auth/Login'
+import SignupPage from 'pages/Auth/Signup'
 import GroupsPage from 'pages/Dashboard/Groups.tsx'
 import HomePage from 'pages/Dashboard/Home.tsx'
 import SavingsPage from 'pages/Dashboard/Savings.tsx'
