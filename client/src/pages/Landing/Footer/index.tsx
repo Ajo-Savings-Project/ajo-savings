@@ -1,9 +1,16 @@
 import classNames from 'classnames'
 import { Text } from 'components'
-import Instagram from './images/Instagram.png'
-import Twitter from './images/Twitter.png'
-import Youtube from './images/Youtube.png'
+import Instagram from './images/instagram.svg?react'
+import Twitter from './images/twitter.svg?react'
+import Youtube from './images/youtube.svg?react'
+
 import styles from './footer.module.scss'
+
+const socials = [
+  { icon: Instagram, link: '#' },
+  { icon: Twitter, link: '#' },
+  { icon: Youtube, link: '#' },
+]
 
 const Footer = () => {
   return (
@@ -21,15 +28,11 @@ const Footer = () => {
         </div>
         <div className={styles.footerCopyAndSocials}>
           <div className={styles.footerSocials}>
-            <a href="#" referrerPolicy="no-referrer" target="_blank">
-              <img src={Instagram} alt="Instagram logo" />
-            </a>
-            <a href="#" referrerPolicy="no-referrer" target="_blank">
-              <img src={Twitter} alt=" Twitter logo" />
-            </a>
-            <a href="#" rel="noreferrer" target="_blank">
-              <img src={Youtube} alt=" Youtube logo" />
-            </a>
+            {socials.map(({ icon: Icon, link }, idx) => (
+              <a key={idx} href={link} rel="noreferrer" target="_blank">
+                <Icon />
+              </a>
+            ))}
           </div>
           <Text className={styles.copy} color={'White'}>
             &copy; 2023 EasyLend. All rights reserved
