@@ -8,5 +8,4 @@ export const validateUserSchema = z.object({
     .email({ message: 'mail is invalid' }),
   phone: z.string({ required_error: 'phone number is required' }).min(11),
   password: z.string({ required_error: 'password is required' }).min(7),
-  confirm_password: z.string({ required_error: 'password is required' }).min(7),
 })
