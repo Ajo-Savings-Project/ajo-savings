@@ -1,13 +1,77 @@
-import { Router } from 'express'
-import { registerUser } from '../controllers/userController'
+// sample endpoint maping
+/**
+ * @swagger
+ * /sample/getbooks:
+ *   get:
+ *     summary: Get all books.
+ *     description: This endpoint returns all the books in the database
+ *     tags:
+ *      - Samples
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of all books data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Internal error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
 
-const router = Router()
+
 
 /**
  * @swagger
+ * /users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: 
+ *      - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *               $ref: '#/components/schemas/RequestBody'
+ *       responses:
+ *         '200':
+ *           description: Registration successful
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 message: Registration Successful.
+ *                 user:
+ *                   $ref: '#/components/schemas/UserResponse'
+ *                 globalWallet: string
+ *                 groupWallet: string
+ *                 savingsWallet: string
+ *                 token: string
+ *         '400':
+ *           description: Bad request
+ *         '500':
+ *           description: Internal Server Error
  * components:
  *   schemas:
- *     User:
+ *     RequestBody:
  *       type: object
  *       required:
  *         - firstName
@@ -15,7 +79,7 @@ const router = Router()
  *         - email
  *         - phone
  *         - password
- *         - confirm_password
+ *         - cpnfirm_password
  *       properties:
  *         firstName:
  *           type: string
@@ -74,13 +138,6 @@ const router = Router()
  *         updatedAt:
  *           type: string
  *           format: date
- *       example:
- *         firstName: John
- *         lastName: Carter
- *         email: johncarter@gmail.com
- *         phone: "07012345678"
- *         password: Ajo12345678@
- *         confirm_password: Ajo12345678@
  *     UserResponse:
  *       type: object
  *       properties:
@@ -89,66 +146,16 @@ const router = Router()
  *         user:
  *           type: object
  *           properties:
- *             firstName:
+  *            firstName:
  *               type: string
  *             lastName:
  *               type: string
- *             email:
- *               type: string
+ *               description: Last name of the user
  *         globalWallet:
  *           type: string
  *         groupWallet:
  *           type: string
- *         savingsWallet:
- *           type: string
+ *         savingsWallet: 
+ *           type string        
  */
 
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: All user APIs
- * paths:
- *   /users/register:
- *     post:
- *       summary: Register new user
- *       tags: [Users]
- *       requestBody:
- *         required: true
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       responses:
- *         200:
- *           description: Registration successful
- *           content:
- *             application/json:
- *               example:
- *                 message: Registration Successful.
- *                 user:
- *                   type: object
- *                   properties:
- *                     firstName: string
- *                     lastName: string
- *                     email: string
- *                 globalWallet: string
- *                 groupWallet: string
- *                 savingsWallet: string
- *         400:
- *           description: Bad request
- *           content:
- *             application/json:
- *               example:
- *                 status: "error"
- *                 message: "Password mismatch"
- *         500:
- *           description: Internal Server Error
- *           content:
- *             application/json:
- *               example:
- *                 message: "Internal Server Error"
- */
-router.post('/register', registerUser)
-
-export default router

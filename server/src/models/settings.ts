@@ -4,16 +4,16 @@ import { db } from '../config'
 export interface SettingsAttribute {
   id: string
   owner_id: string
-  email_notification: boolean
-  contribution_reminder: boolean
-  group_join_request: boolean
-  two_factor_authentication: boolean
-  password_update: boolean
-  profile_visibility: boolean
-  email_privacy: boolean
-  savings_group_update: boolean
-  personal_saving_alert: boolean
-  deactivate_account: boolean
+  email_notification?: boolean
+  contribution_reminder?: boolean
+  group_join_request?: boolean
+  two_factor_authentication?: boolean
+  password_update?: boolean
+  profile_visibility?: boolean
+  email_privacy?: boolean
+  savings_group_update?: boolean
+  personal_saving_alert?: boolean
+  deactivate_account?: boolean
 }
 
 class Settings extends Model<SettingsAttribute> {}

@@ -15,16 +15,18 @@ export type UserAttributes = {
   password: string
   role: string
   phone: string
-  created_at: Date
   gender: string
   occupation: string
-  date_of_birth: Date
+  date_of_birth?: Date
   bvn: string
   address: string
   identification_number: string
   identification_doc: string
   proof_of_address_doc: string
-  otp: string | null
+  otp?: string
+  otp_expiry?: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 class Users extends Model<UserAttributes> {}
@@ -50,15 +52,17 @@ Users.init(
     },
     profilePic: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     otp: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    otp_expiry: {
+      type: DataTypes.DATE,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),
@@ -68,10 +72,13 @@ Users.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     gender: {
       type: DataTypes.STRING,
@@ -83,8 +90,6 @@ Users.init(
     },
     date_of_birth: {
       type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.DATE,
     },
     bvn: {
       type: DataTypes.STRING,
@@ -111,6 +116,7 @@ Users.init(
     sequelize: db,
     tableName: 'Users',
     modelName: 'Users',
+    timestamps: false,
   }
 )
 
