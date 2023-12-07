@@ -1,7 +1,7 @@
 @import '../../../styles/mixins';
 .gridBox {
-  @include px-to-rem(margin-top, 24);
-  @include px-to-rem(margin-bottom, 24);
+  @include px-to-rem(padding-top, 30);
+  @include px-to-rem(margin-bottom, 30);
   display: grid;
   grid-template-columns: 1fr;
 
@@ -21,12 +21,13 @@
   }
 }
 .header {
-  @include px-to-rem(margin-top, 24);
-  @include px-to-rem(margin-bottom, 24);
+  @include px-to-rem(padding-bottom, 30);
   text-align: center;
 }
 @media screen and (min-width: 48rem) {
   .gridBox {
+    @include px-to-rem(padding-top, 80);
+    @include px-to-rem(margin-bottom, 80);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     .card {
@@ -41,6 +42,8 @@
 }
 @media screen and (min-width: 64rem) {
   .gridBox {
+    @include px-to-rem(padding-top, 80);
+    @include px-to-rem(margin-bottom, 80);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 60px;

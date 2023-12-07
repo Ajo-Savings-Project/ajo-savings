@@ -1,5 +1,20 @@
-const Layout = () => {
-  return <div>set to middle for reset password</div>
+import { Helmet } from 'react-helmet'
+import { Outlet } from 'react-router-dom'
+import { getHeaderTitle } from '../../../utils/getHeaderTitle.ts'
+
+const ResetPasswordLayout = () => {
+  return (
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{getHeaderTitle('Reset password')}</title>
+      </Helmet>
+      <div>
+        set to middle for reset password
+        <Outlet />
+      </div>
+    </>
+  )
 }
 
-export default Layout
+export default ResetPasswordLayout

@@ -11,12 +11,14 @@
     "prepare": "cd .. && husky install client/.husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
     "@types/react-helmet": "^6.1.9",
     "axios": "^1.6.2",
     "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-hook-form": "^7.48.2",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.20.0",
     "vite-plugin-svgr": "^4.2.0",

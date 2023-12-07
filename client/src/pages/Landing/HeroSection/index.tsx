@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { Link } from 'react-router-dom'
 import styles from './hero.module.scss'
 import { Text } from 'components'
 import HeroImg from './hero-img.png'
@@ -25,7 +26,9 @@ const HeroSection = () => {
               personalized savings plans with Ajó Savings. Take control of your
               finances and unlock a brighter financial future.
             </Text>
-            <Button kind="default" text="Get Started" />
+            <Link to="/dashboard">
+              <Button text={'Get Started'} />
+            </Link>
           </div>
           <div className={styles.heroHeroImg}>
             <img src={HeroImg} alt="Hero Image" className={styles.HeroImg} />

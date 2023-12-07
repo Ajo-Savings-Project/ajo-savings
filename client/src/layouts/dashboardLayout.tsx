@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { DashboardHeader, Sidebar } from 'components'
+import { AutoLogOut, DashboardHeader, Sidebar } from 'components'
 import { useAuth } from 'contexts'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet'
@@ -36,6 +36,7 @@ const DashboardLayout = () => {
 
   return (
     <>
+      <AutoLogOut />
       <Helmet>
         <meta charSet="utf-8" />
         <title style={{ textTransform: 'capitalize' }}>

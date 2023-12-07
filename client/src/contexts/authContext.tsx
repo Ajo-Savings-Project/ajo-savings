@@ -1,14 +1,20 @@
 import { createContext, ReactNode, useState } from 'react'
+import { REFRESH_TOKEN_KEY, SESSION_COUNT_KEY } from '../appConstants'
 
 const contextValues = {
   isAuth: false,
+  showAutoLogoutMessage: false,
 }
 
 type ContextValueT = typeof contextValues
 
 interface AuthContextI extends ContextValueT {
-  handleAuthSession: (values: { token: string; refreshToken: string }) => void
-  handleClearSession: () => void
+  handleAuthSession: (values: {
+    token?: string
+    id?: string
+    refreshToken: string
+  }) => void
+  handleClearSession: (options: { auto: boolean }) => void
 }
 
 const AuthContext = createContext<AuthContextI>({
@@ -18,28 +24,30 @@ const AuthContext = createContext<AuthContextI>({
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  console.log('Context Render', 'Env is DEV: ' + import.meta.env.DEV)
+  const sessionIsActive = localStorage.getItem(SESSION_COUNT_KEY) || false
+
   const [state, setState] = useState<ContextValueT>({
-    isAuth: false,
+    isAuth: Boolean(sessionIsActive),
+    showAutoLogoutMessage: false,
   })
 
   const handleAuthSession = (
     values: Parameters<AuthContextI['handleAuthSession']>[0]
   ) => {
-    console.log(values.token)
-    console.log(values.refreshToken)
-    setState({ isAuth: true })
+    const s_id = `${String(new Date().getTime())}:${values.id}`
+    localStorage.setItem(SESSION_COUNT_KEY, s_id)
+    localStorage.setItem(REFRESH_TOKEN_KEY, values.refreshToken)
+    setState({ isAuth: true, showAutoLogoutMessage: false })
   }
 
-  const handleClearSession = () => {
+  const handleClearSession = (
+    options: Parameters<AuthContextI['handleClearSession']>[0]
+  ) => {
     // make api call to invalidate token
     // then clear storage
-    setState({ isAuth: false })
+    setState({ isAuth: false, showAutoLogoutMessage: Boolean(options.auto) })
+    localStorage.clear()
   }
-
-  // get profile here
-  // if it returns 401 we attempt to refresh token
-  // else log user out
 
   return (
     <AuthContext.Provider

@@ -1,7 +1,7 @@
 @import '../../../styles/mixins';
 
 .button {
-  border-radius: 5px;
+  border-radius: 8px;
   border: none;
   @include px-to-rem(padding, 12, 18);
   font-size: 1em;
@@ -12,8 +12,6 @@
   transition: border-color 0.25s;
   color: white;
   text-transform: capitalize;
-  margin-top: 1rem;
-  width: 100%;
   &Rounded {
     border-radius: 30px;
   }
