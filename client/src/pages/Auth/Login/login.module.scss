@@ -1,0 +1,72 @@
+@import '../../../styles/mixins';
+
+.loginDiv {
+  &Ajo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > p {
+      @include px-to-rem(margin-bottom, 32);
+    }
+    p:last-child {
+      font-weight: 600;
+    }
+  }
+
+  &FormContainer,
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &FormContainer > form {
+    margin-top: 0.5rem;
+  }
+
+  &FormContainer > form > button {
+    margin-top: 0.5rem;
+  }
+
+  &FormContainer {
+    &HaveAccount {
+      text-align: center;
+    }
+  }
+}
+
+.googleButton {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+  background: none;
+  color: var(--gray-400);
+  border: 1px solid var(--gray-300);
+  font-weight: 400;
+}
+
+.divider {
+  $color: var(--gray-300);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color;
+
+  > p {
+    padding: 0 10px;
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: $color;
+  }
+}

@@ -15,11 +15,15 @@ const Button = ({
 }: PropsWithChildren<ButtonProps>) => {
   return (
     <button
-      type={props.type ?? 'button'}
-      className={classNames(styles.button, {
-        [styles.buttonRounded]: kind === 'rounded',
-      })}
       {...props}
+      type={props.type ?? 'button'}
+      className={classNames(
+        styles.button,
+        {
+          [styles.buttonRounded]: kind === 'rounded',
+        },
+        props.className
+      )}
     >
       {text || children}
     </button>
