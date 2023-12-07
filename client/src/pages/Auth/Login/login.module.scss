@@ -1,0 +1,104 @@
+.loginDiv {
+  max-width: 35.9rem;
+  margin: 5rem auto;
+  padding: 4rem 6.5rem;
+
+  .welcome {
+    color: #101828;
+    font-size: 16px;
+    font-family: Inter;
+    font-weight: 600;
+    line-height: 22.4px;
+    letter-spacing: 0.15px;
+    margin: 2rem 0 2rem 0;
+    word-wrap: break-word;
+    text-align: center;
+  }
+  .loginContainer {
+    display: flex;
+    flex-direction: column;
+
+    .input {
+      padding: 0.75rem 6.7rem;
+      border-radius: 8px;
+      border: 1px solid var(--gray-300);
+      color: #999;
+      &:focus,
+      &:active {
+        outline: 1px solid var(--gray-400);
+      }
+    }
+
+    .google {
+      position: absolute;
+      top: 1.2rem;
+      z-index: 10;
+      bottom: 10;
+      left: 5rem;
+    }
+    .loginInput {
+      position: relative;
+    }
+    .app-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .or {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 1rem 0 1.5rem 0;
+    }
+    .line1 {
+      height: 0;
+      width: 100%;
+      border: 1px solid #eaebec;
+    }
+    .line2 {
+      color: #98a2b3;
+      font-size: 0.88rem;
+      font-family: Inter;
+      font-weight: 400;
+    }
+    .emailInput {
+      &::placeholder {
+        color: #98a2b3;
+      }
+    }
+    .passwordDiv {
+      margin: 1.5rem 0;
+    }
+
+    .passwordLink {
+      color: var(--Blue-600, #1570ef);
+      font-size: 1rem;
+      font-weight: 400;
+      font-family: Inter;
+    }
+
+    .signUp {
+      padding: 1rem 2.3rem;
+    }
+
+    .noAccount {
+      color: var(--Grey-400, #98a2b3);
+      font-family: Inter;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.15px;
+    }
+
+    .signupLink {
+      color: var(--Cyan-600, #088ab2);
+      font-family: Inter;
+      font-weight: 600;
+    }
+  }
+
+  @media (min-width: 768px) {
+    margin-top: 0;
+    align-items: center;
+  }
+}

@@ -96,8 +96,12 @@ const Playground = () => {
       <section>
         <Text level={2} font={'Bodoni'} size={'Subheading'} content={'Input'} />
         <div>
-          <Input label={''} />
-          <Input label={'label'} type={'password'} placeholder='dghhgshgshsjhsnsnm' />
+          <Input label={'Email address'} type={'email'} placeholder={''} />
+          <Input
+            label={'label'}
+            type={'password'}
+            placeholder="dghhgshgshsjhsnsnm"
+          />
           <Select
             label={'Select'}
             options={[
