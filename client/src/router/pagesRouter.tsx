@@ -1,4 +1,4 @@
-import LoginPage from 'pages/Auth/Login.tsx'
+import LoginPage from 'pages/Auth/Login/Login.tsx'
 import SignupPage from 'pages/Auth/Signup.tsx'
 import GroupsPage from 'pages/Dashboard/Groups.tsx'
 import HomePage from 'pages/Dashboard/Home.tsx'
