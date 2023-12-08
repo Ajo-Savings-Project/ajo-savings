@@ -1,0 +1,119 @@
+@import '../../../styles/mixins';
+
+.section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  @include px-to-rem(margin-top, 30);
+  @include px-to-rem(margin-bottom, 30);
+
+  .content {
+    padding: 1.25rem;
+
+    .header {
+      font-size: 2.5rem;
+    }
+
+    .card {
+      padding-top: 0.312rem;
+      .cardGrid {
+        display: flex;
+        flex-direction: row;
+        gap: 0.312rem;
+
+        .circleWrapper {
+          position: relative;
+          width: 1.9rem;
+          height: 1.9rem;
+        }
+
+        .cardId {
+          position: absolute;
+          font-weight: 600;
+          font-size: 1.25rem;
+          top: 0%;
+          left: 0%;
+          margin-left: 13px;
+          z-index: 2;
+          margin-top: 0.312rem;
+        }
+
+        .cardCircle {
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 50%;
+          background-color: cyan;
+        }
+      }
+
+      .cardTitle {
+        font-weight: 600;
+        letter-spacing: 0.25px;
+        line-height: 1.75rem;
+        font-size: 1.25rem;
+        margin-top: 0.312rem;
+        margin-left: 0.75rem;
+      }
+
+      .cardText {
+        padding: 0.75rem 0;
+        font-weight: 400;
+        font-size: 1rem;
+      }
+    }
+  }
+  .image {
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  @media screen and (min-width: 48rem) and (max-width: 63.94px) {
+    grid-template-columns: 1fr 1fr;
+
+    .content {
+      padding: 0.625px;
+
+      .cardId {
+        font-size: 1.13rem;
+        margin-top: 0.3px;
+      }
+      .cardTitle {
+        font-size: 1.13rem;
+      }
+      .cardText {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  @media screen and (min-width: 64rem) {
+    grid-template-columns: 1fr auto;
+    justify-content: space-between;
+    @include px-to-rem(padding-top, 30);
+    @include px-to-rem(padding-bottom, 30);
+
+    .content {
+      padding: 0.3rem;
+
+      .header {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .cardId {
+        font-size: 1.13rem;
+        margin-top: 0.63rem;
+      }
+      .cardTitle {
+        font-size: 1rem;
+      }
+      .CardText {
+        font-size: 0.75rem;
+      }
+    }
+    .image {
+      margin-top: 1.23;
+    }
+  }
+}
