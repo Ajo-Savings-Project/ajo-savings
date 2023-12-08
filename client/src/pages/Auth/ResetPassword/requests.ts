@@ -17,10 +17,16 @@ export const useResetPasswordMutation = () => {
   })
 }
 
-export const ChangePasswordSchema = z.object({
-  newPassword: z.string(),
-  confirmPassword: z.string(),
-})
+const changePassErr = 'Should be minimum of 5 characters'
+export const ChangePasswordSchema = z
+  .object({
+    newPassword: z.string().min(5, changePassErr),
+    confirmPassword: z.string().min(5, changePassErr),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })
 export const useChangePasswordMutation = () => {
   return useMutation({
     mutationFn: async (data: z.infer<typeof ChangePasswordSchema>) => {
