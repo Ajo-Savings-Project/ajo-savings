@@ -10,11 +10,11 @@
   &Form {
     display: grid;
     grid-template-rows: 1fr auto;
+    padding: 0 20px;
 
     > section > div {
       max-width: 500px;
       margin: 6rem auto 0;
-      padding: 0 20px;
     }
 
     > footer {
@@ -29,4 +29,11 @@
       display: block;
     }
   }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  font-size: 1rem;
 }
