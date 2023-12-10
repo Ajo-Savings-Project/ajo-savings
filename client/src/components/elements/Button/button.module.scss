@@ -12,6 +12,7 @@
   transition: border-color 0.25s;
   color: white;
   text-transform: capitalize;
+
   &Rounded {
     border-radius: 30px;
   }
@@ -21,6 +22,10 @@
 
   &:focus,
   &:focus-visible {
+  }
+
+  &:active {
+    background-color: var(--primary-500);
   }
 }
 
