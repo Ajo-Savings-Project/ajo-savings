@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "cd .. && husky install server/.husky",
-    "lint": "echo $PWD",
+    "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "dev": "NODE_ENV=development nodemon",
     "prod": "NODE_ENV=production nodemon",
     "build": "tsc -w"

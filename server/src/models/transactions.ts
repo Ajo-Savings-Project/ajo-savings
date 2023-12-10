@@ -1,39 +1,39 @@
-import { Model, DataTypes } from "sequelize";
-import { db } from "../config";
-import Wallets from "./wallets";
-import Users from "./users";
+import { Model, DataTypes } from 'sequelize'
+import { db } from '../config'
+import Wallets from './wallets'
+import Users from './users'
 
 export enum action {
-  DEBIT = "Debit",
-  CREDIT = "Credit",
+  DEBIT = 'Debit',
+  CREDIT = 'Credit',
 }
 
 export enum transaction_status {
-  SUCCESSFUL = "Successful",
-  PENDING = "Pending",
-  UNSUCCESSFUL = "Unsuccessful",
+  SUCCESSFUL = 'Successful',
+  PENDING = 'Pending',
+  UNSUCCESSFUL = 'Unsuccessful',
 }
 
 export enum transaction_type {
-  GLOBAL = "Global",
-  SAVINGS = "Savings",
-  GROUP_WALLET = "Group Wallet",
+  GLOBAL = 'Global',
+  SAVINGS = 'Savings',
+  GROUP_WALLET = 'Group Wallet',
 }
 
 export type TransactionAttributes = {
-  id: string;
-  wallet_id: string;
-  owner_id: string;
-  amount: number;
-  status: string;
-  action: string;
-  type: string;
-  receiver: string;
-  created_at: Date;
-};
+  id: string
+  wallet_id: string
+  owner_id: string
+  amount: number
+  status: string
+  action: string
+  type: string
+  receiver: string
+  created_at: Date
+}
 
 class Transactions extends Model<TransactionAttributes> {
-  static transaction: any;
+  static transaction: never
 }
 
 Transactions.init(
@@ -47,14 +47,14 @@ Transactions.init(
       type: DataTypes.UUID,
       references: {
         model: Wallets,
-        key: "id",
+        key: 'id',
       },
     },
     owner_id: {
       type: DataTypes.UUID,
       references: {
         model: Users,
-        key: "id",
+        key: 'id',
       },
     },
     amount: {
@@ -85,17 +85,17 @@ Transactions.init(
   },
   {
     sequelize: db,
-    tableName: "Transactions",
-    modelName: "Transactions",
+    tableName: 'Transactions',
+    modelName: 'Transactions',
   }
-);
+)
 
 Transactions.belongsTo(Wallets, {
-  foreignKey: "wallet_id",
-});
+  foreignKey: 'wallet_id',
+})
 
 Transactions.belongsTo(Users, {
-  foreignKey: "owner_id",
-});
+  foreignKey: 'owner_id',
+})
 
-export default Transactions;
+export default Transactions
