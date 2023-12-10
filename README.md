@@ -5,19 +5,11 @@ Take control of your finances and unlock a brighter financial future.
 
 ## Project Installation
 
-**Setup Client:**
+**Project Setup:**
 
 ```bash
-cd client
 yarn
 yarn dev
-```
-
-**Setup Server:**
-
-```bash
-cd server
-yarn
 ```
 
 **Project Guides**

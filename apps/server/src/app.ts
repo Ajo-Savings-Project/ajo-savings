@@ -50,5 +50,7 @@ app.use(function (err: HttpError, req: Request, res: Response) {
 const port = ENV.PORT || 5500
 
 app.listen(port, () => {
-  console.log(`server running on ${port}`)
+  console.log(
+    `\n\nAjo Server:\nserver running on http://localhost:${port}/api-docs`
+  )
 })
