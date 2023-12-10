@@ -1,0 +1,48 @@
+{
+  "name": "ajo-backend",
+  "version": "0.0.1",
+  "main": "app.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint . --fix --report-unused-disable-directives --max-warnings 0",
+    "dev": "NODE_ENV=development nodemon",
+    "prod": "NODE_ENV=production nodemon",
+    "build": "tsc -w"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.6",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.54.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.54.0",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.1",
+    "pg": "^8.11.3",
+    "sequelize": "^6.35.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --ignore-unknown --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.x",
+    "yarn": ">1.x || <=2"
+  }
+}

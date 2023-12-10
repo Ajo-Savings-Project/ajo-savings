@@ -1,0 +1,17 @@
+# IDEs
+.idea
+.vscode
+
+.DS_Store
+
+node_modules/
+yarn.*
+.yarn/
+
+**/node_modules/
+**/.yarn/
+**/.env*
+!**/.env.sample
+**/.DS_Store
+**/yarn-error.log
+**/dist

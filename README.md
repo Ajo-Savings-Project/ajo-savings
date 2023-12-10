@@ -5,19 +5,11 @@ Take control of your finances and unlock a brighter financial future.
 
 ## Project Installation
 
-**Setup Client:**
+**Project Setup:**
 
 ```bash
-cd client
 yarn
 yarn dev
-```
-
-**Setup Server:**
-
-```bash
-cd server
-yarn
 ```
 
 **Project Guides**
@@ -26,14 +18,15 @@ yarn
 2. [Atomic Design pattern]() is used to structure this project
 3. Branch names should follow this format **CU-<task-id>/<task-name>**
 
---- 
+---
+
 **Git flow**
 
 ```
 git checkout main
 git pull origin main
 git checkout <your-branch>
-git pull --rebase origin main  
+git pull --rebase origin main
 git push origin HEAD
 ```
 
@@ -42,6 +35,6 @@ git push origin HEAD
 ```
 git add .
 git commit --amend --no-edit
-git pull --rebase origin main  
+git pull --rebase origin main
 git push origin HEAD -f
 ```

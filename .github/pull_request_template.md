@@ -25,9 +25,11 @@ Please check all that apply.
 - [ ] Does the endpoint return the correct success/error format?
 
 ---
+
 **Screenshots**  
 _add relevant screenshots here_
 
 ---
+
 **Test Coverage**  
 _add relevant screenshots here_
