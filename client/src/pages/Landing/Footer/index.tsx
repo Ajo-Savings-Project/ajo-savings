@@ -8,10 +8,12 @@ import Youtube from './images/youtube.svg?react'
 import styles from './footer.module.scss'
 
 const socials = [
-  { icon: Instagram, link: '#' },
-  { icon: Twitter, link: '#' },
-  { icon: Youtube, link: '#' },
+  { icon: Instagram, link: '#', name: 'instagram' },
+  { icon: Twitter, link: '#', name: 'twitter' },
+  { icon: Youtube, link: '#', name: 'youtube' },
 ]
+
+const supportEmail = 'helpsupport@easylend.com'
 
 const Footer = () => {
   return (
@@ -25,12 +27,22 @@ const Footer = () => {
         />
         <div className={styles.footerEnquiry}>
           <Text content={'For more enquiries:'} color={'White'} />
-          <Text content={'helpsupport@easylend.com'} color={'White'} />
+          <Text color={'White'}>
+            <a href={`mailto:${supportEmail}`} data-testid="support-email">
+              helpsupport@easylend.com
+            </a>
+          </Text>
         </div>
         <div className={styles.footerCopyAndSocials}>
           <div className={styles.footerSocials}>
-            {socials.map(({ icon: Icon, link }, idx) => (
-              <a key={idx} href={link} rel="noreferrer" target="_blank">
+            {socials.map(({ icon: Icon, name, link }) => (
+              <a
+                key={name}
+                data-testid={'socials'}
+                href={link}
+                rel="noreferrer"
+                target="_blank"
+              >
                 <Icon />
               </a>
             ))}
