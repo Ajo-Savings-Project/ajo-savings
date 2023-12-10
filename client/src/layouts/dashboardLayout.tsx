@@ -37,12 +37,7 @@ const DashboardLayout = () => {
   return (
     <>
       <AutoLogOut />
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title style={{ textTransform: 'capitalize' }}>
-          {getHeaderTitle(pageTitle)}
-        </title>
-      </Helmet>
+      <Helmet title={getHeaderTitle(pageTitle)} />
       <div className={styles.layout}>
         <aside>
           <Sidebar

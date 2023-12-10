@@ -47,6 +47,10 @@
   color: var(--gray-400);
   border: 1px solid var(--gray-300);
   font-weight: 400;
+
+  &:active {
+    background-color: unset;
+  }
 }
 
 .divider {

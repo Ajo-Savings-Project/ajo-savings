@@ -30,6 +30,7 @@ const AuthLayout = () => {
 
   return (
     <>
+      <Helmet title={getHeaderTitle(pageTitle)} />
       {showAutoLogoutMessage && (
         <div style={{ backgroundColor: 'var(--primary-500)', padding: '1rem' }}>
           <Text
@@ -39,10 +40,7 @@ const AuthLayout = () => {
           />
         </div>
       )}
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{getHeaderTitle(pageTitle)}</title>
-      </Helmet>
+
       <div className={styles.layout}>
         <div className={styles.layoutBg}>
           <Text

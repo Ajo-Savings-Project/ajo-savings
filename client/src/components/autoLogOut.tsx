@@ -10,8 +10,15 @@ const AutoLogOut = () => {
       clearTimeout(timeout)
       timeout = setTimeout(function () {
         handleClearSession({ auto: true })
+        // 5min
       }, 60000 * 5)
     }
+
+    timeout = setTimeout(() => {
+      // first run even if the mouse didn't move
+      func()
+    }, 2000)
+
     document.addEventListener('mousemove', func)
     document.addEventListener('keydown', func)
 
