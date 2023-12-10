@@ -4,8 +4,7 @@
   "main": "app.ts",
   "license": "MIT",
   "scripts": {
-    "prepare": "husky install",
-    "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "dev": "NODE_ENV=development nodemon",
     "prod": "NODE_ENV=production nodemon",
     "build": "tsc -w"

@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: PR/Client
+    name: PR Lint and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -21,25 +21,13 @@ jobs:
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          cache-dependency-path: '**/yarn.lock'
           node-version: 18
           cache: "yarn"
 
-      - name: Install Dependencies (Client)
-        working-directory: ./client
+      - name: Install Dependencies
         run: yarn --frozen-lockfile
 
-      - name: Go into client
-        working-directory: ./client
+      - name: Format and Test
         run: | 
           yarn lint
           yarn test
-
-      - name: Install Dependencies (Server)
-        working-directory: ./server
-        run: yarn --frozen-lockfile
-
-      - name: Go into server
-        working-directory: ./server
-        run: |
-          yarn lint
