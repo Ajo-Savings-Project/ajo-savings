@@ -3,7 +3,7 @@ name: Pull Request
 on:
   pull_request:
     branches:
-      - fe-staging
+      - main
     types:
       - opened
       - synchronize
@@ -21,12 +21,25 @@ jobs:
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
+          cache-dependency-path: '**/yarn.lock'
           node-version: 18
           cache: "yarn"
 
-      - name: Install Dependencies
+      - name: Install Dependencies (Client)
+        working-directory: ./client
         run: yarn --frozen-lockfile
 
-      - name: Format and Lint
+      - name: Go into client
+        working-directory: ./client
+        run: | 
+          yarn lint
+          yarn test
+
+      - name: Install Dependencies (Server)
+        working-directory: ./server
+        run: yarn --frozen-lockfile
+
+      - name: Go into server
+        working-directory: ./server
         run: |
           yarn lint

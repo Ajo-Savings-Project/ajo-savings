@@ -1,28 +1,33 @@
-// import { createRoutes } from 'router/createRoutes.ts'
-//
-//
-// describe("createRoutes", () => {
-//   const sampleRoutes = {
-//     auth:{
-//       root: "/auth",
-//       login: "login",
-//       logout: "logout"
-//     },
-//     dashboard: {
-//       root: "/dashboard",
-//       page2: {
-//         root: "/page2",
-//         nested: "nested"
-//       }
-//     }
-//   }
-//
-//   const expectedResult = {}
-//
-//   it('should say lol', function() {
-//     const result = createRoutes(sampleRoutes)
-//     expect(result).toBe(expectedResult)
-//   })
-// })
+import { createRoutes } from '../createRoutes.ts'
 
-export {}
+describe('createRoutes', () => {
+  const sampleRoutes = {
+    auth: {
+      root: '/auth',
+      login: 'login',
+      logout: 'logout',
+    },
+  }
+
+  const expectedResult = {
+    auth: {
+      root: {
+        path: '/auth',
+        abs_path: '/auth',
+      },
+      login: {
+        path: 'login',
+        abs_path: '/auth/login',
+      },
+      logout: {
+        path: 'logout',
+        abs_path: '/auth/logout',
+      },
+    },
+  }
+
+  it('should transform routes and should contain path and abs_path', function () {
+    const result = createRoutes(sampleRoutes)
+    expect(result).toStrictEqual(expectedResult)
+  })
+})

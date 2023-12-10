@@ -10,6 +10,13 @@
   &Enquiry {
     line-height: 1.5;
     @include px-to-rem(margin, 40, 0);
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: inherit;
+      font-size: inherit;
+    }
   }
 
   &Socials {
