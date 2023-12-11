@@ -10,6 +10,7 @@ describe('<Footer />', () => {
     expect(screen.getByText(HEADER_TITLE)).toBeInTheDocument()
 
     const supportEmailLink = screen.getByTestId('support-email')
+
     expect(supportEmailLink).toBeInTheDocument()
     expect(supportEmailLink).toHaveAttribute(
       'href',
@@ -17,6 +18,7 @@ describe('<Footer />', () => {
     )
 
     const socialIcons = screen.getAllByTestId('socials')
+
     expect(socialIcons).toHaveLength(3)
 
     expect(
