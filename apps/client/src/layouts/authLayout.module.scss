@@ -1,21 +1,130 @@
+ .layout {
+   display: grid;
+   grid-template-columns: 1fr;
+   min-height: 100dvh;
+
+   &Bg {
+     display: none;
+   }
+
+   &Form {
+     display: grid;
+     grid-template-rows: 1fr auto;
+     padding: 0 20px;
+
+     > section > div {
+       max-width: 500px;
+       margin: 6rem auto 0;
+     }
+
+     > footer {
+       margin-top: 20px;
+     }
+   }
+
+   @media screen and (min-width: 62.5rem) {
+     grid-template-columns: 1fr 1fr;
+
+     &Bg {
+       display: block;
+     }
+   }
+ }
+
+ .footer {
+   display: flex;
+   justify-content: space-between;
+   padding: 1rem 0;
+   font-size: 1rem;
+ }
+
 .layout {
   display: grid;
   grid-template-columns: 1fr;
   min-height: 100dvh;
 
+  &Slide {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: all 0.5 ease;
+  }
+  &SlideCarousel {
+    display: flex;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.5 ease;
+    animation: carouselSlideUp 1s ease 0.5s;
+    animation-fill-mode: forwards;
+  }
   &Bg {
     display: none;
+    position: relative;
+    overflow: hidden;
   }
 
+  &HeaderContainer {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    z-index: 1200;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  &Current {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &Current &Content {
+    opacity: 1;
+  }
+
+  &Content {
+    position: absolute;
+    text-align: center;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.3);
+    animation: slideUp 1s ease 0.5s;
+    animation-fill-mode: forwards;
+    // visibility: hidden;
+    gap: 2rem;
+    display: grid;
+    padding: 1rem 0;
+  }
+
+  @keyframes slideUp {
+    0% {
+      visibility: visible;
+    }
+    100% {
+      visibility: visible;
+      top: 70%;
+    }
+  }
+  @keyframes carouselSlideUp {
+    0% {
+      visibility: visible;
+    }
+    100% {
+      visibility: visible;
+      // top: 75%;
+    }
+  }
   &Form {
     display: grid;
     grid-template-rows: 1fr auto;
-    padding: 0 20px;
-
-    > section > div {
-      max-width: 400px;
-      margin: 6rem auto 0;
-    }
 
     > footer {
       margin-top: 20px;
@@ -29,11 +138,30 @@
       display: block;
     }
   }
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 0;
-  font-size: 1rem;
+  &AllLoginimg {
+    width: auto;
+    height: 100%;
+  }
+  &CarouselContainer {
+    display: flex;
+    flex-direction: row;
+  }
+  &CarouselContainer > ul {
+    display: flex;
+    margin: 0.1rem;
+    list-style-type: none;
+  }
+  &CarouselAll {
+    height: 5px;
+    width: 5px;
+    border-radius: 5px;
+    background-color: #d9d9d9;
+    z-index: 1656;
+    font-size: 1px;
+    cursor: pointer;
+  }
+  &CarouselCurrent {
+    width: 40px;
+    background-color: white;
+  }
 }
