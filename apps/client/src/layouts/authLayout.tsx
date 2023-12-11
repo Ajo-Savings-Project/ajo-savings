@@ -4,8 +4,7 @@ import { Helmet } from 'react-helmet'
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { routes } from 'router'
 import { getHeaderTitle } from 'utils/getHeaderTitle.ts'
-import { Text } from '../components'
-import { HEADER_TITLE } from '../appConstants'
+import { AuthCarousel, Text } from 'components'
 import styles from './authLayout.module.scss'
 
 export const AuthLayoutFooter = ({ className }: { className?: string }) => {
@@ -30,7 +29,6 @@ const AuthLayout = () => {
 
   return (
     <>
-      <Helmet title={getHeaderTitle(pageTitle)} />
       {showAutoLogoutMessage && (
         <div style={{ backgroundColor: 'var(--primary-500)', padding: '1rem' }}>
           <Text
@@ -40,15 +38,13 @@ const AuthLayout = () => {
           />
         </div>
       )}
-
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{getHeaderTitle(pageTitle)}</title>
+      </Helmet>
       <div className={styles.layout}>
         <div className={styles.layoutBg}>
-          <Text
-            font={'Bodoni'}
-            className={classNames('app-logo')}
-            content={HEADER_TITLE}
-          />
-          <div>image</div>
+          <AuthCarousel />
         </div>
         <div className={styles.layoutForm}>
           <section>

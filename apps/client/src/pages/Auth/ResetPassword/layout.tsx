@@ -4,7 +4,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { HEADER_TITLE } from '../../../appConstants'
 import { Text } from '../../../components'
 import { useAuth } from '../../../contexts'
-import { AuthLayoutFooter } from '../../../layouts/authLayout.tsx'
+// import { AuthLayoutFooter } from '../../../layouts/authLayout.tsx'
 import { routes } from '../../../router'
 import { getHeaderTitle } from '../../../utils/getHeaderTitle.ts'
 import styles from './resetPassword.module.scss'
@@ -31,7 +31,7 @@ const ResetPasswordLayout = () => {
         <div className={styles.layoutContent}>
           <Outlet />
         </div>
-        <AuthLayoutFooter className={styles.layoutFooter} />
+        {/* <AuthLayoutFooter className={styles.layoutFooter} /> */}
       </div>
     </>
   )
