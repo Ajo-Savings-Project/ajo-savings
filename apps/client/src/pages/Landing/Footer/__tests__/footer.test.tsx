@@ -18,6 +18,7 @@ describe('<Footer />', () => {
     )
 
     const socialIcons = screen.getAllByTestId('socials')
+
     expect(socialIcons).toHaveLength(3)
 
     expect(
