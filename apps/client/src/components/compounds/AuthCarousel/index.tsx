@@ -1,12 +1,12 @@
+import { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { Text } from 'components'
 import { HEADER_TITLE } from 'appConstants'
 import styles from './authcarousel.module.scss'
-import AjoLoginImg1 from './Image/AjoLoginImg1.jpeg'
-import AjoLoginImg2 from './Image/AjologinImg2.jpeg'
-import AjoLoginImg3 from './Image/AjoLoginImg3.jpeg'
-import AjoLoginImg4 from './Image/AjoLoginImg4.jpeg'
-import { useEffect, useState } from 'react'
+import AjoLoginImg1 from './Image/img1.jpeg'
+import AjoLoginImg2 from './Image/img2.jpeg'
+import AjoLoginImg3 from './Image/img3.jpeg'
+import AjoLoginImg4 from './Image/img4.jpeg'
 
 const slideData = [
   {
