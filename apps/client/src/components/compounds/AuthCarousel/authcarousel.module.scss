@@ -1,0 +1,80 @@
+.carousel {
+  $min-height: 100dvh;
+
+  position: relative;
+  min-height: $min-height;
+
+  &Logo {
+    position: absolute;
+    padding: 3rem;
+    z-index: 1;
+  }
+
+  &Images {
+    min-height: $min-height;
+    background: black;
+
+    $img-opacity: 0.67;
+
+    @keyframes fade-in {
+      from {
+        opacity: 0.3;
+      }
+      to {
+        opacity: $img-opacity;
+      }
+    }
+
+    &Image {
+      display: none;
+      width: 100%;
+      height: $min-height;
+      object-fit: cover;
+      opacity: $img-opacity;
+      animation: fade-in 3s;
+    }
+
+    &Active {
+      display: block;
+    }
+  }
+
+  &Description {
+    position: absolute;
+    bottom: 12.5rem;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.875rem;
+
+    p,
+    ul {
+      max-width: 400px;
+      text-align: center;
+    }
+
+    > ul {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    &Button {
+      border: none;
+      background-color: var(--mute);
+      height: 4px;
+      width: 4px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: width 0.5s;
+
+      &Active {
+        background-color: var(--white);
+        width: 20px;
+      }
+    }
+  }
+}
