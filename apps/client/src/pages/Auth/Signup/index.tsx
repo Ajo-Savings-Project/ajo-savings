@@ -7,7 +7,6 @@ import GoogleIcon from '../Login/GoogleGoogleIcon.svg?react'
 import styles from '../Login/login.module.scss'
 import { RegisterSchema, useRegisterMutation } from './request'
 import { z } from 'zod'
-import { useAuth } from 'contexts'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -23,19 +22,15 @@ const SignupPage = () => {
     resolver: zodResolver(RegisterSchema),
   })
 
-  const { handleAuthSession } = useAuth()
-
   const apiSignUp = useRegisterMutation()
 
   const handleRegister = async (values: RegisterSchemaType) => {
     try {
-       await apiSignUp.mutateAsync(values)
-
+      await apiSignUp.mutateAsync(values)
     } finally {
-      console.log(routes, 'routes');
-      
+      console.log(routes, 'routes')
+
       navigate(routes.auth.login.abs_path)
-  
     }
   }
 
