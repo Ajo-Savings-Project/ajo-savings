@@ -8,9 +8,16 @@
   }
 
   &Form {
+    $footer-height: 70px;
+
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr minmax($footer-height, auto);
     padding: 0 20px;
+
+    > section {
+      height: calc(100dvh - $footer-height);
+      overflow: auto;
+    }
 
     > section > div {
       max-width: 400px;
