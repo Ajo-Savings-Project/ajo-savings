@@ -1,0 +1,18 @@
+.modalContainer {
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  height: 100dvh;
+  .overlay {
+    transition: 0.5s;
+    width: 100%;
+    height: 100%;
+    background: #088ab23b;
+    position: absolute;
+    top: 0;
+    z-index: -20;
+  }
+}
