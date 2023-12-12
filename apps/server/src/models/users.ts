@@ -1,4 +1,10 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from 'sequelize'
 import { db } from '../config'
 
 export enum role {
@@ -6,30 +12,34 @@ export enum role {
   CONTRIBUTOR = 'Contributor', //NORMAL USER
 }
 
-export type UserAttributes = {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  profilePic: string
-  password: string
-  role: string
-  phone: string
-  gender: string
-  occupation: string
-  date_of_birth?: Date
-  bvn: string
-  address: string
-  identification_number: string
-  identification_doc: string
-  proof_of_address_doc: string
-  otp?: string
-  otp_expiry?: Date
-  createdAt?: Date
-  updatedAt?: Date
-}
+const TABLE_NAME = 'Users'
 
-class Users extends Model<UserAttributes> {}
+// https://sequelize.org/docs/v6/other-topics/typescript/
+class Users extends Model<
+  InferAttributes<Users>,
+  InferCreationAttributes<Users>
+> {
+  declare id: string
+  declare firstName: string
+  declare lastName: string
+  declare email: string
+  declare profilePic: string | null
+  declare password: string
+  declare role: string
+  declare phone: string
+  declare gender: string | null
+  declare occupation: string | null
+  declare date_of_birth: CreationOptional<Date>
+  declare bvn: string | null
+  declare address: string | null
+  declare identification_number: string
+  declare identification_doc: string
+  declare proof_of_address_doc: string | null
+  declare otp: CreationOptional<string>
+  declare otp_expiry: CreationOptional<Date>
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: CreationOptional<Date>
+}
 
 Users.init(
   {
@@ -114,9 +124,9 @@ Users.init(
   },
   {
     sequelize: db,
-    tableName: 'Users',
-    modelName: 'Users',
-    timestamps: false,
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
+    timestamps: true,
   }
 )
 

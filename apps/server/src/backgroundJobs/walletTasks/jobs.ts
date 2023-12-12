@@ -1,23 +1,13 @@
-import { mailOTP } from '../../utils/mailFunctions'
-import Wallets, { WalletAttributes, type } from '../../models/wallets'
+import { v4 as uuidV4 } from 'uuid'
 import Settings, { SettingsAttribute } from '../../models/settings'
-import { v4 } from 'uuid'
-
-export interface MailOTPJobData {
-  email: string
-  otp: string
-}
+import Wallets, { type, WalletAttributes } from '../../models/wallets'
 
 export interface WalletJobData {
   userId: string
 }
 
-const mailOTPJob = async ({ email, otp }: MailOTPJobData) => {
-  mailOTP(email, otp)
-}
-
 const createGlobalWalletJob = async (data: WalletJobData) => {
-  const globalWalletId = v4()
+  const globalWalletId = uuidV4()
   const newGlobalWallet = (await Wallets.create({
     id: globalWalletId,
     user_id: data.userId,
@@ -28,14 +18,13 @@ const createGlobalWalletJob = async (data: WalletJobData) => {
     created_at: new Date(),
   })) as unknown as WalletAttributes
 
-  const globalWallet = (await Wallets.findOne({
+  return (await Wallets.findOne({
     where: { id: newGlobalWallet.id },
   })) as unknown as WalletAttributes
-  return globalWallet
 }
 
 const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
-  const savingsWalletId = v4()
+  const savingsWalletId = uuidV4()
   const newSavingsWallet = (await Wallets.create({
     id: savingsWalletId,
     user_id: data.userId,
@@ -45,40 +34,35 @@ const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
     earnings: [],
     created_at: new Date(),
   })) as unknown as WalletAttributes
-  const savingsWallet = (await Wallets.findOne({
+  return (await Wallets.findOne({
     where: { id: newSavingsWallet.id },
   })) as unknown as WalletAttributes
-
-  return savingsWallet
 }
 
 const createPersonalGroupWalletJob = async (data: WalletJobData) => {
-  const personalGroupWalletId = v4()
-  const newpersonalGroupWallet = (await Wallets.create({
+  const personalGroupWalletId = uuidV4()
+  const personalGroupWallet = (await Wallets.create({
     id: personalGroupWalletId,
     user_id: data.userId,
-    total_amount: 1000,
+    total_amount: 0,
     type: type.GROUP_WALLET,
     total_income: 0,
     earnings: [],
     created_at: new Date(),
   })) as unknown as WalletAttributes
-  const personalGroupWallet = (await Wallets.findOne({
-    where: { id: newpersonalGroupWallet.id },
+  return (await Wallets.findOne({
+    where: { id: personalGroupWallet.id },
   })) as unknown as WalletAttributes
-  return personalGroupWallet
 }
 
 const createSettingsJob = async (data: WalletJobData) => {
-  const settings = (await Settings.create({
-    id: v4(),
+  return (await Settings.create({
+    id: uuidV4(),
     owner_id: data.userId,
   })) as unknown as SettingsAttribute
-  return settings
 }
 
 export {
-  mailOTPJob,
   createGlobalWalletJob,
   createPersonalSavingsWalletJob,
   createPersonalGroupWalletJob,

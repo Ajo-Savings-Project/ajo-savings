@@ -25,7 +25,7 @@ const RegisterResponseSchema = z.object({
 export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: (data: z.infer<typeof RegisterSchema>) =>
-      request.post('/signup', data).then((r) => {
+      request.post('/users/register', data).then((r) => {
         const result = RegisterResponseSchema.safeParse(r.data)
         if (result.success) {
           return r

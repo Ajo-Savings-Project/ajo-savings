@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser } from '../controllers/userController'
+import { registerUser } from '../../controllers/userController'
 
 const router = Router()
 
@@ -97,7 +97,7 @@ const router = Router()
  *   name: Users
  *   description: All user APIs
  * paths:
- *   /users/register:
+ *   /api/v1/users/register:
  *     post:
  *       summary: Register new user
  *       tags: [Users]

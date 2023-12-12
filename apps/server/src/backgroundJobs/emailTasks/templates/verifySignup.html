@@ -1,0 +1,82 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Welcome to {{title}}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 90%;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #088ab2;
+        text-align: center;
+        font-weight: 800;
+      }
+      p {
+        margin-bottom: 30px;
+        color: #777777;
+        text-align: center;
+      }
+      .otp {
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-align: center;
+        color: #ff9900;
+        display: block;
+        margin-top: 20px;
+      }
+      .team {
+        color: #088ab2;
+        font-weight: 500;
+      }
+      .otp {
+        border-radius: 15px;
+        padding: 10px 20px;
+        font-size: 20px;
+        display: block;
+        margin: auto;
+        color: #000;
+        cursor: pointer;
+      }
+      .signature {
+        color: #444444;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome to Ajó Savings</h2>
+      <p>Hello {{firstName}},</p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab
+        consequuntur corporis deserunt eaque illo iure minus pariatur quaerat
+        sequi tempore! Aliquam architecto consectetur harum qui quod repellendus
+        suscipit, tempore voluptates?Adipisci, eaque ex molestias numquam
+        quaerat repellat.
+      </p>
+      <p>
+        <a href="{{link}}">Click here</a>&nbsp;to verify your email or copy this
+        and paste it in your browser
+        <br />
+        {{link}}
+      </p>
+      <p class="otp">{{otp}}</p>
+      <p class="signature">Thank You<br /><span class="team">TEAM AJó</span></p>
+    </div>
+  </body>
+</html>

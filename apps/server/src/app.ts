@@ -4,18 +4,17 @@ import dotenv from 'dotenv'
 import logger from 'morgan'
 import path from 'path'
 import createError, { HttpError } from 'http-errors'
-import userRoutes from './routes/users'
-import groupRoutes from './routes/groups'
+import apiV1Routes from './routes/v1'
 import swaggerUi from 'swagger-ui-express'
 import specs from './swagger'
 import { db, ENV } from './config'
-import { serverAdapter } from './controllers/background-jobs/bullBoardConfig'
+import { serverAdapter } from './config/bullBoardConfig'
+import cors from 'cors'
 
 dotenv.config()
 const app = express()
 
-export const redisOptions = { host: 'localhost', port: 6379 }
-
+app.use(cors())
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -34,8 +33,7 @@ db.sync({
     console.log(err)
   })
 
-app.use('/users', userRoutes)
-app.use('/groups', groupRoutes)
+app.use('/api/v1', apiV1Routes)
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
@@ -57,6 +55,10 @@ const port = ENV.PORT || 5500
 
 app.listen(port, () => {
   console.log(
-    `\n\nAjo Server:\nserver running on http://localhost:${port}/api-docs`
+    `\n\nAjo Server:\n\nApi docs, open @  http://localhost:${port}/api-docs`
   )
+  console.log(`\nLocal baseUrl, use @ http://localhost:${port}/api/`)
+  console.log(`\nBull UI, open @ http://localhost:${port}/admin/queues`)
+  //you can use docker: docker run -d -p 6379:6379 redis
+  console.log('\nMake sure Redis is running on port 6379 by default\n')
 })

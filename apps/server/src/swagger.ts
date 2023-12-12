@@ -9,7 +9,7 @@ const options = {
       description: 'Describes all the available  APIs on the Ajo-savings app',
     },
   },
-  apis: ['src/routes/*.ts'], // Path to your route files
+  apis: ['src/routes/v1/*.ts'], // Path to your route files
 }
 
 const specs = swaggerJsdoc(options)
