@@ -9,9 +9,12 @@ import groupRoutes from './routes/groups'
 import swaggerUi from 'swagger-ui-express'
 import specs from './swagger'
 import { db, ENV } from './config'
+import { serverAdapter } from './controllers/background-jobs/bullBoardConfig'
 
 dotenv.config()
 const app = express()
+
+export const redisOptions = { host: 'localhost', port: 6379 }
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -19,8 +22,11 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
+app.use('/admin/queues', serverAdapter.getRouter())
 
-db.sync({})
+db.sync({
+  // force:true
+})
   .then(() => {
     console.log('Database is connected')
   })
