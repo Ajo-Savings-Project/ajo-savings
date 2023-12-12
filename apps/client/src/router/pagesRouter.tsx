@@ -10,6 +10,7 @@ import TransactionsPage from 'pages/Dashboard/Transactions.tsx'
 import LandingPage from 'pages/Landing'
 import PlaygroundPage from 'pages/Playground'
 import ResetPasswordPage from 'pages/Auth/ResetPassword'
+import VerifyEmailPage from 'pages/Auth/Signup/verifyEmail.tsx'
 
 import AuthLayout from '../layouts/authLayout.tsx'
 import DashboardLayout from '../layouts/dashboardLayout.tsx'
@@ -59,6 +60,7 @@ const pagesRouter = createBrowserRouter([
       { path: routes.auth.signup.path, element: <SignupPage /> },
     ],
   },
+  { path: routes.auth['verify-email'].path, element: <VerifyEmailPage /> },
 ])
 
 export default pagesRouter
