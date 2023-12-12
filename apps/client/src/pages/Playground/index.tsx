@@ -13,9 +13,9 @@ import toast from 'react-hot-toast'
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
-  const notify = () => toast.success('created successfully')
-  const notifyWarning = () => toast.error('Error creating User')
-  const emoji = () =>
+  const notify = (): string => toast.success('created successfully')
+  const notifyWarning = (): string => toast.error('Error creating User')
+  const emoji = (): string =>
     toast('Good Job!', {
       icon: '👏',
     })
