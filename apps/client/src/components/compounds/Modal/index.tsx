@@ -9,7 +9,7 @@ type RenderModalOnOpenT = { onOpen: () => void }
 interface ModalProps {
   renderModalContent: ({ onClose }: RenderModalContentT) => React.ReactElement
   renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => React.ReactElement
-  initialState: boolean
+  initialState?: boolean
 }
 
 export default function Modal({

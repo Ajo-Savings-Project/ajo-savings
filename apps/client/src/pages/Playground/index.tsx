@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Button, Input, Select, Text, Textarea } from 'components'
+import { Button, Input, Select, Text, Textarea, Modal } from 'components'
 import styles from './play.module.scss'
 
 const textContent = 'the quick brown fox jumps over the lazy dog'
@@ -7,12 +7,22 @@ const textContent = 'the quick brown fox jumps over the lazy dog'
 const Playground = () => {
   return (
     <section className={classNames('container', styles.playground)}>
+
+      <Modal initialState={true} renderOnOpen={({onOpen})=><button onClick={onOpen}>add</button>} renderModalContent={({onClose})=>(<div>
+<button onClick={onClose}>Close</button>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore cum vitae ipsam veritatis natus, deserunt eveniet dolore, eaque reiciendis, perferendis consectetur eius inventore sed cupiditate perspiciatis rem quis blanditiis dicta?</p>
+
+      </div>
+        
+
+      )} />
       <Text
         font={'Bodoni'}
         size={'Heading'}
         level={1}
         content={'Ajo Component Playground'}
       />
+
       <section>
         <Text
           level={2}
