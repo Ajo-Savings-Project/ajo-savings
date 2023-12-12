@@ -1,4 +1,5 @@
 export { default as Sidebar } from './Sidebar'
+export {default as Modal} from './Modal'
 export { default as DashboardHeader } from './DashboardHeader'
 export { default as ReactHookFormErrorRender } from './ReactHookFormErrorRender'
 export { default as AuthCarousel } from './AuthCarousel'
