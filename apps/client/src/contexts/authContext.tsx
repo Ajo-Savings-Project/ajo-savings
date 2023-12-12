@@ -13,6 +13,7 @@ interface AuthContextI extends ContextValueT {
     token?: string
     id?: string
     refreshToken: string
+    
   }) => void
   handleClearSession: (options: { auto: boolean }) => void
 }
