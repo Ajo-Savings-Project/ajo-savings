@@ -9,10 +9,17 @@ import {
   InfoCard,
 } from 'components'
 import styles from './play.module.scss'
-
+import toast from 'react-hot-toast'
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
+  const notify = () => toast.success('created successfully')
+  const notifyWarning = () => toast.error('Error creating User')
+  const emoji = () =>
+    toast('Good Job!', {
+      icon: '👏',
+    })
+
   return (
     <section className={classNames('container', styles.playground)}>
       <Modal
@@ -26,6 +33,12 @@ const Playground = () => {
           />
         )}
       />
+
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Button onClick={notify} text={'Success'} />
+        <Button onClick={notifyWarning} text={'Failed'} />
+        <Button onClick={emoji} text={'Show emoji'} />
+      </div>
 
       <Text
         font={'Bodoni'}
