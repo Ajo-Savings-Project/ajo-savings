@@ -25,13 +25,10 @@ const SignupPage = () => {
   const apiSignUp = useRegisterMutation()
 
   const handleRegister = async (values: RegisterSchemaType) => {
-    try {
-      await apiSignUp.mutateAsync(values)
-    } finally {
-      console.log(routes, 'routes')
-
-      navigate(routes.auth.login.abs_path)
-    }
+    const _newValue: Partial<RegisterSchemaType> = { ...values }
+    delete _newValue['confirmPassword']
+    const res = await apiSignUp.mutateAsync(_newValue as RegisterSchemaType)
+    navigate(routes.auth.login.abs_path, { state: res!.user })
   }
 
   return (
@@ -82,7 +79,7 @@ const SignupPage = () => {
             type={'text'}
             label={'Phone Number'}
             placeholder="Enter your phone number"
-            {...register('phoneNumber')}
+            {...register('phone')}
           />
 
           <Input
