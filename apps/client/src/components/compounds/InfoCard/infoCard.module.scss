@@ -8,7 +8,13 @@
   border-radius: 20px;
   &Icon {
     text-align: end;
-    margin: 14px 14px;
+    padding: 14px 14px;
+
+    > button {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
   }
   .cardBody {
     text-align: center;

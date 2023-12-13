@@ -22,6 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
-    <Toaster />
+    <Toaster position={'top-right'} />
   </React.StrictMode>
 )

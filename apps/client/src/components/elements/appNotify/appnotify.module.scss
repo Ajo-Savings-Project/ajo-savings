@@ -1,0 +1,117 @@
+.notify {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 12px 4px #0000002e;
+  max-width: 400px;
+  font-size: 0.875rem;
+
+  $pad: 15px;
+
+  &Actions,
+  &Message {
+    height: 100%;
+  }
+
+  &Message {
+    padding: $pad;
+    height: 100%;
+
+    > p:first-child {
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: capitalize;
+      margin-bottom: 10px;
+    }
+  }
+
+  &Actions {
+    $border: black;
+
+    border-left: 1px solid $border;
+    display: grid;
+    grid-auto-rows: auto;
+    align-items: center;
+    grid-auto-flow: dense;
+
+    > button {
+      padding: $pad;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 600;
+
+      &:active {
+        opacity: 0.5;
+      }
+    }
+
+    hr {
+      border: 0.5px solid $border;
+    }
+  }
+
+  &Error {
+    $color: var(--error-500);
+    $border: 1px solid $color;
+    border: $border;
+    .notifyActions {
+      border-left: $border;
+      button {
+        color: $color;
+      }
+      hr {
+        border: 0.5px solid $color;
+      }
+    }
+    .notifyMessage > p:first-child {
+      color: $color;
+    }
+  }
+
+  &Success {
+    $color: var(--green-active);
+    $border: 1px solid var(--green-active);
+
+    border: $border;
+    .notifyActions {
+      border-left: $border;
+
+      button {
+        color: $color;
+      }
+
+      hr {
+        border: 0.5px solid $color;
+      }
+    }
+    .notifyMessage > p:first-child {
+      color: $color;
+    }
+  }
+
+  &Info {
+    $color: var(--primary-600);
+    $border: 1px solid var(--primary-600);
+    border: $border;
+    .notifyActions {
+      border-left: $border;
+      button {
+        color: $color;
+      }
+      hr {
+        border: 0.5px solid $color;
+      }
+    }
+    .notifyMessage > p:first-child {
+      color: $color;
+    }
+  }
+
+  @media screen and (min-width: 32.25rem) {
+    min-width: 200px;
+  }
+}

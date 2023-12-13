@@ -5,35 +5,42 @@ import { z } from 'zod'
 export const ResetPasswordSchema = z.object({
   email: z.string().email(),
 })
+const ResetPasswordResponseSchema = z.object({
+  message: z.string(),
+})
 
 export const useResetPasswordMutation = () => {
   return useMutation({
-    mutationFn: (data: z.infer<typeof ResetPasswordSchema>) =>
-      request.post('/reset-password', data).then((r) => {
-        const result = ResetPasswordSchema.safeParse(r.data)
-        if (result.success) return r
-        return Promise.reject(result.error)
-      }),
+    mutationKey: ['reset-password'],
+    mutationFn: async (data: z.infer<typeof ResetPasswordSchema>) => {
+      const res = await request.post('/reset-password', data)
+      const result = ResetPasswordResponseSchema.safeParse(res.data)
+      if (result.success) return result.data
+    },
   })
 }
 
 const changePassErr = 'Should be minimum of 5 characters'
 export const ChangePasswordSchema = z
   .object({
-    newPassword: z.string().min(5, changePassErr),
-    confirmPassword: z.string().min(5, changePassErr),
+    newPassword: z.string().min(7, changePassErr),
+    confirmPassword: z.string().min(7, changePassErr),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],
   })
+
+const ChangePasswordResponseSchema = z.object({
+  message: z.string(),
+})
 export const useChangePasswordMutation = () => {
   return useMutation({
+    mutationKey: ['change-password'],
     mutationFn: async (data: z.infer<typeof ChangePasswordSchema>) => {
       const res = await request.post('/change-password', data)
-      const result = ChangePasswordSchema.safeParse(res.data)
+      const result = ChangePasswordResponseSchema.safeParse(res.data)
       if (result.success) return res
-      return Promise.reject(result.error)
     },
   })
 }

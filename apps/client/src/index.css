@@ -99,7 +99,8 @@ body {
   /* Firefox */
 }
 
-img {
+img,
+svg {
   vertical-align: middle;
 }
 
