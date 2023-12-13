@@ -19,7 +19,16 @@ const InfoCard = ({
   return (
     <div className={styles.cardContainer}>
       <div className={styles.cardContainerIcon}>
-        <Close onClick={onClick} />
+        <button
+          onClick={onClick}
+          style={{
+            border: 'none',
+            background: 'var(--white)',
+            cursor: 'pointer',
+          }}
+        >
+          <Close />
+        </button>
       </div>
       {children || (
         <div className={styles.cardBody}>
