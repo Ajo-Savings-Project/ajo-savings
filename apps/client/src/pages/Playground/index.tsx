@@ -13,9 +13,9 @@ import toast from 'react-hot-toast'
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
-  const notify = (): string => toast.success('created successfully')
-  const notifyWarning = (): string => toast.error('Error creating User')
-  const emoji = (): string =>
+  const notify = () => toast.success('created successfully')
+  const notifyWarning = () => toast.error('Error creating User')
+  const emoji = () =>
     toast('Good Job!', {
       icon: '👏',
     })
@@ -31,18 +31,6 @@ const Playground = () => {
             text="Account Updated!"
             Subtext="Your Account has been updated successfully."
           />
-        )}
-      />
-
-          <div>
-            <button onClick={onClose}>Close</button>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-              cum vitae ipsam veritatis natus, deserunt eveniet dolore, eaque
-              reiciendis, perferendis consectetur eius inventore sed cupiditate
-              perspiciatis rem quis blanditiis dicta?
-            </p>
-          </div>
         )}
       />
 
