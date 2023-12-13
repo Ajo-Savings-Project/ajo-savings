@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const request = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL as string,
+  baseURL: import.meta.env.VITE_BASE_URL || 'http://add.env.file',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -9,15 +9,23 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(
-  (req) => req,
+  (req) => {
+    console.log('req', req)
+    return req
+  },
   (error) => {
+    console.log('req error', error)
     return Promise.reject(error)
   }
 )
 
 request.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('response success', response)
+    return response
+  },
   (error) => {
+    console.log('response error', error)
     return Promise.reject(error)
   }
 )

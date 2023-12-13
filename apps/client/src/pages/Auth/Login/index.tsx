@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Button, Input, ReactHookFormErrorRender, Text } from 'components'
 import { useAuth } from 'contexts'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 import { routes } from 'router'
 import { HEADER_TITLE } from '../../../appConstants'
@@ -14,12 +14,17 @@ import GoogleIcon from './GoogleGoogleIcon.svg?react'
 type LoginSchemaType = z.infer<typeof LoginSchema>
 
 const LoginPage = () => {
+  const { state } = useLocation()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: state?.email,
+    },
   })
 
   const { handleAuthSession } = useAuth()
@@ -45,7 +50,13 @@ const LoginPage = () => {
           color={'Primary'}
           font={'Bodoni'}
         />
-        <Text content={'Welcome back to Ajó Savings.'} />
+        <Text
+          content={
+            state
+              ? `Welcome ${state?.firstName}. Login to continue.`
+              : 'Welcome back to Ajó Savings.'
+          }
+        />
       </div>
       <div className={styles.loginDivFormContainer}>
         <Button className={styles.googleButton}>

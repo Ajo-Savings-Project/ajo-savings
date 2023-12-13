@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
-    "@types/react-helmet": "^6.1.9",
     "axios": "^1.6.2",
     "classnames": "^2.3.2",
     "react": "^18.2.0",
@@ -24,9 +23,11 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.20.0",
     "vite-plugin-svgr": "^4.2.0",
+    "sass": "^1.69.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/react-helmet": "^6.1.9",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.11",
@@ -43,7 +44,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
     "prettier": "^3.1.0",
-    "sass": "^1.69.5",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
