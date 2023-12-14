@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser } from '../../controllers/userController'
+import { loginUser, registerUser } from '../../controllers/userController'
 
 const router = Router()
 
@@ -135,5 +135,75 @@ const router = Router()
  *                 message: "Internal Server Error"
  */
 router.post('/register', registerUser)
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: All user APIs
+ * paths:
+ *   /api/v1/users/login:
+ *     post:
+ *       summary: Login user
+ *       tags: [Users]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - email
+ *                 - password
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   description: Email address of the user
+ *                 password:
+ *                   type: string
+ *                   format: password
+ *                   description: User password
+ *       responses:
+ *         200:
+ *           description: Login successful
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                   method:
+ *                     type: string
+ *                   message:
+ *                     type: string
+ *                   user:
+ *                     type: object
+ *                     properties:
+ *                       email:
+ *                         type: string
+ *                       firstName:
+ *                         type: string
+ *                       lastName:
+ *                         type: string
+ *                       token:
+ *                         type: string
+ *         400:
+ *           description: Bad request
+ *           content:
+ *             application/json:
+ *               example:
+ *                 status: "error"
+ *                 message: "Invalid email or password"
+ *         500:
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Internal Server Error"
+ */
+
+router.post('/login', loginUser)
 
 export default router

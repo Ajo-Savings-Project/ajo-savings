@@ -4,8 +4,15 @@ import { v4 as uuidV4 } from 'uuid'
 import z from 'zod'
 import * as bgJobs from '../backgroundJobs'
 import { HTTP_STATUS_CODE } from '../constants/httpStatusCode'
-import { GenerateOTP, hashPassword, passwordUtils } from '../utils/helpers'
+import {
+  GenerateOTP,
+  hashPassword,
+  passwordUtils,
+  GenerateToken,
+} from '../utils/helpers'
 import Users, { role } from '../models/users'
+import bcrypt from 'bcrypt'
+import { loginSchema } from '../utils/validators/index'
 
 const validateUserSchema = z.object({
   firstName: z.string().min(2, 'firstname is required'),
@@ -102,5 +109,64 @@ export const registerUser = async (req: Request, res: Response) => {
         { message: `This is our fault, our team are working to resolve this.` },
       ],
     })
+  }
+}
+
+//===================LOGIN-USER========================\\
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body
+
+    const validationResult = loginSchema.safeParse(req.body)
+
+    if (!validationResult.success) {
+      return res.status(400).json({
+        Error: validationResult.error.errors[0].message,
+      })
+    }
+
+    const confirmUser = await Users.findOne({
+      where: { email: email },
+    })
+
+    if (!confirmUser) {
+      return res.status(400).json({ message: `User does not exist` })
+    }
+    const confirm_password = await bcrypt.compare(
+      password,
+      confirmUser.password
+    )
+
+    if (!confirm_password) {
+      return res.status(401).send({
+        status: 'error',
+        method: req.method,
+        message: 'Password is Incorect',
+      })
+    }
+
+    const token = await GenerateToken({
+      id: confirmUser.id,
+      email: confirmUser.email,
+    })
+    return res.status(200).json({
+      status: 'success',
+      method: req.method,
+      message: 'Login Successful',
+      user: {
+        email: confirmUser.email,
+        firstName: confirmUser.firstName,
+        lastName: confirmUser.lastName,
+        token: token,
+      },
+    })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return res.status(500).json({ message: `Internal Server Error` })
+    } else {
+      console.log('An unexpected error occurred:', error)
+      return res.status(500).json({ message: `Internal Server Error` })
+    }
   }
 }
