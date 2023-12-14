@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import nodemailer from 'nodemailer'
 import { compile } from 'handlebars'
 import Env from '../../../config/env'
+import { GenerateToken } from '../../../utils/helpers'
 
 // TODO: move this function
 const readTemplate = async (name: string) => {
@@ -13,6 +14,8 @@ const readTemplate = async (name: string) => {
     throw new Error('Error reading template file: ' + error)
   }
 }
+
+const baseUrl = `http://localhost:${Env.PORT}`
 
 const transporter = nodemailer.createTransport({
   // email service configuration
@@ -30,6 +33,13 @@ export const mailOTP = async (values: {
   lastName: string
 }) => {
   try {
+    //generate non-sensitive token
+    const tokenPayload = {
+      id: values.firstName,
+      email: values.email,
+    }
+    const token = await GenerateToken(tokenPayload)
+
     // Read the Handlebars template
     const template = await readTemplate('verifySignup')
 
@@ -39,7 +49,7 @@ export const mailOTP = async (values: {
     // Replace placeholders in the template with actual data
     const html = compiledTemplate({
       ...values,
-      link: `http://localhost:5173/verify-email?otp=${values.otp}&token=some-token-of-sort`,
+      link: `${baseUrl}/verify-email?otp=${values.otp}&token=${token}`,
     })
 
     const mailOptions = {

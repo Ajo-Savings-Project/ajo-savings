@@ -20,6 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
 
@@ -30,7 +31,7 @@ db.sync({
     console.log('Database is connected')
   })
   .catch((err: HttpError) => {
-    console.log(err)
+    console.log('DB Error: ', err)
   })
 
 app.use('/api/v1', apiV1Routes)
