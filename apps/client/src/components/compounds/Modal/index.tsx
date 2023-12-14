@@ -1,4 +1,5 @@
-import { useState, PropsWithChildren } from 'react'
+import classNames from 'classnames'
+import { useState, PropsWithChildren, useEffect, ReactElement } from 'react'
 
 import { createPortal } from 'react-dom'
 import styles from './modal.module.scss'
@@ -7,9 +8,10 @@ type RenderModalContentT = { onClose: () => void }
 type RenderModalOnOpenT = { onOpen: () => void }
 
 interface ModalProps {
-  renderModalContent: ({ onClose }: RenderModalContentT) => React.ReactElement
-  renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => React.ReactElement
+  renderModalContent: ({ onClose }: RenderModalContentT) => ReactElement
+  renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => ReactElement
   initialState?: boolean
+  disableOutsideClose?: boolean
 }
 
 export default function Modal({
@@ -17,8 +19,14 @@ export default function Modal({
   children,
   renderOnOpen,
   renderModalContent,
+  disableOutsideClose,
 }: PropsWithChildren<ModalProps>) {
   const [showModal, setShowModal] = useState(Boolean(initialState))
+
+  useEffect(() => {
+    // prevents scrolling when open
+    document.body.style.overflow = showModal ? 'hidden' : 'unset'
+  }, [showModal])
 
   return (
     <>
@@ -26,13 +34,21 @@ export default function Modal({
 
       {showModal &&
         createPortal(
-          <div className={styles.modalContainer}>
+          <div
+            className={classNames(styles.modalContainer, {
+              [styles.modalContainerScroll]: showModal,
+            })}
+          >
             <div
-              onClick={() => setShowModal(false)}
+              onClick={
+                !disableOutsideClose ? () => setShowModal(false) : undefined
+              }
               className={styles.overlay}
             />
-            {children ||
-              renderModalContent({ onClose: () => setShowModal(false) })}
+            <div className={styles.modalContent}>
+              {children ||
+                renderModalContent({ onClose: () => setShowModal(false) })}
+            </div>
             <div />
           </div>,
           document.body

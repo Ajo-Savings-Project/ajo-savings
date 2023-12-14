@@ -7,23 +7,20 @@ import {
   Textarea,
   Modal,
   InfoCard,
+  appNotify,
 } from 'components'
 import styles from './play.module.scss'
-import toast from 'react-hot-toast'
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
-  const notify = () => toast.success('created successfully')
-  const notifyWarning = () => toast.error('Error creating User')
-  const emoji = () =>
-    toast('Good Job!', {
-      icon: '👏',
-    })
+  const notify = () => appNotify('success', 'created successfully')
+  const notifyWarning = () => appNotify('error', 'Error creating User')
+  const emoji = () => appNotify('info', 'works!')
+  const retry = () => appNotify('info', 'works!', notify, { duration: 500 })
 
   return (
     <section className={classNames('container', styles.playground)}>
       <Modal
-        initialState={true}
         renderOnOpen={({ onOpen }) => <button onClick={onOpen}>add</button>}
         renderModalContent={({ onClose }) => (
           <InfoCard
@@ -38,6 +35,7 @@ const Playground = () => {
         <Button onClick={notify} text={'Success'} />
         <Button onClick={notifyWarning} text={'Failed'} />
         <Button onClick={emoji} text={'Show emoji'} />
+        <Button onClick={retry} text={'Show with retry'} />
       </div>
 
       <Text

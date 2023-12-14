@@ -19,14 +19,7 @@ const InfoCard = ({
   return (
     <div className={styles.cardContainer}>
       <div className={styles.cardContainerIcon}>
-        <button
-          onClick={onClick}
-          style={{
-            border: 'none',
-            background: 'var(--white)',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={onClick}>
           <Close />
         </button>
       </div>

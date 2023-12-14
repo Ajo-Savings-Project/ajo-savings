@@ -1,8 +1,7 @@
-import { AxiosError } from 'axios'
-import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import request from 'api'
 import { object, z } from 'zod'
+import { appNotify } from '../../../components'
 
 export const RegisterSchema = z
   .object({
@@ -10,8 +9,8 @@ export const RegisterSchema = z
     lastName: z.string().min(1, 'Last name is required'),
     email: z.string().email().min(1, 'Email is required'),
     phone: z.string().min(1, 'Phone number is required'),
-    password: z.string().min(6, 'Password is required'),
-    confirmPassword: z.string().min(6, 'Confirm password is required'),
+    password: z.string().min(7, 'Password is required'),
+    confirmPassword: z.string().min(7, 'Confirm password is required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -30,21 +29,13 @@ export const useRegisterMutation = () => {
   return useMutation({
     mutationKey: ['signup-user'],
     mutationFn: async (data: z.infer<typeof RegisterSchema>) => {
-      try {
-        const res = await request.post('/users/register', data)
-        const result = RegisterResponseSchema.safeParse(res.data)
-        if (result.success) {
-          return result.data
-        }
-        console.log(result.error)
-      } catch (e) {
-        const err = e as AxiosError<z.infer<typeof RegisterResponseSchema>>
-        if (err.response) {
-          const msg: string = err.response?.data.message
-          toast(msg)
-        }
-        return Promise.reject(e)
-      }
+      const res = await request.post('/users/register', data)
+      const result = RegisterResponseSchema.safeParse(res.data)
+      if (result.success) return result.data
+      appNotify(
+        'error',
+        'This is our fault, our team have been notified. kindly navigate to login.'
+      )
     },
   })
 }

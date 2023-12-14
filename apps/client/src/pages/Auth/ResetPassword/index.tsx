@@ -1,4 +1,10 @@
-import { Text, Input, Button, ReactHookFormErrorRender } from 'components'
+import {
+  Text,
+  Input,
+  Button,
+  ReactHookFormErrorRender,
+  appNotify,
+} from 'components'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -36,6 +42,14 @@ const ResetPasswordPage = () => {
   const apiResetPassword = useResetPasswordMutation()
   const handleResetPassword = async (values: ResetPasswordSchemaType) => {
     await apiResetPassword.mutateAsync(values)
+    appNotify(
+      'success',
+      <>
+        <p>You will receive an email if you have an account with us.</p>
+        <br />
+        <p>Kindly follow the instruction in the email.</p>
+      </>
+    )
   }
   const apiChangePassword = useChangePasswordMutation()
   const handleChangePassword = async (values: ChangePasswordSchemaType) => {
