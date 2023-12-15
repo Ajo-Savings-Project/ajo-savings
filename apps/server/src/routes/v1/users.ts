@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { loginUser, registerUser } from '../../controllers/userController'
+import {
+  loginUser,
+  registerUser,
+  tokenRefresher,
+} from '../../controllers/userController'
+import { extractJwtMiddleware } from '../../middlware/authorization/authentication'
 
 const router = Router()
 
@@ -205,5 +210,53 @@ router.post('/register', registerUser)
  */
 
 router.post('/login', loginUser)
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+/**
+ * @swagger
+ * paths:
+ *   /api/v1/users/tokenrefresh:
+ *     post:
+ *       summary: Refresh access token
+ *       tags: [Users]
+ *       security:
+ *         - BearerAuth: []
+ *       requestBody:
+ *         required: false
+ *       responses:
+ *         200:
+ *           description: Access token successfully refreshed
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/UserResponse'
+ *         401:
+ *           description: Unauthorized
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: Unauthorized
+ *         403:
+ *           description: Invalid refresh token
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: Invalid refresh token
+ *         500:
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: Internal Server Error
+ */
+
+router.post('/tokenrefresh', extractJwtMiddleware, tokenRefresher)
 
 export default router

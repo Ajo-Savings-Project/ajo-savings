@@ -13,13 +13,21 @@ export const passwordUtils = {
   error: `Password must be at least 7 characters and should contain at least one uppercase letter, one lowercase letter, one special character, and one number.`,
 }
 
-export const hashPassword = async (password: string) => {
-  const salt = await bcrypt.genSalt(10)
-  return await bcrypt.hash(password, salt)
+export class PasswordHarsher {
+  static async compare(password: string, hash: string) {
+    return await bcrypt.compare(password, hash)
+  }
+  static async hash(password: string) {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+  }
 }
 
-export const GenerateToken = async (payload: TokenPayload) => {
-  return jwt.sign(payload, ENV.APP_SECRET!, { expiresIn: '1d' })
+export const GenerateToken = <TokenPayload extends Record<string, string>>(
+  payload: TokenPayload,
+  options?: jwt.SignOptions
+) => {
+  return jwt.sign(payload, ENV.APP_SECRET!, { ...options })
 }
 
 export const GenerateOTP = () => {
