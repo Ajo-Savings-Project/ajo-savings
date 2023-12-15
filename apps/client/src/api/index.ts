@@ -44,9 +44,10 @@ request.interceptors.response.use(
           if (error.response) {
             if (error.response.data.message) {
               appNotify('error', error.response.data.message)
+            } else {
+              // TODO: log to server
+              appNotify('error', 'Something went wrong')
             }
-            // TODO: log to server
-            appNotify('error', 'Something went wrong')
           }
         }
         break
