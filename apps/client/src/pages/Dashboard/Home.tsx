@@ -4,6 +4,8 @@ import { useState } from 'react'
 import reactLogo from '../../assets/react.svg'
 import Logo from '../../assets/react.svg?react'
 
+//TODO: Add welcome message with logged in user details
+
 const HomePage = () => {
   const [count, setCount] = useState(0)
 
