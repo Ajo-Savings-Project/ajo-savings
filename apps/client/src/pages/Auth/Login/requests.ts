@@ -9,18 +9,21 @@ export const LoginSchema = z.object({
 
 const LoginResponseSchema = z.object({
   refreshToken: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  id: z.string(),
+  token: z.string(),
+  user: z.object({
+    id: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+  }),
 })
 
 export const useLoginMutation = () => {
   return useMutation({
-    mutationFn: (data: z.infer<typeof LoginSchema>) =>
-      request.post('/login', data).then((r) => {
-        const result = LoginResponseSchema.safeParse(r.data)
-        if (result.success) return r
-        return Promise.reject(result.error)
-      }),
+    mutationFn: async (data: z.infer<typeof LoginSchema>) => {
+      const res = await request.post('/users/login', data)
+      //TODO: also prefetch profile data
+      const result = LoginResponseSchema.safeParse(res.data)
+      if (result.success) return result
+    },
   })
 }
