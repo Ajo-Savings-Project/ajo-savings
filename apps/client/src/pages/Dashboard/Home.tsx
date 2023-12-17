@@ -1,14 +1,26 @@
+import { KYCSetup, Text } from 'components'
+import { useAuth } from '../../contexts'
 import viteLogo from '/vite.svg?url'
-import { Button, Text } from 'components'
+import { Button } from 'components'
 import { useState } from 'react'
 import reactLogo from '../../assets/react.svg'
 import Logo from '../../assets/react.svg?react'
+import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
 
 const HomePage = () => {
   const [count, setCount] = useState(0)
 
+  const v = useAuth()
+  const { firstName, lastName } = v
+
+  console.log(v)
+
   return (
     <>
+      <KYCSetup />
+      <Text content={`Welcome back ${firstName} ${lastName},`.trim()} />
+      <Text>Date</Text>
+      <div>content goes here</div>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -42,6 +54,7 @@ const HomePage = () => {
         className="read-the-docs"
         content={'Click on the Vite and React logos to learn more'}
       />
+      <UpcomingActivities />
     </>
   )
 }

@@ -4,16 +4,18 @@ import { REFRESH_TOKEN_KEY, SESSION_COUNT_KEY } from '../appConstants'
 const contextValues = {
   isAuth: false,
   showAutoLogoutMessage: false,
+  firstName: '',
+  lastName: '',
+  id: '',
 }
 
 type ContextValueT = typeof contextValues
 
 interface AuthContextI extends ContextValueT {
   handleAuthSession: (values: {
+    user: Omit<typeof contextValues, 'isAuth' | 'showAutoLogoutMessage'>
     token?: string
-    id?: string
     refreshToken: string
-    
   }) => void
   handleClearSession: (options: { auto: boolean }) => void
 }
@@ -30,15 +32,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<ContextValueT>({
     isAuth: Boolean(sessionIsActive),
     showAutoLogoutMessage: false,
+    firstName: '',
+    lastName: '',
+    id: '',
   })
 
   const handleAuthSession = (
     values: Parameters<AuthContextI['handleAuthSession']>[0]
   ) => {
-    const s_id = `${String(new Date().getTime())}:${values.id}`
+    const s_id = `${String(new Date().getTime())}:${values.user.id}`
     localStorage.setItem(SESSION_COUNT_KEY, s_id)
     localStorage.setItem(REFRESH_TOKEN_KEY, values.refreshToken)
-    setState({ isAuth: true, showAutoLogoutMessage: false })
+    setState({
+      ...state,
+      ...values.user,
+      isAuth: true,
+      showAutoLogoutMessage: false,
+    })
   }
 
   const handleClearSession = (
@@ -46,7 +56,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     // make api call to invalidate token
     // then clear storage
-    setState({ isAuth: false, showAutoLogoutMessage: Boolean(options.auto) })
+    setState({
+      ...state,
+      isAuth: false,
+      showAutoLogoutMessage: Boolean(options.auto),
+    })
     localStorage.clear()
   }
 
