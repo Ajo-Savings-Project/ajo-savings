@@ -1,0 +1,55 @@
+.customTip {
+  gap: 2px;
+  &Flex {
+    position: relative;
+    width: 57.8px;
+    height: 21.4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.6px;
+    background: var(--gray-900);
+    border-radius: 3.9px;
+    padding: 2px;
+  }
+  &Label {
+    color: var(--white);
+    font-weight: 500;
+  }
+  &Beak {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+}
+.chartHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+  width: 100%;
+  &Btn {
+    padding: 2px;
+    border: 1px solid var(--gray-500);
+    border-radius: 8px;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+@media (min-width: 37.5rem) {
+  .chartHeading {
+    max-width: 30rem;
+    padding: 0 50px;
+  }
+}
+@media (min-width: 64rem) {
+  .chartHeading {
+    max-width: 40rem;
+    padding: 0;
+  }
+}
