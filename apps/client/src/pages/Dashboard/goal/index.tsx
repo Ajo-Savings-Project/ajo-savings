@@ -4,7 +4,7 @@ import Home from "./images/home.svg";
 import Car from "./images/car.svg";
 import styles from "./goal.module.scss";
 import { Card, Text } from "components";
-import ProgressBar from "./ProgressBar";
+
 
 export const data = [
   {
