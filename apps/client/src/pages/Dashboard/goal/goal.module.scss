@@ -1,25 +1,28 @@
 
 .container {
-    height:300px;
-    width: 350px;
-  
+  max-width: 396px;
+  width: 100%;
+  height: 300px;
+  padding: 1rem;
+
     .header{
       display: flex;
       justify-content: space-between;
       gap: 12rem;
      
       .headerText,
-      &view{
+      &View{
         font-size: 14px;
         font-weight: 400;
         letter-spacing: 0.07px;
       }
   
-      .view{
+      .View{
         text-decoration: none;
       }
   
       @media screen and (max-width: 768px) {
+        max-width: 30rem;
         flex-direction: column; 
         gap: 0.70rem; 
       }
@@ -103,24 +106,16 @@
    
         .infoSection {
           flex-direction: column;
-          align-items: start;
-  
           .goal{
             flex-direction: column;
           }
-  
-          .percentage{
-            font-size: 14px;  
-          }
         }
   
-      
         .dashedLinesContainer {
-          width: 250px; 
-          
+          width: 200px; 
           .dashedLine,
           .dashedLineLeft {
-            width: 50%; 
+            width: 25%; 
             margin: 0.5rem 0; 
           }
         }

@@ -34,7 +34,7 @@ const MyGoals = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <span className={styles.headerText}>MY GOALS</span>
-        <Link to="/dashboard/savings" className={styles.view}>
+        <Link to="/dashboard/savings" className={styles.View}>
           View all
         </Link>
       </div>
