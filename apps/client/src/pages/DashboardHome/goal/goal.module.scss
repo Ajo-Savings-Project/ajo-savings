@@ -1,202 +1,137 @@
+
 .container {
- 
- 
+  height:300px;
+  width: 350px;
+
   .header{
     display: flex;
-    gap: 15rem;
+    justify-content: space-between;
+    gap: 12rem;
    
     .headerText,
     &view{
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.07px;
     }
 
-  }
-
-   
-  .infoSection{
-    display: flex;
-    padding-top: 0.5rem;
-    
-    
-    .goal{
-      display: flex;
-      gap: 12px;
-      padding-bottom: 10px;
-      
-      .save,
-      &target{
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.07px;
-      }
-      .targetAmount{
-        color:#D9D9D9;
-      }
-  
-     .info{
-      .amount{
-        display: flex;
-      }
-     }
-    
+    .view{
+      text-decoration: none;
     }
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column; 
+      gap: 0.70rem; 
+    }
+
   }
 
-  .dash{
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px;
-    flex: 0 0 auto;
+  .goalSection{
+
+    .infoSection{
+      display: flex;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+
+      .goal{
+        display: flex;
+        gap: 10px;
+        padding-top: 5px;
+
+        .image{
+          width: 30px;
+        }
+        
+       .info{
+
+        &arget{
+          font-size: 14px;  
+        }
+        
+        .amount{
+          display: flex;
+          padding-top: 3px;
+         
+          .saved,
+          .targetAmount {
+            font-size: 14px;          
+          }
+        
+          .targetAmount{
+            color:#D9D9D9;
+          }
+        }
+       
+       }
+      
+      }
+
+      .percentage{
+        font-size: 14px;
+        padding-top: 15px;
+       
+      }
+
+
+    }
+
+    .dashedLinesContainer {
+      display: flex;
+      width: 300px;
+      padding-top: 15px;
+
+      .dashedLine,
+      .dashedLineLeft {
+        height: 4px;
+        width: 150px;
+        border-bottom: 4px solid;
+        font-weight: bold;
+        border-radius: 3px;
+        margin: 0 5px;
+      }
+
+      .dashedLine {
+        border-color: #0d72b9;
+      }
+
+      .dashedLineLeft {
+        border-color: #d9d9d9;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+ 
+      .infoSection {
+        flex-direction: column;
+        align-items: start;
+
+        .goal{
+          flex-direction: column;
+        }
+
+        .percentage{
+          font-size: 14px;  
+        }
+      }
+
     
+      .dashedLinesContainer {
+        width: 250px; 
+        
+        .dashedLine,
+        .dashedLineLeft {
+          width: 50%; 
+          margin: 0.5rem 0; 
+        }
+      }
+    }
+    
+  } 
+
+
+
   }
    
  
-}
+ 
 
-// .inline-flex {
-//   display: inline-flex;
-// }
-
-// .items-start {
-//   align-items: flex-start;
-// }
-
-// .gap-10px {
-//   gap: 10px;
-// }
-
-// .p-10px {
-//   padding: 10px;
-// }
-
-// .relative {
-//   position: relative;
-// }
-
-// .flex-0-0-auto {
-//   flex: 0 0 auto;
-// }
-
-// .my-goals-container {
-//     display: inline-flex;
-//     flex-direction: column;
-//     align-items: start;
-//     padding: 16px;
-//     position: relative;
-//     background-color: #ffffff;
-//     overflow: hidden;
-//   }
-  
-  // .header-container {
-  //   display: flex;
-  //   width: 348px;
-  //   align-items: start;
-  //   justify-content: space-between;
-  //   background-color: #ffffff;
-  //   position: relative;
-  //   flex: 0 0 auto;
-  // }
-  
-  // .header-text {
-  //   font-family: 'Inter-Regular', Helvetica;
-  //   font-weight: normal;
-  //   font-size: 14px;
-  //   line-height: 20px;
-  //   letter-spacing: 0.07px;
-  //   color: #101828;
-  //   white-space: nowrap;
-  //   margin-top: -1px;
-  // }
-  
-  // .view-all-link {
-  //   font-size: 14px;
-  //   font-weight: var(--button-normal-14-font-weight);
-  //   color: #0066cc;
-  //   cursor: pointer;
-  //   transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
-  // }
-  
-  // .view-all-link:hover {
-  //   color: #00bcd4;
-  //   transform: scale(1.05);
-  // }
-  
-  // .goal-container {
-  //   display: inline-flex;
-  //   flex-direction: column;
-  //   align-items: start;
-  //   position: relative;
-  //   flex: 0 0 auto;
-  //   height: 50px;
-  // }
-  
-  // .info-container {
-  //   display: flex;
-  //   width: 338px;
-  //   justify-content: space-between;
-  //   align-items: center;
-  //   gap: 20px;
-  //   position: relative;
-  //   flex: 0 0 auto;
-  //   overflow-y: auto;
-  // }
-  
-  // .category-image {
-  //   width: 30px;
-  //   height: 30px;
-  // }
-  
-  // .text-container {
-  //   display: inline-flex;
-  //   flex-direction: column;
-  //   align-items: start;
-  //   gap: 0;
-  //   position: relative;
-  //   flex: 0 0 auto;
-  // }
-  
-  // .goal-text {
-  //   font-weight: var(--button-normal-14-font-weight);
-  //   font-size: 14px;
-  //   color: #101828;
-  //   white-space: nowrap;
-  // }
-  
-  // .amount-saved-text {
-  //   font-weight: var(--button-normal-14-font-weight);
-  //   font-size: 14px;
-  //   white-space: nowrap;
-  // }
-  
-  // .saved-amount {
-  //   color: #101828;
-  // }
-  
-  // .target-amount {
-  //   color: #d9d9d9;
-  // }
-  
-  // .percentage-text {
-  //   font-weight: var(--button-normal-14-font-weight);
-  //   font-size: 14px;
-  //   color: #101828;
-  //   white-space: nowrap;
-  // }
-  
-  // .progress-bar-container {
-  //   display: inline-flex;
-  //   align-items: start;
-  //   gap: 10px;
-  //   padding: 10px;
-  //   position: relative;
-  //   flex: 0 0 auto;
-  // }
-  
-  // .progress-bar {
-  //   width: 350px;
-  //   border-width: 1px;
-  // }
-  
