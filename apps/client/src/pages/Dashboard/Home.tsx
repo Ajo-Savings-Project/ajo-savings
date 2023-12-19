@@ -1,6 +1,6 @@
 import { KYCSetup, Text } from 'components'
 import { useAuth } from '../../contexts'
-import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
+import MyGoals from './Goal'
 
 const HomePage = () => {
   const v = useAuth()
@@ -14,7 +14,7 @@ const HomePage = () => {
       <Text content={`Welcome back ${firstName} ${lastName},`.trim()} />
       <Text>Date</Text>
       <div>content goes here</div>
-      <UpcomingActivities />
+      <MyGoals />
     </>
   )
 }
