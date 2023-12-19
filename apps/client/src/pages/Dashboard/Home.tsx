@@ -2,11 +2,9 @@ import { KYCSetup, Text } from 'components'
 import { useAuth } from '../../contexts'
 import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
 
+import ChartWithUpcoming from './chartAndUpcoming'
 const HomePage = () => {
-  const v = useAuth()
-  const { firstName, lastName } = v
-
-  console.log(v)
+  const { firstName, lastName } = useAuth()
 
   return (
     <>
@@ -15,6 +13,7 @@ const HomePage = () => {
       <Text>Date</Text>
       <div>content goes here</div>
       <UpcomingActivities />
+      <ChartWithUpcoming />
     </>
   )
 }
