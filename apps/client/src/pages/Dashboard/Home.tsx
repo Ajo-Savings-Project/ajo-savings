@@ -3,7 +3,9 @@ import { KYCSetup, Text } from 'components'
 import { useAuth } from '../../contexts'
 import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
 import ChartWithUpcoming from './chartAndUpcoming'
-import MyGoals from 'pages/DashboardHome/goal'
+import MyGoals from 'pages/Dashboard/goal'
+
+
 const HomePage = () => {
   const { firstName, lastName } = useAuth()
 
@@ -18,6 +20,8 @@ const HomePage = () => {
       <ChartWithUpcoming />
 
        <MyGoals />
+      
+      
     </>
   )
 }
