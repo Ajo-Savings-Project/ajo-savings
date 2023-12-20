@@ -32,10 +32,9 @@ export const authorizationMiddleware = async (
 
     return next()
   } catch (err) {
-    console.log('ERROR:', err)
-    return res.status(401).send({
-      status: 'Error',
-      message: err,
+    return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+      message: 'Unauthorized access',
+      code: JWT_EXPIRATION_STATUS_CODE,
     })
   }
 }
