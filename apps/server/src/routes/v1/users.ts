@@ -2,9 +2,9 @@ import { Router } from 'express'
 import {
   loginUser,
   registerUser,
-  tokenRefresher,
+  refreshToken,
 } from '../../controllers/userController'
-import { extractJwtMiddleware } from '../../middlware/authorization/authentication'
+import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
 
 const router = Router()
 
@@ -208,8 +208,8 @@ router.post('/register', registerUser)
  *               example:
  *                 message: "Internal Server Error"
  */
-
 router.post('/login', loginUser)
+
 /**
  * @swagger
  * components:
@@ -256,7 +256,6 @@ router.post('/login', loginUser)
  *               example:
  *                 message: Internal Server Error
  */
-
-router.post('/tokenrefresh', extractJwtMiddleware, tokenRefresher)
+router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
 
 export default router

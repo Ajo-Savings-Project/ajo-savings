@@ -25,6 +25,8 @@ const {
   GMAIL_USER,
   GMAIL_PASSWORD,
   APP_SECRET,
+  JWT_SECRET,
+  JWT_REFRESH_SECRET,
   REDIS,
 } = process.env
 
@@ -38,7 +40,10 @@ const ENV = {
   GMAIL_USER,
   GMAIL_PASSWORD,
   APP_SECRET,
+  JWT_SECRET,
+  JWT_REFRESH_SECRET,
   REDIS,
+  IS_PROD: isProduction,
 }
 
 export default ENV

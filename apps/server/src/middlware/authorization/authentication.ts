@@ -1,8 +1,14 @@
-import { Response, NextFunction } from 'express'
-import jwt, { JwtPayload } from 'jsonwebtoken'
-import { ENV } from '../../config/index'
+import { NextFunction, Response } from 'express'
+import { JwtPayload } from 'jsonwebtoken'
+import Env from '../../config/env'
+import {
+  HTTP_STATUS_CODE,
+  JWT_EXPIRATION_STATUS_CODE,
+  REFRESH_TOKEN,
+} from '../../constants'
+import { getCookieValue, Jwt } from '../../utils/helpers'
 
-export const auth = async (
+export const authorizationMiddleware = async (
   req: JwtPayload,
   res: Response,
   next: NextFunction
@@ -22,8 +28,7 @@ export const auth = async (
         message: "The pin can't be used",
       })
     }
-    const decoded = jwt.verify(pin, `${ENV.APP_SECRET}`)
-    req.user = decoded
+    req.user = await Jwt.verify(pin)
 
     return next()
   } catch (err) {
@@ -35,16 +40,21 @@ export const auth = async (
   }
 }
 
-export const extractJwtMiddleware = (
+export const validateRefreshTokenMiddleWare = async (
   req: JwtPayload,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(' ')[1]
-  if (token) {
-    req.refreshToken = token
-    next()
-  } else {
-    return res.status(401).json({ message: 'Unauthorized' })
+  const cookies = getCookieValue(req.headers.cookie)
+  const token = cookies[REFRESH_TOKEN]
+  //TODO: check if it is white listed
+  const hasExpired = await Jwt.isTokenExpired(token, Env.JWT_REFRESH_SECRET)
+  if (!hasExpired.expired) {
+    req.body[REFRESH_TOKEN] = token
+    return next()
   }
+  return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+    message: 'Unauthorized access',
+    code: JWT_EXPIRATION_STATUS_CODE,
+  })
 }

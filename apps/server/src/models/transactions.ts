@@ -1,7 +1,14 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize'
 import { db } from '../config'
 import Wallets from './wallets'
 import Users from './users'
+
+const TABLE_NAME = 'Transactions'
 
 export enum action {
   DEBIT = 'Debit',
@@ -20,20 +27,20 @@ export enum transaction_type {
   GROUP_WALLET = 'Group Wallet',
 }
 
-export type TransactionAttributes = {
-  id: string
-  wallet_id: string
-  owner_id: string
-  amount: number
-  status: string
-  action: string
-  type: string
-  receiver: string
-  created_at: Date
-}
-
-class Transactions extends Model<TransactionAttributes> {
+class Transactions extends Model<
+  InferAttributes<Transactions>,
+  InferCreationAttributes<Transactions>
+> {
   static transaction: never
+  declare id: string
+  declare wallet_id: string
+  declare owner_id: string
+  declare amount: number
+  declare status: string
+  declare action: string
+  declare type: string
+  declare receiver: string
+  declare created_at: Date
 }
 
 Transactions.init(
@@ -85,8 +92,8 @@ Transactions.init(
   },
   {
     sequelize: db,
-    tableName: 'Transactions',
-    modelName: 'Transactions',
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
   }
 )
 

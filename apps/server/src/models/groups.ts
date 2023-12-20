@@ -1,6 +1,15 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+
+const TABLE_NAME = 'Groups'
+
+// https://sequelize.org/docs/v6/other
 
 interface GroupTransactions {
   transaction_id: string
@@ -25,28 +34,30 @@ export interface Members {
   date_of_last_contribution: Date
   profilePicture?: string
 }
-export type GroupAttributes = {
-  id: string
-  title: string
-  description: string
-  admin_id: string
-  group_image?: string
-  amount_contributed?: number
-  contribution_amount: number
-  group_transactions: GroupTransactions[]
-  amount_withdrawn: number
-  members: Members[]
-  slots: number[]
-  availableSlots: number[]
-  number_of_participants: number
-  frequency: string
-  duration: string
-  startDate: Date
-  endDate: Date
-  created_at: Date
-}
 
-class Groups extends Model<GroupAttributes> {}
+class Groups extends Model<
+  InferAttributes<Groups>,
+  InferCreationAttributes<Groups>
+> {
+  declare id: string
+  declare title: string
+  declare description: string
+  declare admin_id: string
+  declare group_image?: string
+  declare amount_contributed?: number
+  declare contribution_amount: number
+  declare group_transactions: GroupTransactions[]
+  declare amount_withdrawn: number
+  declare members: Members[]
+  declare slots: number[]
+  declare availableSlots: number[]
+  declare number_of_participants: number
+  declare frequency: string
+  declare duration: string
+  declare startDate: Date
+  declare endDate: Date
+  declare created_at: Date
+}
 
 Groups.init(
   {
@@ -133,8 +144,8 @@ Groups.init(
   },
   {
     sequelize: db,
-    tableName: 'Groups',
-    modelName: 'Groups',
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
   }
 )
 

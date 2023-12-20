@@ -1,21 +1,10 @@
-import * as fs from 'fs'
 import nodemailer from 'nodemailer'
 import { compile } from 'handlebars'
 import Env from '../../../config/env'
-import { GenerateToken } from '../../../utils/helpers'
+import { Jwt, PasswordHarsher } from '../../../utils/helpers'
+import { readTemplate } from '../templates/readTemplate'
 
-// TODO: move this function
-const readTemplate = async (name: string) => {
-  try {
-    return fs.readFileSync(require.resolve(`../templates/${name}.html`), {
-      encoding: 'utf-8',
-    })
-  } catch (error) {
-    throw new Error('Error reading template file: ' + error)
-  }
-}
-
-const baseUrl = `http://localhost:${Env.PORT}`
+const baseUrl = `http://localhost:3000`
 
 const transporter = nodemailer.createTransport({
   // email service configuration
@@ -35,10 +24,12 @@ export const mailOTP = async (values: {
   try {
     //generate non-sensitive token
     const tokenPayload = {
-      id: values.firstName,
       email: values.email,
+      otp: values.otp,
     }
-    const token = await GenerateToken(tokenPayload)
+    const secret = await PasswordHarsher.hash(values.otp)
+
+    const token = await Jwt.sign(tokenPayload, { _secret: secret })
 
     // Read the Handlebars template
     const template = await readTemplate('verifySignup')
@@ -49,7 +40,7 @@ export const mailOTP = async (values: {
     // Replace placeholders in the template with actual data
     const html = compiledTemplate({
       ...values,
-      link: `${baseUrl}/verify-email?otp=${values.otp}&token=${token}`,
+      link: `${baseUrl}/verify-email?user=${token}`,
     })
 
     const mailOptions = {
