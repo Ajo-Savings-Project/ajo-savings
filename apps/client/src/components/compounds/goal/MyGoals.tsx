@@ -30,8 +30,6 @@ const data = [
     target_amount: 5_000_000.0,
   },
 ];
-
-
 const MyGoals = () => {
   return (
     <div className={styles.container}>
