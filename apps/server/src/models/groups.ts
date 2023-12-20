@@ -26,13 +26,13 @@ enum frequency {
 }
 
 export interface Members {
-  member_picture: string
+  member_picture: string | null
   member_id: string
   name: string
   amount_contributed: number
   amount_withdrawn: number
   date_of_last_contribution: Date
-  profilePicture?: string
+  profilePicture?: string | null
 }
 
 class Groups extends Model<
