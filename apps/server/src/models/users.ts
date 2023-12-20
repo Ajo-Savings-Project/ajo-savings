@@ -37,6 +37,9 @@ class Users extends Model<
   declare proof_of_address_doc: string | null
   declare otp: CreationOptional<string>
   declare otp_expiry: CreationOptional<Date>
+  declare resetToken: CreationOptional<string>
+  declare resetTokenExpires: CreationOptional<Date>
+  declare isVerified: boolean
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 }
@@ -73,6 +76,19 @@ Users.init(
     },
     otp_expiry: {
       type: DataTypes.DATE,
+    },
+    resetToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetTokenExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),

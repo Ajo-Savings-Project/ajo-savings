@@ -1,25 +1,72 @@
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { ENV } from '../config'
 
-export interface TokenPayload {
-  id: string
-  email: string
-}
-
 export const passwordUtils = {
-  regex:
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.&])[A-Za-z\d@$!%*?.&]{7,}$/,
-  error: `Password must be at least 7 characters and should contain at least one uppercase letter, one lowercase letter, one special character, and one number.`,
+  length: 5,
+  regex: ENV.IS_PROD
+    ? /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.&])[A-Za-z\d@$!%*?.&]{5,}$/
+    : /^[A-Za-z]{5,}$/,
+  error: ENV.IS_PROD
+    ? `Password: Min 5 characters, with an uppercase, a lowercase, a number, and a special character.`
+    : 'Password: Min 5 characters, uppercase or lowercase.',
 }
 
-export const hashPassword = async (password: string) => {
-  const salt = await bcrypt.genSalt(10)
-  return await bcrypt.hash(password, salt)
+export class PasswordHarsher {
+  static async compare(password: string, hash: string) {
+    return await bcrypt.compare(password, hash)
+  }
+
+  static async hash(password: string) {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+  }
 }
 
-export const GenerateToken = async (payload: TokenPayload) => {
-  return jwt.sign(payload, ENV.APP_SECRET!, { expiresIn: '1d' })
+export class Jwt {
+  static async sign<TokenPayload extends Record<string, string>>(
+    payload: TokenPayload,
+    options?: jwt.SignOptions & { _secret?: string }
+  ) {
+    const { _secret, ...restOptions } = options ?? {}
+    return jwt.sign(payload, _secret ?? ENV.JWT_SECRET!, restOptions)
+  }
+
+  static async verify<T extends JwtPayload>(
+    token: string,
+    options?: jwt.VerifyOptions & { complete?: true; _secret?: string }
+  ): Promise<T> {
+    const { _secret, ...restOptions } = options ?? {}
+    return jwt.verify(token, _secret ?? ENV.JWT_SECRET!, restOptions) as T
+  }
+
+  static async isTokenExpired<T extends JwtPayload>(
+    token: string,
+    secret?: string
+  ) {
+    try {
+      const payload = await this.verify(token, {
+        _secret: secret || ENV.JWT_SECRET,
+      })
+      return { data: payload as T, expired: false, valid: true }
+    } catch (e) {
+      if (e instanceof jwt.TokenExpiredError) {
+        return {
+          data: (await jwt.decode(token)) as T,
+          expired: true,
+          valid: true,
+        }
+      } else {
+        const decoded = (await jwt.decode(token)) as JwtPayload
+        return {
+          data: decoded as T,
+          expired: decoded?.exp && decoded?.exp < Math.floor(Date.now() / 1000),
+          valid: false,
+          error: e,
+        }
+      }
+    }
+  }
 }
 
 export const GenerateOTP = () => {
@@ -27,4 +74,18 @@ export const GenerateOTP = () => {
   const expiry = new Date()
   expiry.setTime(new Date().getTime() + 30 * 60 * 1000)
   return { otp, expiry }
+}
+
+type CookieString = string
+/**
+ * Get cookie values
+ * @param {CookieString} cookies
+ * @returns {Record<string, string>}
+ */
+export const getCookieValue = (cookies: CookieString) => {
+  return cookies.split('; ').reduce((acc: Record<string, string>, cur) => {
+    const [k, v] = cur.split('=')
+    acc[k] = v
+    return acc
+  }, {})
 }

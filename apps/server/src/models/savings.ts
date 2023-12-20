@@ -1,6 +1,15 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+
+const TABLE_NAME = 'Savings'
+
+// https://sequelize.org/docs/v6/other
 
 export enum frequency {
   DAILY = 'Daily',
@@ -17,21 +26,23 @@ enum category {
   GADGETS = 'Gadgets',
   OTHER = 'Other',
 }
-export type SavingAttributes = {
-  id: string
-  user_id: string
-  name: string
-  target: string
-  target_amount: number
-  amount_saved: number
-  frequency: string
-  category: string
-  startDate: string
-  endDate: string
-  created_at: Date
-}
 
-class Savings extends Model<SavingAttributes> {}
+class Savings extends Model<
+  InferAttributes<Savings>,
+  InferCreationAttributes<Savings>
+> {
+  declare id: string
+  declare user_id: string
+  declare name: string
+  declare target: string
+  declare target_amount: number
+  declare amount_saved: number
+  declare frequency: string
+  declare category: string
+  declare startDate: string
+  declare endDate: string
+  declare created_at: Date
+}
 
 Savings.init(
   {
@@ -89,8 +100,8 @@ Savings.init(
   },
   {
     sequelize: db,
-    tableName: 'Savings',
-    modelName: 'Savings',
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
   }
 )
 

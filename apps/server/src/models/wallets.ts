@@ -1,6 +1,15 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+
+const TABLE_NAME = 'Wallets'
+
+// https://sequelize.org/docs/v6/other
 
 export enum type {
   GLOBAL = 'Global',
@@ -13,17 +22,18 @@ export interface Income {
   amount: number
 }
 
-export type WalletAttributes = {
-  id: string
-  user_id: string
-  total_amount: number
-  type: string
-  created_at: Date
-  earnings: Income[]
-  total_income: number
+class Wallets extends Model<
+  InferAttributes<Wallets>,
+  InferCreationAttributes<Wallets>
+> {
+  declare id: string
+  declare user_id: string
+  declare total_amount: number
+  declare type: string
+  declare created_at: Date
+  declare earnings: Income[]
+  declare total_income: number
 }
-
-class Wallets extends Model<WalletAttributes> {}
 
 Wallets.init(
   {
@@ -63,8 +73,8 @@ Wallets.init(
   },
   {
     sequelize: db,
-    tableName: 'Wallets',
-    modelName: 'Wallets',
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
   }
 )
 

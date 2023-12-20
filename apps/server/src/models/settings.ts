@@ -1,22 +1,30 @@
-import { Model, DataTypes } from 'sequelize'
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize'
 import { db } from '../config'
 
-export interface SettingsAttribute {
-  id: string
-  owner_id: string
-  email_notification?: boolean
-  contribution_reminder?: boolean
-  group_join_request?: boolean
-  two_factor_authentication?: boolean
-  password_update?: boolean
-  profile_visibility?: boolean
-  email_privacy?: boolean
-  savings_group_update?: boolean
-  personal_saving_alert?: boolean
-  deactivate_account?: boolean
-}
+const TABLE_NAME = 'Settings'
 
-class Settings extends Model<SettingsAttribute> {}
+class Settings extends Model<
+  InferAttributes<Settings>,
+  InferCreationAttributes<Settings>
+> {
+  declare id: string
+  declare owner_id: string
+  declare email_notification?: boolean
+  declare contribution_reminder?: boolean
+  declare group_join_request?: boolean
+  declare two_factor_authentication?: boolean
+  declare password_update?: boolean
+  declare profile_visibility?: boolean
+  declare email_privacy?: boolean
+  declare savings_group_update?: boolean
+  declare personal_saving_alert?: boolean
+  declare deactivate_account?: boolean
+}
 
 Settings.init(
   {
@@ -83,8 +91,8 @@ Settings.init(
 
   {
     sequelize: db,
-    tableName: 'Settings',
-    modelName: 'Settings',
+    tableName: TABLE_NAME,
+    modelName: TABLE_NAME,
   }
 )
 export default Settings
