@@ -1,11 +1,13 @@
-import { Link } from 'react-router-dom'
-import Travel from './images/travel.svg'
-import Home from './images/home.svg'
-import Car from './images/car.svg'
-import styles from './goal.module.scss'
-import { Card, Text } from 'components'
+// Import statements
+import { Link } from 'react-router-dom';
+import Travel from './images/travel.svg';
+import Home from './images/home.svg';
+import Car from './images/car.svg';
+import styles from './goal.module.scss';
+import { Card, Text } from 'components';
 
-export const data = [
+
+const data = [
   {
     id: '1',
     image: Travel,
@@ -27,14 +29,15 @@ export const data = [
     amount_saved: 1_000_000.0,
     target_amount: 5_000_000.0,
   },
-]
+];
+
 
 const MyGoals = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <span className={styles.headerText}>MY GOALS</span>
-        <Link to="/dashboard/savings" className={styles.View}>
+        <Link to="/dashboard/savings" className={styles.view}>
           View all
         </Link>
       </div>
@@ -44,11 +47,7 @@ const MyGoals = () => {
             <div className={styles.goal}>
               <img className={styles.image} alt="image" src={target.image} />
               <div className={styles.info}>
-                <Text
-                  size={'Small'}
-                  className={styles.target}
-                  content={target.target}
-                />
+                <Text size={'Small'} className={styles.target} content={target.target} />
                 <div className={styles.amount}>
                   <Text
                     size={'Small'}
@@ -101,7 +100,7 @@ const MyGoals = () => {
         </Card>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default MyGoals
+export default MyGoals;

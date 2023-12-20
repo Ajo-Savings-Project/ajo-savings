@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts'
 import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
 
 import ChartWithUpcoming from './chartAndUpcoming'
-import MyGoals from './goal'
+import MyGoals from '../../components/compounds/goal/MyGoals'
 const HomePage = () => {
   const { firstName, lastName } = useAuth()
 
