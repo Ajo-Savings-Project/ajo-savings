@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 import { v4 as uuidV4 } from 'uuid'
 import * as bgJobs from '../backgroundJobs'
+import { ENV } from '../config'
 import Env from '../config/env'
 import {
   HTTP_STATUS_CODE,
@@ -11,13 +12,16 @@ import {
   REFRESH_TOKEN,
 } from '../constants'
 import Users, { role } from '../models/users'
+import UserResetPasswordToken from '../models/userPasswordToken'
 import {
   GenerateOTP,
   Jwt,
   PasswordHarsher,
   passwordUtils,
+  generateLongString,
 } from '../utils/helpers'
 import {
+  forgotPasswordSchema,
   loginSchema,
   refreshTokenSchema,
   registerSchema,
@@ -115,7 +119,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const validationResult = loginSchema.safeParse(req.body)
+    const validationResult = loginSchema.strict().safeParse(req.body)
 
     if (!validationResult.success) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
@@ -224,6 +228,64 @@ export const refreshToken = async (req: Request, res: Response) => {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).send({
       conde: JWT_INVALID_STATUS_CODE,
       message: 'Something has gone wrong.',
+    })
+  }
+}
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const isValidBody = forgotPasswordSchema.strict().safeParse(req.body)
+
+    if (isValidBody.success) {
+      let { email } = isValidBody.data
+
+      email = email.trim().toLowerCase()
+
+      const user = await Users.findOne({ where: { email } })
+
+      if (user) {
+        const { otp, expiry: tokenExpiry } = GenerateOTP()
+        const longString = generateLongString(80) //generate 80 chars long random string
+
+        // create unique verify token
+        const token = await Jwt.sign({
+          otp: otp.toString(),
+          tokenExpiry: tokenExpiry.getTime().toString(),
+        })
+
+        //create password reset data instance
+        await UserResetPasswordToken.create({
+          id: longString,
+          token,
+        })
+
+        const link = `${ENV.FE_BASE_URL}/auth/reset-password?verify=${longString}`
+
+        bgJobs.resetPasswordSendEmail({
+          firstName: user.firstName,
+          email: email,
+          message: link,
+        })
+
+        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+          message: `Password reset link will be sent to your email if you have an account with us.`,
+        })
+      }
+      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
+        message: `Account not found`,
+      })
+    }
+
+    return res.status(HTTP_STATUS_CODE.BAD_REQUEST).send({
+      message: isValidBody.error.issues,
+    })
+  } catch (error) {
+    console.log(error)
+    // TODO: send to error logger - error
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: [
+        { message: `This is our fault, our team are working to resolve this.` },
+      ],
     })
   }
 }

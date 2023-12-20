@@ -69,10 +69,18 @@ export class Jwt {
   }
 }
 
-export const GenerateOTP = () => {
+/**
+ * GenerateOTP
+ * @param {{expires: number}} options
+ * @returns {{otp: number, expiry: Date}}
+ * @constructor
+ */
+export const GenerateOTP = (options?: { expires: number }) => {
   const otp = Math.floor(100000 + Math.random() * 900000)
   const expiry = new Date()
-  expiry.setTime(new Date().getTime() + 30 * 60 * 1000)
+  expiry.setTime(
+    new Date().getTime() + Number(options?.expires) || 30 * 60 * 1000
+  )
   return { otp, expiry }
 }
 
@@ -88,4 +96,17 @@ export const getCookieValue = (cookies: CookieString) => {
     acc[k] = v
     return acc
   }, {})
+}
+
+export const generateLongString = (length: number) => {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  let counter = 0
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    counter += 1
+  }
+  return result
 }

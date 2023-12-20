@@ -40,6 +40,7 @@ class Users extends Model<
   declare resetToken: CreationOptional<string>
   declare resetTokenExpires: CreationOptional<Date>
   declare isVerified: boolean
+  declare resetTokenExpiry: CreationOptional<Date>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 }
@@ -89,6 +90,10 @@ Users.init(
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: false,
+    },
+    resetTokenExpiry: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),
