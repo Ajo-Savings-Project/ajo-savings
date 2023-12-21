@@ -43,7 +43,6 @@ const calculatePercentage = (amountSaved: number, targetAmount: number) => {
 };
 
 
-
 const MyGoals = () => {
   return (
     <div className={styles.container}>
