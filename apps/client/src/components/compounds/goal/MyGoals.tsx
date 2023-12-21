@@ -4,6 +4,9 @@ import Home from './images/home.svg';
 import Car from './images/car.svg';
 import styles from './goal.module.scss';
 import { Card, Text } from 'components';
+import { routes } from 'router';
+import { Link } from 'react-router-dom';
+
 
 const data = [
   {
@@ -48,11 +51,13 @@ const MyGoals = () => {
     <div className={styles.container}>
       <div className={styles.containerHeader}>
          <Text content={'MY GOALS'} size={'Small'} />
+         <Link className={styles.view} to={routes.dashboard.savings.abs_path}>
          <Text
           content={'View all'}
           size={'Small'}
-          style={{ color: 'var(--dashboard-blue1)' }}
+          style={{ color: 'var(--dashboard-blue1)'}}
         />
+        </Link>
       </div>
       {data.map((target, index) => (
         <Card key={index} className={styles.goalSection}>
