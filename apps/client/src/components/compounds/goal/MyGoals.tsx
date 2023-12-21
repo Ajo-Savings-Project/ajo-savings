@@ -1,43 +1,59 @@
-// Import statements
-import { Link } from 'react-router-dom';
+
 import Travel from './images/travel.svg';
 import Home from './images/home.svg';
 import Car from './images/car.svg';
 import styles from './goal.module.scss';
 import { Card, Text } from 'components';
 
-
 const data = [
   {
     id: '1',
     image: Travel,
     target: 'Travel',
-    amount_saved: 5_000_000.0,
-    target_amount: 10_000_000.0,
+    amountSaved: 5000000,
+    targetAmount: 10000000,
   },
   {
     id: '2',
     image: Home,
     target: 'Dream Home',
-    amount_saved: 10_000_000.0,
-    target_amount: 40_000_000.0,
+    amountSaved: 10000000,
+    targetAmount: 40000000,
   },
   {
     id: '3',
     image: Car,
     target: 'Dream Car',
-    amount_saved: 1_000_000.0,
-    target_amount: 5_000_000.0,
+    amountSaved: 1000000,
+    targetAmount: 5000000,
   },
 ];
+
+const formatCurrency = (amountSaved: number | bigint) => {
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+  }).format(amountSaved);
+};
+
+const calculatePercentage = (amountSaved: number, targetAmount: number) => {
+  const parsedAmountSaved = parseFloat(amountSaved.toString().replace('₦', '').replace(',', ''));
+  const parsedTargetAmount = parseFloat(targetAmount.toString().replace('₦', '').replace(',', ''));
+  return Math.round((parsedAmountSaved / parsedTargetAmount) * 100);
+};
+
+
+
 const MyGoals = () => {
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <span className={styles.headerText}>MY GOALS</span>
-        <Link to="/dashboard/savings" className={styles.view}>
-          View all
-        </Link>
+      <div className={styles.containerHeader}>
+         <Text content={'MY GOALS'} size={'Small'} />
+         <Text
+          content={'View all'}
+          size={'Small'}
+          style={{ color: 'var(--dashboard-blue1)' }}
+        />
       </div>
       {data.map((target, index) => (
         <Card key={index} className={styles.goalSection}>
@@ -50,39 +66,18 @@ const MyGoals = () => {
                   <Text
                     size={'Small'}
                     className={styles.saved}
-                    content={new Intl.NumberFormat('en-NG', {
-                      style: 'currency',
-                      currency: 'NGN',
-                    }).format(target.amount_saved)}
+                    content={formatCurrency(target.amountSaved)}
                   />
                   <Text
                     size={'Small'}
                     className={styles.targetAmount}
-                    content={`/${new Intl.NumberFormat('en-NG', {
-                      style: 'currency',
-                      currency: 'NGN',
-                    }).format(target.target_amount)}`}
+                    content={`/${formatCurrency(target.targetAmount)}`}
                   />
                 </div>
               </div>
             </div>
             <div className={styles.percentage}>
-              {Math.round(
-                (parseFloat(
-                  target.amount_saved
-                    .toString()
-                    .replace('₦', '')
-                    .replace(',', '')
-                ) /
-                  parseFloat(
-                    target.target_amount
-                      .toString()
-                      .replace('₦', '')
-                      .replace(',', '')
-                  )) *
-                  100
-              )}
-              %
+              {calculatePercentage(target.amountSaved, target.targetAmount)}%
             </div>
           </div>
           <div className={styles.dashedLinesContainer}>

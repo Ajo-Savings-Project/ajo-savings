@@ -5,13 +5,10 @@
   padding: 1rem;
   background: white;
 
-  .header{
+  &Header{
     display: flex;
     justify-content: space-between;
     
-    .view{
-      text-decoration: none;
-    }
   }
     
     .goalSection{
@@ -73,7 +70,7 @@
 
     @media screen and (max-width: 450px) {
 
-        .header,
+        &Header,
         .infoSection,
         .goal,
         .amount{
