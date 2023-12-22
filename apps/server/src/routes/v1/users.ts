@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import {
-  loginUser,
   registerUser,
+  loginUser,
   refreshToken,
   forgotPassword
-} from '../../controllers/userController'
+} from '../../controllers/userControllers'
 import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
 
 const router = Router()
@@ -223,7 +223,7 @@ router.post('/login', loginUser)
 /**
  * @swagger
  * paths:
- *   /api/v1/users/tokenrefresh:
+ *   /api/v1/users/token-refresh:
  *     post:
  *       summary: Refresh access token
  *       tags: [Users]
@@ -257,7 +257,7 @@ router.post('/login', loginUser)
  *               example:
  *                 message: Internal Server Error
  */
-router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
+router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
 
 /**
  * @swagger

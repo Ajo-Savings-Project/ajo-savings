@@ -11,11 +11,13 @@ const TABLE_NAME = 'Wallets'
 
 // https://sequelize.org/docs/v6/other
 
-export enum type {
+export enum WalletType {
   GLOBAL = 'Global',
   SAVINGS = 'Savings',
   GROUP_WALLET = 'Group Wallet',
 }
+
+// const WalletType = ['Global', 'Savings', 'Group Wallet'] as const
 
 export interface Income {
   date: Date
@@ -27,12 +29,11 @@ class Wallets extends Model<
   InferCreationAttributes<Wallets>
 > {
   declare id: string
-  declare user_id: string
-  declare total_amount: number
+  declare userId: string
+  declare totalAmount: number
   declare type: string
-  declare created_at: Date
   declare earnings: Income[]
-  declare total_income: number
+  declare totalIncome: number
 }
 
 Wallets.init(
@@ -42,18 +43,18 @@ Wallets.init(
       primaryKey: true,
       allowNull: false,
     },
-    user_id: {
+    userId: {
       type: DataTypes.UUID,
       references: {
         model: Users,
         key: 'id',
       },
     },
-    total_amount: {
+    totalAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    total_income: {
+    totalIncome: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
@@ -62,19 +63,15 @@ Wallets.init(
       allowNull: true,
     },
     type: {
-      type: DataTypes.ENUM(...Object.values(type)),
+      type: DataTypes.ENUM(...Object.values(WalletType)),
       allowNull: false,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize: db,
     tableName: TABLE_NAME,
     modelName: TABLE_NAME,
+    timestamps: true,
   }
 )
 

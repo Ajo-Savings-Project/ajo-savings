@@ -1,31 +1,30 @@
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 import { v4 as uuidV4 } from 'uuid'
-import * as bgJobs from '../backgroundJobs'
-import { ENV } from '../config'
-import Env from '../config/env'
+import * as bgJobs from '../../backgroundJobs'
+import Env from "../../config/env";
 import {
   HTTP_STATUS_CODE,
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
   JWT_INVALID_STATUS_CODE,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   REFRESH_TOKEN,
-} from '../constants'
-import Users, { role } from '../models/users'
-import UserResetPasswordToken from '../models/userPasswordToken'
+} from '../../constants'
+import Users, { role } from '../../models/users'
+import UserResetPasswordToken from '../../models/userPasswordToken'
 import {
   GenerateOTP,
   Jwt,
   PasswordHarsher,
   passwordUtils,
-  generateLongString,
-} from '../utils/helpers'
+  generateLongString
+} from '../../utils/helpers'
 import {
   forgotPasswordSchema,
   loginSchema,
   refreshTokenSchema,
   registerSchema,
-} from '../utils/validators'
+} from '../../utils/validators'
 
 export const registerUser = async (req: Request, res: Response) => {
   const passwordRegex = passwordUtils.regex
@@ -259,7 +258,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
           token,
         })
 
-        const link = `${ENV.FE_BASE_URL}/auth/reset-password?verify=${longString}`
+        const link = `${Env.FE_BASE_URL}/auth/reset-password?verify=${longString}`
 
         bgJobs.resetPasswordSendEmail({
           firstName: user.firstName,

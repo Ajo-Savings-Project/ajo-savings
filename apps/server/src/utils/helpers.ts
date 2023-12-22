@@ -6,7 +6,7 @@ export const passwordUtils = {
   length: 5,
   regex: ENV.IS_PROD
     ? /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.&])[A-Za-z\d@$!%*?.&]{5,}$/
-    : /^[A-Za-z]{5,}$/,
+    : /^[A-Za-z0-9]{5,}$/,
   error: ENV.IS_PROD
     ? `Password: Min 5 characters, with an uppercase, a lowercase, a number, and a special character.`
     : 'Password: Min 5 characters, uppercase or lowercase.',
@@ -59,8 +59,10 @@ export class Jwt {
       } else {
         const decoded = (await jwt.decode(token)) as JwtPayload
         return {
-          data: decoded as T,
-          expired: decoded?.exp && decoded?.exp < Math.floor(Date.now() / 1000),
+          data: (decoded || {}) as T,
+          expired:
+            (decoded?.exp && decoded?.exp < Math.floor(Date.now() / 1000)) ||
+            true,
           valid: false,
           error: e,
         }
@@ -91,6 +93,7 @@ type CookieString = string
  * @returns {Record<string, string>}
  */
 export const getCookieValue = (cookies: CookieString) => {
+  if (!cookies) return {}
   return cookies.split('; ').reduce((acc: Record<string, string>, cur) => {
     const [k, v] = cur.split('=')
     acc[k] = v

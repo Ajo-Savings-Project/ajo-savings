@@ -28,9 +28,11 @@ const {
   JWT_SECRET,
   JWT_REFRESH_SECRET,
   REDIS,
-  FE_BASE_URL
+  FE_BASE_URL,
+  CLOUDINARY_NAME,
+  API_KEY_4_CLOUDINARY,
+  API_SECRET_4_CLOUDINARY,
 } = process.env
-
 
 const ENV = {
   PORT,
@@ -47,6 +49,9 @@ const ENV = {
   REDIS,
   IS_PROD: isProduction,
   FE_BASE_URL,
+  CLOUDINARY_NAME,
+  API_KEY_4_CLOUDINARY,
+  API_SECRET_4_CLOUDINARY,
 }
 
 export default ENV
