@@ -1,7 +1,8 @@
 import classNames from 'classnames'
-import { Text } from 'components'
+import { Text, Switcher } from 'components'
 import { useState } from 'react'
 import styles from './settings.module.scss'
+
 const data = [
   {
     section: 'Communication Settings',
@@ -111,24 +112,12 @@ const SettingsPage = () => {
                 />
                 <div className={styles.settingWrapperTextWithInput}>
                   <Text size={'Small'} content={item.description} />
-                  {item.accessor ? (
-                    <div className={styles.settingWrapperInputContainer}>
-                      <button
-                        className={styles.settingWrapperInputButton}
-                      ></button>
-                      <input className={styles.settingWrapperInput} readOnly />
-                    </div>
-                  ) : (
-                    <div className={styles.settingWrapperInputContainerFalse}>
-                      <button
-                        className={styles.settingWrapperInputButtonFalse}
-                      ></button>
-                      <input
-                        className={styles.settingWrapperInputFalse}
-                        readOnly
-                      />
-                    </div>
-                  )}
+                  {
+                    <Switcher
+                      onChange={() => item.accessor}
+                      value={item.accessor}
+                    />
+                  }
                 </div>
               </div>
             ))}
