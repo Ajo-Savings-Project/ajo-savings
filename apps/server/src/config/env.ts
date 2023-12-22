@@ -28,7 +28,9 @@ const {
   JWT_SECRET,
   JWT_REFRESH_SECRET,
   REDIS,
+  FE_BASE_URL
 } = process.env
+
 
 const ENV = {
   PORT,
@@ -44,6 +46,7 @@ const ENV = {
   JWT_REFRESH_SECRET,
   REDIS,
   IS_PROD: isProduction,
+  FE_BASE_URL,
 }
 
 export default ENV

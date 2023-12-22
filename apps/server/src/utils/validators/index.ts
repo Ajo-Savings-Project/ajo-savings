@@ -19,3 +19,7 @@ export const registerSchema = z.object({
 export const refreshTokenSchema = z.object({
   [REFRESH_TOKEN]: z.string(),
 })
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({ message: 'email is invalid' }),
+})

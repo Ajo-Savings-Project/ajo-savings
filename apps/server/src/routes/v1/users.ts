@@ -3,6 +3,7 @@ import {
   loginUser,
   registerUser,
   refreshToken,
+  forgotPassword
 } from '../../controllers/userController'
 import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
 
@@ -258,4 +259,58 @@ router.post('/login', loginUser)
  */
 router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: All user APIs
+ * paths:
+ *   /api/v1/users/forgotPassword:
+ *     post:
+ *       summary: Forgot password
+ *       tags: [Users]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *       responses:
+ *         200:
+ *           description: password reset link has been sent to your email
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: password reset link has been sent to your email.
+ *
+ *         400:
+ *           description: Bad request
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                   message:
+ *                     type: string
+ *         404:
+ *           description: Account not found
+ *           content:
+ *             application/json:
+ *               example:
+ *                 status: "error"
+ *                 message: "Account not found"
+ *         500:
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Internal Server Error"
+ */
+router.post('/forgotPassword', forgotPassword)
 export default router
