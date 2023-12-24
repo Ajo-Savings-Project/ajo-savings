@@ -4,6 +4,11 @@ import { v2 as cloudinary } from 'cloudinary'
 import { CloudinaryStorage } from 'multer-storage-cloudinary'
 
 // const storage = multer.memoryStorage()
+interface MyParams {
+  folder: string
+  allowedFormats?: string[]
+  transformation?: { width: number; height: number; crop: string }[]
+}
 
 // Configure Cloudinary
 cloudinary.config({
@@ -14,28 +19,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async () => {
-    return {
-      folder: 'AJO-Uploads',
-    }
-  },
+  params: {
+    folder: 'AJO-Uploads',
+    allowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ width: 500, height: 500, crop: 'limit' }],
+  } as MyParams,
 })
 
-export const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype == 'image/png' ||
-      file.mimetype == 'image/jpg' ||
-      file.mimetype == 'image/jpeg' ||
-      file.mimetype == 'image/webp'
-    ) {
-      cb(null, true)
-    } else {
-      cb(null, false)
-      return cb(
-        new Error('Only .png, .jpg, .webp and .jpeg formats are allowed!')
-      )
-    }
-  },
-})
+export const upload = multer({ storage: storage })

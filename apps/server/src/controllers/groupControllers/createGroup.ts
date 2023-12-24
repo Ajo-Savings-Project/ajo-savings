@@ -47,7 +47,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       title: _data.groupName,
       description: _data.purposeAndGoals,
       adminId: userId,
-      contribution_amount: 0,
+      contributionAmount: 0,
       // TODO: image upload logic
       groupImage: groupImage,
       amountContributed: 0,

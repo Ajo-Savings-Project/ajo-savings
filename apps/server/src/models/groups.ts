@@ -45,7 +45,7 @@ class Groups extends Model<
   declare adminId: string
   declare groupImage?: string
   declare amountContributed?: number
-  declare contribution_amount: number
+  declare contributionAmount: number
   declare groupTransactions: GroupTransactions[]
   declare amountWithdrawn: number
   declare members: Members[]
@@ -105,7 +105,7 @@ Groups.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    contribution_amount: {
+    contributionAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

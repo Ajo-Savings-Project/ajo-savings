@@ -3,7 +3,7 @@ import {
   registerUser,
   loginUser,
   refreshToken,
-  forgotPassword
+  forgotPassword,
 } from '../../controllers/userControllers'
 import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
 
@@ -119,7 +119,7 @@ const router = Router()
  *           content:
  *             application/json:
  *               example:
- *                 message: Registration Successful.
+ *                 message: "Registration Successful."
  *                 user:
  *                   type: object
  *                   properties:
@@ -243,19 +243,19 @@ router.post('/login', loginUser)
  *           content:
  *             application/json:
  *               example:
- *                 message: Unauthorized
+ *                 message: "Unauthorized"
  *         403:
  *           description: Invalid refresh token
  *           content:
  *             application/json:
  *               example:
- *                 message: Invalid refresh token
+ *                 message: "Invalid refresh token"
  *         500:
  *           description: Internal Server Error
  *           content:
  *             application/json:
  *               example:
- *                 message: Internal Server Error
+ *                 message: "Internal Server Error"
  */
 router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
 
@@ -285,7 +285,7 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  *           content:
  *             application/json:
  *               example:
- *                 message: password reset link has been sent to your email.
+ *                 message: "password reset link has been sent to your email."
  *
  *         400:
  *           description: Bad request
