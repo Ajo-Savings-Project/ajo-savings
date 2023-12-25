@@ -1,0 +1,50 @@
+.savingsContainer {
+  background: white;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+
+  &Top {
+    display: flex;
+    justify-content: space-between;
+    background: white;
+  }
+
+  section {
+    display: flex;
+    gap: 2.5rem;
+  }
+  section > img {
+    border-radius: 8px;
+  }
+  &TargetDetails {
+    display: grid;
+  }
+  &Title {
+    padding: 0.4rem 0.6rem;
+    border-radius: 15px;
+    background: #ccfbf1;
+    width: fit-content;
+    height: fit-content;
+    color: var(--Teal-500);
+  }
+
+  &ProgressBar {
+    width: 100%;
+    border-radius: 8px;
+    background: #f2f4f7;
+  }
+  &ProgressBarContent {
+    height: 4px;
+    background: #088ab2;
+  }
+
+  @media (max-width: 500px) {
+    &Top {
+      display: grid;
+    }
+    section {
+      display: grid;
+    }
+  }
+}
