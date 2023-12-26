@@ -38,7 +38,7 @@ const TransactionHistory = () => {
   return (
     <div  className={styles.container}>
       <div className={styles.containerHeader}>
-      <Text content={'TRANSACTION HISTOR'} size={'Small'} />
+      <Text content={'TRANSACTION HISTORY'} size={'Small'} />
       <div className={styles.select}>
       <Text content={'Recently'} size={'Small'} className={` ${selected === 0 ? 'selected' : ''} ${styles.button}`} onClick={() => handleClick(0)}/>
       <Text content={'Oldest'} size={'Small'}  className={`button ${selected === 2 ? 'selected' : ''} ${styles.button}`} onClick={() => handleClick(1)} />
