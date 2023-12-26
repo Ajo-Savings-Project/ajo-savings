@@ -50,10 +50,10 @@ const TransactionHistory = () => {
       <table>
         <thead>
             <tr>
-                <th><Text content={'Receiver'} size={'Small'}/></th>
-                <th><Text content={'Type'} size={'Small'}/></th>
-                <th><Text content={'Date'} size={'Small'}/></th>
-                <th><Text content={'Amount'} size={'Small'} /></th>
+                <th><Text content={'Receiver'} size={'Small'} className={styles.head}/></th>
+                <th><Text content={'Type'} size={'Small'} className={styles.head}/></th>
+                <th><Text content={'Date'} size={'Small'} className={styles.head}/></th>
+                <th><Text content={'Amount'} size={'Small'} className={styles.head}/></th>
             </tr>
         </thead>
         <tbody>
@@ -62,7 +62,7 @@ const TransactionHistory = () => {
                     <td><Text content={items.receiver} size={'Small'} /></td>
                     <td><Text content={items.type} size={'Small'} /></td>
                     <td><Text content={items.date} size={'Small'} /></td>
-                    <td><Text content={items.amount} size={'Small'} /></td>
+                    <td><Text content={`₦ ${items.amount}`} size={'Small'} /></td>
                 </tr>
             ))}
         </tbody>
