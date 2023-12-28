@@ -1,5 +1,4 @@
 import SavingsTargetCard from 'components/compounds/SavingsTargetCard'
-import travelImg from './../../components/compounds/SavingsTargetCard/Images/Travel_Img.svg'
 
 const SavingsPage = () => {
   return (
@@ -7,7 +6,7 @@ const SavingsPage = () => {
       Savings Page
       <div>
         <SavingsTargetCard
-          img={travelImg}
+          img="https://picsum.photos/200/300"
           title={'Travel'}
           description={'Trip to Bali'}
           savedAmount={5000000}

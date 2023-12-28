@@ -1,13 +1,6 @@
+import { formatCurrency } from 'utils/currencyFormatter'
 import styles from './savingsTarget.module.scss'
 import { Text } from 'components'
-
-function formatNaira(amount: number): string {
-  const formattedAmount = amount.toLocaleString('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-  })
-  return formattedAmount.replace('NGN', '₦')
-}
 
 interface SavingsI {
   img: string
@@ -27,14 +20,14 @@ const SavingsTargetCard = ({
     <div className={styles.savingsContainer}>
       <div className={styles.savingsContainerTop}>
         <section>
-          <img src={img} alt="Trip to Bali" />
+          <img src={img} alt={description} />
           <div className={styles.savingsContainerTargetDetails}>
             <div className={styles.savingsContainerTitle}>
               <Text content={title} color="none" />
             </div>
             <Text content={description} size="Subtext" />
             <Text
-              content={`${formatNaira(savedAmount)} / ${formatNaira(
+              content={`${formatCurrency(savedAmount)} / ${formatCurrency(
                 totalAmount
               )}`}
               level={4}
