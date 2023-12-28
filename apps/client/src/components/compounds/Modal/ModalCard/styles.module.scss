@@ -1,0 +1,19 @@
+.modalCard {
+  position: relative;
+  border-radius: 16px;
+
+  &Icon {
+    padding: 8px 8px 0;
+    text-align: end;
+
+    > button {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+  }
+
+  &Content {
+    padding: 1.625rem 2.125rem;
+  }
+}

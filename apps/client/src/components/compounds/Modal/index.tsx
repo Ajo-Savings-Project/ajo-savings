@@ -12,6 +12,7 @@ interface ModalProps {
   renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => ReactElement
   initialState?: boolean
   disableOutsideClose?: boolean
+  modalContentClassName?: string
 }
 
 export default function Modal({
@@ -20,6 +21,7 @@ export default function Modal({
   renderOnOpen,
   renderModalContent,
   disableOutsideClose,
+  modalContentClassName,
 }: PropsWithChildren<ModalProps>) {
   const [showModal, setShowModal] = useState(Boolean(initialState))
 
@@ -45,7 +47,9 @@ export default function Modal({
               }
               className={styles.overlay}
             />
-            <div className={styles.modalContent}>
+            <div
+              className={classNames(styles.modalContent, modalContentClassName)}
+            >
               {children ||
                 renderModalContent({ onClose: () => setShowModal(false) })}
             </div>

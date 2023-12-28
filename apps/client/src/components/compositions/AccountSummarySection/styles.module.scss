@@ -1,0 +1,63 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 10px;
+
+  &Secondary {
+    background: none;
+    border: 1px solid white;
+  }
+
+  > p {
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+.globalWallet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #fff;
+  border-radius: 1rem;
+  background-color: var(--primary-500);
+  padding: 1rem;
+  min-width: 18.25rem;
+  width: min-content;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.04);
+
+  > p {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .row-between {
+    gap: 10px;
+  }
+}
+
+.otherWallet {
+  background-color: #fff;
+  min-width: 12rem;
+}
+
+.accountSummary {
+  display: flex;
+  gap: 20px;
+  padding: 20px 10px 20px 0;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.modalCard,
+.modalCard > form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 400px;
+}

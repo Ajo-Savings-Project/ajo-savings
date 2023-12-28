@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react'
 import styles from './infoCard.module.scss'
-import { Text } from 'components'
-import Close from './images/Close.svg?react'
+import { ModalCard, Text } from 'components'
 import Check from './images/CheckOutline.svg?react'
 
 interface CardProps {
@@ -10,29 +9,17 @@ interface CardProps {
   onClick: () => void
 }
 
-const InfoCard = ({
-  text,
-  Subtext,
-  children,
-  onClick,
-}: PropsWithChildren<CardProps>) => {
+const InfoCard = ({ text, Subtext, onClick }: PropsWithChildren<CardProps>) => {
   return (
-    <div className={styles.cardContainer}>
-      <div className={styles.cardContainerIcon}>
-        <button onClick={onClick}>
-          <Close />
-        </button>
-      </div>
-      {children || (
-        <div className={styles.cardBody}>
-          <div className={styles.cardBodyLogo}>
-            <Check />
-          </div>
-          <Text size={'Label'} content={text} className={styles.cardBodyText} />
-          <Text content={Subtext} />
+    <ModalCard onClick={onClick} className={styles.cardContainer}>
+      <div className={styles.cardBody}>
+        <div className={styles.cardBodyLogo}>
+          <Check />
         </div>
-      )}
-    </div>
+        <Text size={'Label'} content={text} className={styles.cardBodyText} />
+        <Text content={Subtext} />
+      </div>
+    </ModalCard>
   )
 }
 
