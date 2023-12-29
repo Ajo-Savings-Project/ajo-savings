@@ -1,14 +1,62 @@
+// import styles from './switcher.module.scss'
+// import { useState, useRef } from 'react'
+// import classNames from 'classnames'
+
+// interface SwitcherProps {
+//   // name: string;
+//   onChange: (checked: boolean) => void
+//   value?: boolean
+// }
+
+// const Switcher = ({ onChange, value }: SwitcherProps) => {
+//   const [checked, setIsChecked] = useState(value || false)
+
+//   const inputRef = useRef<HTMLInputElement | null>(null)
+
+//   const handleToggle = () => {
+//     if (inputRef.current) {
+//       setIsChecked(!inputRef.current.checked)
+//       if (onChange) onChange(checked)
+//     }
+//   }
+
+//   return (
+//     <div
+//       className={classNames(styles.switcherWrapper, {
+//         [styles.switcherWrapperButtonOff]: checked,
+//       })}
+//     >
+//       <button
+//         onClick={handleToggle}
+//         className={classNames(styles.switcherWrapperButton, {
+//           [styles.switcherWrapperButtonOn]: checked,
+//         })}
+//       ></button>
+//       <input
+//         name="toggle"
+//         ref={inputRef}
+//         className={styles.switcherWrapperInput}
+//         checked={checked}
+//         type="checkbox"
+//       />
+//     </div>
+//   )
+// }
+
+// export default Switcher
+
 import styles from './switcher.module.scss'
 import { useState, useRef } from 'react'
 import classNames from 'classnames'
 
 interface SwitcherProps {
-  // name: string;
-  onChange: (checked: boolean) => void
+  name?: string
+  onChange: (checked: boolean, e?: HTMLInputElement) => void
   value?: boolean
+  disabled?: boolean
 }
 
-const Switcher = ({ onChange, value }: SwitcherProps) => {
+const Switcher = ({ onChange, value, name, disabled }: SwitcherProps) => {
   const [checked, setIsChecked] = useState(value || false)
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -16,7 +64,7 @@ const Switcher = ({ onChange, value }: SwitcherProps) => {
   const handleToggle = () => {
     if (inputRef.current) {
       setIsChecked(!inputRef.current.checked)
-      if (onChange) onChange(checked)
+      if (onChange) onChange(checked, inputRef.current)
     }
   }
 
@@ -31,12 +79,15 @@ const Switcher = ({ onChange, value }: SwitcherProps) => {
         className={classNames(styles.switcherWrapperButton, {
           [styles.switcherWrapperButtonOn]: checked,
         })}
-      ></button>
+        disabled={disabled}
+      />
       <input
-        name="toggle"
         ref={inputRef}
+        id={name}
+        name={name}
         className={styles.switcherWrapperInput}
         checked={checked}
+        value={checked.toString()}
         type="checkbox"
       />
     </div>
