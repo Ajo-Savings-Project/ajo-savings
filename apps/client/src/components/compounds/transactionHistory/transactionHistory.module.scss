@@ -30,6 +30,8 @@
         table {
         width: 100%;
         border-collapse: collapse;
+        overflow-x: auto;
+        white-space: nowrap;
         margin-top: 10px;
 
         tr{
@@ -66,32 +68,14 @@
             
         }
         table {
-            
-            tr {
-                
-                th:first-child {
-                justify-self: start;
-                margin-right: 1px;
-                }
-        
-                th:nth-child(2) {
-                justify-self: center; 
-                margin-right: 1px;
-                }
-        
-                th:nth-child(3) {
-                justify-self: center; 
-        
-                th:last-child {
-                justify-self: end; 
-                }
-        
-                td {
-                text-align: center;
-                }
-              
-            }
-            }
+          display: block;
+          white-space: nowrap;
+          overflow-x: auto;
+
+          th, td {
+            display: inline-block;
+          }
+           
         }
     }
   }
