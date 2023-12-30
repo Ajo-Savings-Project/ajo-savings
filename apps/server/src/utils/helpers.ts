@@ -113,3 +113,23 @@ export const generateLongString = (length: number) => {
   }
   return result
 }
+
+export class DateHandler {
+  static getDaysInMonth = (year: number, month: number): number => {
+    return new Date(year, month + 1, 0).getDate()
+  }
+
+  static getNextFriday = (date: Date) => {
+    const dayOfWeek = date.getDay()
+    let daysUntilFriday = 5 - dayOfWeek
+
+    if (daysUntilFriday <= 0) {
+      daysUntilFriday += 7
+    }
+
+    const nextFriday = new Date(date)
+    nextFriday.setDate(date.getDate() + daysUntilFriday)
+
+    return nextFriday
+  }
+}
