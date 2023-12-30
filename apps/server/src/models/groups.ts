@@ -26,13 +26,13 @@ enum frequency {
 }
 
 export interface Members {
-  member_picture: string
-  member_id: string
+  memberPicture: string | null
+  memberId: string
   name: string
-  amount_contributed: number
-  amount_withdrawn: number
-  date_of_last_contribution: Date
-  profilePicture?: string
+  amountContributed: number
+  amountWithdrawn: number
+  dateOfLastContribution: Date
+  profilePicture?: string | null
 }
 
 class Groups extends Model<
@@ -42,21 +42,20 @@ class Groups extends Model<
   declare id: string
   declare title: string
   declare description: string
-  declare admin_id: string
-  declare group_image?: string
-  declare amount_contributed?: number
-  declare contribution_amount: number
-  declare group_transactions: GroupTransactions[]
-  declare amount_withdrawn: number
+  declare adminId: string
+  declare groupImage?: string
+  declare amountContributed?: number
+  declare contributionAmount: number
+  declare groupTransactions: GroupTransactions[]
+  declare amountWithdrawn: number
   declare members: Members[]
   declare slots: number[]
   declare availableSlots: number[]
-  declare number_of_participants: number
+  declare numberOfParticipants: number
   declare frequency: string
   declare duration: string
   declare startDate: Date
   declare endDate: Date
-  declare created_at: Date
 }
 
 Groups.init(
@@ -66,7 +65,7 @@ Groups.init(
       primaryKey: true,
       allowNull: false,
     },
-    group_image: {
+    groupImage: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -79,14 +78,14 @@ Groups.init(
       field: 'Content of the post',
       allowNull: false,
     },
-    admin_id: {
+    adminId: {
       type: DataTypes.UUID,
       references: {
         model: Users,
         key: 'id',
       },
     },
-    group_transactions: {
+    groupTransactions: {
       type: DataTypes.JSON,
       allowNull: true,
     },
@@ -102,19 +101,19 @@ Groups.init(
       type: DataTypes.ARRAY(DataTypes.INTEGER),
       allowNull: true,
     },
-    amount_contributed: {
+    amountContributed: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    contribution_amount: {
+    contributionAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    amount_withdrawn: {
+    amountWithdrawn: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    number_of_participants: {
+    numberOfParticipants: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -136,16 +135,17 @@ Groups.init(
       allowNull: false,
       defaultValue: DataTypes.DATE,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
+    // createdAt: {
+    //   type: DataTypes.DATE,
+    //   allowNull: false,
+    //   defaultValue: DataTypes.NOW,
+    // },
   },
   {
     sequelize: db,
     tableName: TABLE_NAME,
     modelName: TABLE_NAME,
+    timestamps: true,
   }
 )
 
