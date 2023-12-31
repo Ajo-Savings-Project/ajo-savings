@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import {
   registerUser,
   loginUser,
@@ -317,6 +318,9 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  *                 message: "Internal Server Error"
  */
 router.post('/forgotPassword', forgotPassword)
+
+router.post('/login', loginUser)
+
 export default router
 
 /**
