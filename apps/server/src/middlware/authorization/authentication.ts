@@ -8,6 +8,7 @@ import {
 } from '../../constants'
 import Users from '../../models/users'
 import { getCookieValue, Jwt } from '../../utils/helpers'
+import { JwtPayload } from 'jsonwebtoken'
 
 export interface RequestExt extends Request {
   body: Request['body'] & {
@@ -81,4 +82,18 @@ export const validateRefreshTokenMiddleWare = async (
       ? JWT_EXPIRATION_STATUS_CODE
       : JWT_INVALID_STATUS_CODE,
   })
+}
+
+export const extractJwtMiddleware = (
+  req: JwtPayload,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization?.split(' ')[1]
+  if (token) {
+    req.refreshToken = token
+    next()
+  } else {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
 }
