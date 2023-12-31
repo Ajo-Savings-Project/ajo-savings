@@ -171,10 +171,13 @@ export const loginUser = async (req: Request, res: Response) => {
         })
       }
     }
+
     return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).send({
       message: 'Invalid Credentials!',
     })
   } catch (error) {
+    console.log('error', error)
+
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [`This is our fault, our team are working to resolve this.`],
     })
@@ -224,6 +227,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       })
     }
   } catch (error) {
+    console.log('error', error)
+
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).send({
       conde: JWT_INVALID_STATUS_CODE,
       message: 'Something has gone wrong.',
@@ -246,6 +251,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         const { otp, expiry: tokenExpiry } = GenerateOTP()
         const longString = generateLongString(80) //generate 80 chars long random string
         const secret = generateLongString(20) //generate 80 chars long random string
+        const expiresIn = 300 // seconds
 
         // create unique verify token
         const token = await Jwt.sign(
@@ -254,7 +260,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
             otp: otp.toString(),
             tokenExpiry: tokenExpiry.getTime().toString(),
           },
-          { _secret: Env.JWT_SECRET + longString }
+          { _secret: Env.JWT_SECRET + longString, expiresIn }
         )
 
         //create password reset data instance
@@ -262,6 +268,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
           id: longString,
           secret,
           token,
+          used: false,
         })
 
         const link = `${Env.FE_BASE_URL}/auth/reset-password?verify=${longString}`
@@ -283,11 +290,71 @@ export const forgotPassword = async (req: Request, res: Response) => {
     })
   } catch (error) {
     console.log(error)
+
     // TODO: send to error logger - error
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [
         { message: `This is our fault, our team are working to resolve this.` },
       ],
+    })
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { verify: longString } = req.query
+
+    const { newPassword } = req.body
+
+    if (!newPassword) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid or missing new-password in the request.',
+      })
+    }
+    // Check for reset-token instance using query-string(id)
+    const resetTokenInstance = await UserResetPasswordToken.findOne({
+      where: { id: longString as string, used: false },
+    })
+
+    if (!resetTokenInstance) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Invalid or already used verification token.',
+      })
+    }
+
+    const { id, token } = resetTokenInstance
+
+    /**
+     * References JWT secret in forgotPassword function
+     * @see forgotPassword
+     **/
+    const tokenStatus = await Jwt.isTokenExpired(token, Env.JWT_SECRET + id)
+
+    if (!tokenStatus.valid || tokenStatus.expired) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Invalid or expired reset password token.',
+      })
+    }
+
+    const decodedToken = tokenStatus.data
+
+    const hashedPassword = await PasswordHarsher.hash(newPassword)
+
+    await Users.update(
+      { password: hashedPassword },
+      { where: { id: decodedToken.id } }
+    )
+
+    // Invalidate the reset token after it's used
+    await resetTokenInstance.update({ used: true })
+
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message:
+        'Password reset successful. You can now log in with your new password.',
+    })
+  } catch (error) {
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: 'This is our fault, our team is working to resolve this.',
     })
   }
 }

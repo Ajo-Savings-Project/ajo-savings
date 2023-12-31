@@ -7,7 +7,9 @@ import {
   forgotPassword,
   getUpcomingUserActivities,
   getUserPersonalSavingsWallet,
+  resetPassword,
 } from '../../controllers/userControllers'
+
 import {
   authorizationMiddleware,
   validateRefreshTokenMiddleWare,
@@ -192,7 +194,6 @@ router.post('/login', loginUser)
  *                 message: "Internal Server Error"
  */
 router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
-
 /**
  * @swagger
  * tags:
@@ -248,14 +249,10 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  */
 router.post('/forgotPassword', forgotPassword)
 
-router.post('/login', loginUser)
-
-
-export default router
-
 /**
  * @swagger
- * /api/v1/users/upcomingActivities:
+ 
+* /api/v1/users/upcomingActivities:
  *   get:
  *     summary: Get upcoming user activities
  *     description: Retrieves upcoming user activities based on user ID.
@@ -297,7 +294,6 @@ router.get(
   authorizationMiddleware,
   getUpcomingUserActivities
 )
-
 /**
  * @swagger
  * components:
@@ -369,3 +365,72 @@ router.get(
   authorizationMiddleware,
   getUserPersonalSavingsWallet
 )
+
+/**
+ * @swagger
+ * /api/v1/users/resetPassword:
+ *   post:
+ *     summary: Reset user password
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: verify
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Verification token received in the email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: New user password
+ *               verify:
+ *                 type: string
+ *                 description: Verification token received in the email
+ *             required:
+ *               - newPassword
+ *               - verify
+ *           example:
+ *             newPassword: "DUBUM9&%"
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Password reset successful. You can now log in with your new password."
+ *       400:
+ *         description: Bad request or invalid request body
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Invalid request body."
+ *               errors: [...]
+ *       401:
+ *         description: Invalid or expired verification token
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Invalid or expired reset password token."
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "User not found."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "This is our fault, our team is working to resolve this."
+ */
+router.post('/resetPassword', resetPassword)
+
+export default router

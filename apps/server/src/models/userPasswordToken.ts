@@ -15,6 +15,7 @@ class UserResetPasswordToken extends Model<
   declare id: string
   declare secret: string
   declare token: string
+  declare used: boolean
 }
 
 UserResetPasswordToken.init(
@@ -31,6 +32,10 @@ UserResetPasswordToken.init(
     token: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    used: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
