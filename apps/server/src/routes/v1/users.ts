@@ -319,11 +319,6 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  */
 router.post('/forgotPassword', forgotPassword)
 
-router.post('/login', loginUser)
-
-
-export default router
-
 /**
  * @swagger
  * /api/v1/users/upcomingActivities:
