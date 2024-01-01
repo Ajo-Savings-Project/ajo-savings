@@ -6,6 +6,7 @@ import {
   refreshToken,
   forgotPassword,
   getUpcomingUserActivities,
+  
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -321,7 +322,8 @@ router.post('/forgotPassword', forgotPassword)
 
 /**
  * @swagger
- * /api/v1/users/upcomingActivities:
+ 
+* /api/v1/users/upcomingActivities:
  *   get:
  *     summary: Get upcoming user activities
  *     description: Retrieves upcoming user activities based on user ID.
@@ -363,3 +365,7 @@ router.get(
   authorizationMiddleware,
   getUpcomingUserActivities
 )
+
+
+
+export default router

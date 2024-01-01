@@ -33,3 +33,8 @@ export const createGroupSchema = z.object({
   numberOfParticipants: z.number(),
   duration: z.string(),
 })
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1), // Assuming the reset token is a non-empty string
+  newPassword: z.string().min(8), // Adjust the minimum length as needed
+})
