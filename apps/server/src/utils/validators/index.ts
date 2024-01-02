@@ -25,6 +25,7 @@ export const forgotPasswordSchema = z.object({
 })
 export const createGroupSchema = z.object({
   groupName: z.string(),
+  contributionAmount: z.number(),
   purposeAndGoals: z.string(),
   frequency: z.string(),
   startDate: z.string(),

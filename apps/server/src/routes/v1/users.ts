@@ -4,8 +4,12 @@ import {
   loginUser,
   refreshToken,
   forgotPassword,
+  getUpcomingUserActivities,
 } from '../../controllers/userControllers'
-import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
+import {
+  authorizationMiddleware,
+  validateRefreshTokenMiddleWare,
+} from '../../middlware/authorization/authentication'
 
 const router = Router()
 
@@ -314,3 +318,48 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  */
 router.post('/forgotPassword', forgotPassword)
 export default router
+
+/**
+ * @swagger
+ * /api/v1/users/upcomingActivities:
+ *   get:
+ *     summary: Get upcoming user activities
+ *     description: Retrieves upcoming user activities based on user ID.
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success. Returns a list of upcoming user activities.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "retrieved user upcoming payments successfully"
+ *               contributions:
+ *                 - groupName: "Ajo Legends"
+ *                   contributionAmount: 5000
+ *                   date: "2024-01-05T16:26:39.500Z"
+ *                   image: ""
+ *                 - groupName: "Ajo Legends"
+ *                   contributionAmount: 5000
+ *                   date: "2024-01-12T16:26:39.500Z"
+ *                   image: ""
+ *                 # ... (more contributions)
+ *       404:
+ *         description: Error. User groups not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Error fetching user groups"
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Something went wrong, our team has been notified."
+ */
+router.get(
+  '/upcomingActivities',
+  authorizationMiddleware,
+  getUpcomingUserActivities
+)

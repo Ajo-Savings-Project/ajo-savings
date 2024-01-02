@@ -19,7 +19,7 @@ interface GroupTransactions {
   transaction_type: string
 }
 
-enum frequency {
+export enum frequency {
   DAILY = 'Daily',
   WEEKLY = 'Weekly',
   MONTHLY = 'Monthly',
