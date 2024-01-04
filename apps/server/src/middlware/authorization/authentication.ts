@@ -24,8 +24,8 @@ export const authorizationMiddleware = async (
   const authorization = req?.headers?.authorization
 
   if (!authorization) {
-    return res.status(HTTP_STATUS_CODE.FORBIDDEN).json({
-      message: ['Unauthorized access', 'Token is missing'],
+    return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+      message: ['Unauthorized access:', 'Token is missing'],
       code: JWT_INVALID_STATUS_CODE,
     })
   }

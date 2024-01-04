@@ -32,22 +32,8 @@ const LoginPage = () => {
   const apiLogin = useLoginMutation()
 
   const handleLogin = async (values: LoginSchemaType) => {
-    try {
-      const data = await apiLogin.mutateAsync(values)
-      //TODO: when get profile endpoint is created, modify what handleAuthSession may hold
-      if (data) handleAuthSession(data.data)
-    } finally {
-      // this try/finally block should be removed once login route has been implemented
-      handleAuthSession({
-        refreshToken: 'refresh token',
-        token: '',
-        user: {
-          lastName: 'Doe',
-          firstName: 'John',
-          id: 'id',
-        },
-      })
-    }
+    const data = await apiLogin.mutateAsync(values)
+    if (data) handleAuthSession(data.data)
   }
 
   return (

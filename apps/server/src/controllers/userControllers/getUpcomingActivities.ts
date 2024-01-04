@@ -31,71 +31,66 @@ export const getUpcomingUserActivities = async (
       },
     })
 
-    if (userGroups && userGroups.length !== 0) {
-      const contributions = []
+    const contributions = []
 
-      for (const group of userGroups) {
-        const contributionAmount = group.contributionAmount
-        const groupName = group.title
-        const image = group.groupImage
+    for (const group of userGroups) {
+      const contributionAmount = group.contributionAmount
+      const groupName = group.title
+      const image = group.groupImage
 
-        if (group.frequency === frequency.DAILY) {
-          const daysInMonth = DateHandler.getDaysInMonth(
-            currentYear,
-            currentMonth
-          )
-          for (let day = 1; day <= daysInMonth; day++) {
-            const contributionDate = new Date(currentYear, currentMonth, day)
+      if (group.frequency === frequency.DAILY) {
+        const daysInMonth = DateHandler.getDaysInMonth(
+          currentYear,
+          currentMonth
+        )
+        for (let day = 1; day <= daysInMonth; day++) {
+          const contributionDate = new Date(currentYear, currentMonth, day)
 
-            const contributionDetails = {
-              groupName,
-              contributionAmount,
-              date: contributionDate,
-              image,
-            }
-            if (contributionDate >= currentDate) {
-              contributions.push(contributionDetails)
-            }
-          }
-        } else if (group.frequency === frequency.WEEKLY) {
-          let currentWeekEnd = DateHandler.getNextFriday(currentDate)
-
-          while (currentWeekEnd <= lastDayOfMonth) {
-            const contributionDetails = {
-              groupName,
-              contributionAmount,
-              date: currentWeekEnd,
-              image,
-            }
-
-            if (currentWeekEnd >= currentDate) {
-              contributions.push(contributionDetails)
-            }
-            const oneWeek = 7 * 24 * 60 * 60 * 1000
-
-            currentWeekEnd = new Date(currentWeekEnd.getTime() + oneWeek)
-          }
-        } else if (group.frequency === frequency.MONTHLY) {
           const contributionDetails = {
             groupName,
             contributionAmount,
-            date: lastDayOfMonth,
+            date: contributionDate,
             image,
           }
-          if (lastDayOfMonth >= currentDate) {
+          if (contributionDate >= currentDate) {
             contributions.push(contributionDetails)
           }
         }
+      } else if (group.frequency === frequency.WEEKLY) {
+        let currentWeekEnd = DateHandler.getNextFriday(currentDate)
+
+        while (currentWeekEnd <= lastDayOfMonth) {
+          const contributionDetails = {
+            groupName,
+            contributionAmount,
+            date: currentWeekEnd,
+            image,
+          }
+
+          if (currentWeekEnd >= currentDate) {
+            contributions.push(contributionDetails)
+          }
+          const oneWeek = 7 * 24 * 60 * 60 * 1000
+
+          currentWeekEnd = new Date(currentWeekEnd.getTime() + oneWeek)
+        }
+      } else if (group.frequency === frequency.MONTHLY) {
+        const contributionDetails = {
+          groupName,
+          contributionAmount,
+          date: lastDayOfMonth,
+          image,
+        }
+        if (lastDayOfMonth >= currentDate) {
+          contributions.push(contributionDetails)
+        }
       }
-      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-        message: `retrieved user upcoming payments successfully`,
-        data: contributions,
-      })
-    } else {
-      return res
-        .status(HTTP_STATUS_CODE.NOT_FOUND)
-        .json({ message: `Error fetching user groups` })
     }
+
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: `retrieved user upcoming payments successfully`,
+      data: contributions,
+    })
   } catch (err) {
     console.log(err)
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({

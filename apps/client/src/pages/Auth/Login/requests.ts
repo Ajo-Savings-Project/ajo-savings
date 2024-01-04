@@ -8,10 +8,10 @@ export const LoginSchema = z.object({
 })
 
 const LoginResponseSchema = z.object({
-  refreshToken: z.string(),
   token: z.string(),
   user: z.object({
     id: z.string(),
+    email: z.string(),
     firstName: z.string(),
     lastName: z.string(),
   }),
@@ -21,7 +21,7 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (data: z.infer<typeof LoginSchema>) => {
       const res = await request.post('/users/login', data)
-      //TODO: also prefetch profile data
+      request.defaults.headers['Authorization'] = `Bearer ${res.data.token}`
       const result = LoginResponseSchema.safeParse(res.data)
       if (result.success) return result
     },
