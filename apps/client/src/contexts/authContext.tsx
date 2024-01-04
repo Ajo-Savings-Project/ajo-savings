@@ -17,7 +17,7 @@ interface AuthContextI extends ContextValueT {
     token?: string
     refreshToken: string
   }) => void
-  handleClearSession: (options: { auto: boolean }) => void
+  handleClearSession: (options?: { auto: boolean }) => void
 }
 
 const AuthContext = createContext<AuthContextI>({
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setState({
       ...state,
       isAuth: false,
-      showAutoLogoutMessage: Boolean(options.auto),
+      showAutoLogoutMessage: Boolean(options?.auto),
     })
     localStorage.clear()
   }

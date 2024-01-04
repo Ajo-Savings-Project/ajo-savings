@@ -133,6 +133,12 @@ body::-webkit-scrollbar {
   margin: 0 0;
 }
 
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media screen and (min-width: 900px) {
   .container {
     padding: 0 20px;

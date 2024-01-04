@@ -1,24 +1,12 @@
 .cardContainer {
-  padding-bottom: 4.375rem;
   width: 100%;
   max-width: 28.75rem;
   max-height: 19.375rem;
-  margin: auto;
-  background: var(--white);
-  border-radius: 20px;
-  &Icon {
-    text-align: end;
-    padding: 14px 14px;
 
-    > button {
-      border: none;
-      background: none;
-      cursor: pointer;
-    }
-  }
   .cardBody {
     text-align: center;
     margin: 0 3.5rem;
+
     &Logo {
       width: 4.375rem;
       height: 4.375rem;
