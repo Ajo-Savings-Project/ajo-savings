@@ -31,9 +31,8 @@ const AuthLayout = () => {
   return (
     <>
       {showAutoLogoutMessage && (
-        <div style={{ backgroundColor: 'var(--primary-500)', padding: '1rem' }}>
+        <div className={styles.autoLogout}>
           <Text
-            style={{ textAlign: 'center' }}
             color={'White'}
             content={'You were logged out due to inactivity.'}
           />

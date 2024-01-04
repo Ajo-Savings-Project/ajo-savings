@@ -14,7 +14,13 @@ import cors from 'cors'
 dotenv.config()
 const app = express()
 
-app.use(cors())
+app.use(
+  cors({
+    origin: ENV.FE_BASE_URL,
+    methods: ['GET', 'POST', 'DELETE'],
+    credentials: true,
+  })
+)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

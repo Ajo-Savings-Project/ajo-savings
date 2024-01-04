@@ -1,11 +1,13 @@
 import { createContext, ReactNode, useState } from 'react'
-import { REFRESH_TOKEN_KEY, SESSION_COUNT_KEY } from '../appConstants'
+import request from '../api'
+import { SESSION_COUNT_KEY } from '../appConstants'
 
 const contextValues = {
   isAuth: false,
   showAutoLogoutMessage: false,
   firstName: '',
   lastName: '',
+  email: '',
   id: '',
 }
 
@@ -15,7 +17,6 @@ interface AuthContextI extends ContextValueT {
   handleAuthSession: (values: {
     user: Omit<typeof contextValues, 'isAuth' | 'showAutoLogoutMessage'>
     token?: string
-    refreshToken: string
   }) => void
   handleClearSession: (options?: { auto: boolean }) => void
 }
@@ -27,13 +28,14 @@ const AuthContext = createContext<AuthContextI>({
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const sessionIsActive = localStorage.getItem(SESSION_COUNT_KEY) || false
+  const sessionIsActive = sessionStorage.getItem(SESSION_COUNT_KEY) || false
 
   const [state, setState] = useState<ContextValueT>({
     isAuth: Boolean(sessionIsActive),
     showAutoLogoutMessage: false,
     firstName: '',
     lastName: '',
+    email: '',
     id: '',
   })
 
@@ -41,13 +43,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     values: Parameters<AuthContextI['handleAuthSession']>[0]
   ) => {
     const s_id = `${String(new Date().getTime())}:${values.user.id}`
-    localStorage.setItem(SESSION_COUNT_KEY, s_id)
-    localStorage.setItem(REFRESH_TOKEN_KEY, values.refreshToken)
-    setState({
-      ...state,
-      ...values.user,
-      isAuth: true,
-      showAutoLogoutMessage: false,
+
+    setState((prev) => {
+      sessionStorage.setItem(SESSION_COUNT_KEY, values.token as string)
+      sessionStorage.setItem('log_time', s_id)
+
+      return {
+        ...prev,
+        ...values.user,
+        isAuth: true,
+        showAutoLogoutMessage: false,
+      }
     })
   }
 
@@ -61,7 +67,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAuth: false,
       showAutoLogoutMessage: Boolean(options?.auto),
     })
-    localStorage.clear()
+    sessionStorage.clear()
+  }
+
+  // automatically append token to session on refresh
+  if (sessionIsActive && !request.defaults.headers['Authorization']) {
+    request.defaults.headers['Authorization'] = `Bearer ${sessionIsActive}`
   }
 
   return (
