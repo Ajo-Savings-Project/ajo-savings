@@ -24,6 +24,7 @@ import {
   loginSchema,
   refreshTokenSchema,
   registerSchema,
+  resetPasswordSchema,
 } from '../../utils/validators'
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -137,7 +138,6 @@ export const loginUser = async (req: Request, res: Response) => {
         password,
         confirmUser.password
       )
-      // console.log("user :",confirmUser);
 
       if (confirmPassword) {
         const payload = {
@@ -147,7 +147,6 @@ export const loginUser = async (req: Request, res: Response) => {
         const accessToken = await Jwt.sign(payload, {
           expiresIn: JWT_ACCESS_TOKEN_EXPIRATION_TIME,
         })
-        console.log('user:', confirmUser)
 
         const refreshToken = await Jwt.sign(payload, {
           expiresIn: JWT_REFRESH_TOKEN_EXPIRATION_TIME,
@@ -159,7 +158,6 @@ export const loginUser = async (req: Request, res: Response) => {
           sameSite: 'strict',
           secure: Env.IS_PROD,
         })
-        console.log('accessToken: ', accessToken)
 
         // Return basic user data to client-side
         return res.status(HTTP_STATUS_CODE.SUCCESS).json({
@@ -276,8 +274,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
         return res.status(HTTP_STATUS_CODE.SUCCESS).json({
           message: `Password reset link will be sent to your email if you have an account with us.`,
-          token,
-          otp,
         })
       }
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
@@ -289,8 +285,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
       message: isValidBody.error.issues,
     })
   } catch (error) {
-    console.log('errorPass: ', error)
-
     // TODO: send to error logger - error
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [
@@ -300,68 +294,51 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 }
 
-// export const resetPassword = async (req: Request, res: Response) => {
-//   try {
-//     // Validate request parameters (e.g., reset token, new password)
-//     const validationResult = resetPasswordSchema.strict().safeParse(req.body);
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const validResetBody = resetPasswordSchema.strict().safeParse(req.body)
 
-//     if (!validationResult.success) {
-//       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-//         message: validationResult.error.issues,
-//       });
-//     }
+    if (!validResetBody.success) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid request body.',
+        errors: validResetBody.error,
+      })
+    }
+    const { newPassword, email } = validResetBody.data
+    const { verify } = req.query
 
-//     // Extract required data from the request body
-//     const { token, newPassword } = validationResult.data;
+    if (!verify) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid or missing verification token.',
+      })
+    }
+    const resetToken = await UserResetPasswordToken.findOne({
+      where: { id: verify as string },
+    })
 
-//     // Verify the reset token against your database
-//     const resetToken = await UserResetPasswordToken.findOne({
-//       where: { token },
-//     });
+    // Lets check if token is found, valid & unexpired
+    if (!resetToken || !Jwt.isTokenExpired(resetToken.token)) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Invalid or expired verification token.',
+      })
+    }
 
-//     if (resetToken) {
-//       // Check if the token is still valid (e.g., not expired)
-//       const currentTimestamp = new Date().getTime();
-//       const tokenExpiry = resetToken.tokenExpiry.getTime().toString();
+    await Users.findOne({ where: { email } })
 
-//       if (currentTimestamp <= tokenExpiry) {
-//         // Update the user's password in the database
-//         const userId = resetToken.id; // ID of the user associated with the reset token
-//         const hashedPassword = await PasswordHarsher.hash(newPassword);
+    const hashedPassword = await PasswordHarsher.hash(newPassword)
 
-//         await Users.update(
-//           { password: hashedPassword },
-//           { where: { id: userId } }
-//         );
+    // Lets update the password
+    await Users.update({ password: hashedPassword }, { where: { email } })
 
-//         // Delete the used reset token from your database
-//         await UserResetPasswordToken.destroy({ where: { token } });
+    // Let's invalidate the reset token to prevent its reuse
+    await resetToken.destroy()
 
-//         // Respond to the client with a success message
-//         return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-//           message: `Password reset successful.`,
-//         });
-//       } else {
-//         // Expired token
-//         return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-//           message: `Expired reset token.`,
-//         });
-//       }
-//     } else {
-//       // Invalid token
-//       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-//         message: `Invalid reset token.`,
-//       });
-//     }
-//   } catch (error) {
-//     // console.log("error:",error);
-
-//     // TODO: Log the error
-
-//     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-//       message: [
-//         { message: `This is our fault, our team is working to resolve this.` },
-//       ],
-//     });
-//   }
-// };
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: [`Password reset successful.`],
+    })
+  } catch (error) {
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: [`This is our fault, our team is working to resolve this.`],
+    })
+  }
+}
