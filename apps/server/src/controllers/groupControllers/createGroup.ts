@@ -3,7 +3,7 @@ import { RequestExt } from '../../middlware/authorization/authentication'
 import { HTTP_STATUS_CODE } from '../../constants'
 import { v4 } from 'uuid'
 import Groups, { Members } from '../../models/groups'
-import Wallets, { WalletType } from '../../models/wallets'
+import Wallets, { WalletType, OwnerType } from '../../models/wallets'
 import { createGroupSchema } from '../../utils/validators'
 import { v2 as cloudinary } from 'cloudinary'
 
@@ -69,7 +69,8 @@ export const createGroup = async (req: RequestExt, res: Response) => {
 
     const groupWallet = await Wallets.create({
       id: v4(),
-      userId: userId,
+      ownerId: groupId,
+      ownerType: OwnerType.GROUP,
       totalAmount: 0,
       type: WalletType.GROUP_WALLET,
       earnings: [],
@@ -83,7 +84,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     })
   } catch (error) {
     console.log(error)
-    await Wallets.destroy({ where: { userId: groupId } })
+    await Wallets.destroy({ where: { ownerId: groupId } })
     await Groups.destroy({ where: { id: groupId } })
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: 'Something went wrong, our team has been notified.',

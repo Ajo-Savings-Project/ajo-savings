@@ -61,6 +61,7 @@ const router = Router()
  *         numberOfParticipants: 10
  *         duration: "3 months"
  */
+
 /**
  * @swagger
  * tags:
