@@ -1,0 +1,70 @@
+.allContainer {
+  margin-top: 1rem;
+}
+.container {
+  width: 100%;
+  overflow-y: scroll;
+  max-height: 19rem;
+
+  .tableContainer {
+    .table {
+      table-layout: fixed;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 100px;
+      }
+      tr {
+        border-radius: 8px;
+        background: white;
+        max-width: 1000px;
+        padding: 10px 13px;
+        align-items: center;
+        margin: 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 1.05rem;
+        white-space: nowrap;
+        height: 60px;
+        flex-shrink: 0;
+      }
+
+      th,
+      td {
+        padding: 0.5rem;
+        text-align: left;
+      }
+      // div {
+      //   flex-shrink: 0;
+      // }
+      td:nth-child(2) {
+        width: 13rem;
+        white-space: normal;
+      }
+      td:nth-child(3) {
+        width: 13rem;
+        white-space: normal;
+      }
+      td:nth-child(4) {
+        width: 6rem;
+      }
+      td:nth-child(5) {
+        width: 7rem;
+      }
+      td:nth-child(6) {
+        width: 6rem;
+      }
+
+      .status-cell {
+        width: 5rem;
+        color: var(--red);
+
+        /* Conditional styling based on status */
+        &[data-status='Received'] {
+          color: var(--green-1);
+        }
+      }
+    }
+  }
+}
