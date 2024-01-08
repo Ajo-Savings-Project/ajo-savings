@@ -1,6 +1,7 @@
 import { Card, Text } from 'components'
 import AjoCorperImg from './Image/AjoCorperImg.svg'
 import styles from './upcomingActivities.module.scss'
+import { formatCurrency } from 'utils/currencyFormatter'
 
 const activities = [
   {
@@ -25,20 +26,6 @@ const activities = [
     amount: 5000,
   },
 ]
-
-function formatCurrency(input: number): string {
-  const formattedCurrency = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    minimumFractionDigits: 0,
-  }).format(Math.abs(input))
-
-  if (input < 0) {
-    return `-${formattedCurrency}`
-  }
-
-  return `${formattedCurrency}`
-}
 
 const UpcomingActivities = () => {
   return (
