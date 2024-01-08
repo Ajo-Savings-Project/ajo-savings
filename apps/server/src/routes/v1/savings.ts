@@ -1,9 +1,14 @@
 import { Router } from 'express'
-import { createUserTarget } from '../../controllers/savingsController'
+import {
+  createTarget,
+  getTarget,
+  getAllTarget,
+} from '../../controllers/savingsController'
 
 const router = Router()
 
-router.post('create', createUserTarget)
-//router.get('getSavings', getAllUserTargets)
+router.post('savings/create', createTarget)
+router.get('savings/get', getTarget)
+router.get('savings/getAll', getAllTarget)
 
 export default router
