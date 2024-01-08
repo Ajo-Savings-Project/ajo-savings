@@ -44,3 +44,17 @@
   padding: 1rem 0;
   font-size: 1rem;
 }
+
+.autoLogout {
+  background-color: var(--primary-500);
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 5;
+
+  > p {
+    text-align: center;
+  }
+}

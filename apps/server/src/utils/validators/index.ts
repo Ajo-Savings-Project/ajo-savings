@@ -23,3 +23,13 @@ export const refreshTokenSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email: z.string().email({ message: 'email is invalid' }),
 })
+export const createGroupSchema = z.object({
+  groupName: z.string(),
+  contributionAmount: z.number(),
+  purposeAndGoals: z.string(),
+  frequency: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  numberOfParticipants: z.number(),
+  duration: z.string(),
+})

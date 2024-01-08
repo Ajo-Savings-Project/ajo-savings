@@ -1,0 +1,33 @@
+.switcherWrapper {
+  transition: 0.5s;
+  width: 45px;
+  height: 22px;
+  border-radius: 20px;
+  background-color: var(--gray-4);
+  border: none;
+
+  &Button {
+    transition: transform 0.2s;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--white);
+    border: none;
+    margin-top: -4px;
+    cursor: pointer;
+    transform: translateX(-5px);
+
+    &On {
+      background-color: var(--green-2);
+      transform: translateX(20px);
+    }
+  }
+
+  &ButtonOff {
+    background: var(--green-1);
+  }
+
+  &Input {
+    display: none;
+  }
+}

@@ -22,6 +22,7 @@
   --gray-1: #828282;
   --gray-2: #4f4f4f;
   --gray-3: #bdbdbd;
+  --gray-4: #9e9e9e;
   --gray-50: #f8fafc;
   --gray-100: #f2f4f7;
   --gray-200: #e5e7eb;
@@ -130,6 +131,12 @@ body::-webkit-scrollbar {
 
 .container-dashboard {
   margin: 0 0;
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @media screen and (min-width: 900px) {

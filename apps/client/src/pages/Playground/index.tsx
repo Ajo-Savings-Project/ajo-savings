@@ -8,8 +8,10 @@ import {
   Modal,
   InfoCard,
   appNotify,
+  Switcher,
 } from 'components'
 import styles from './play.module.scss'
+
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
@@ -17,6 +19,10 @@ const Playground = () => {
   const notifyWarning = () => appNotify('error', 'Error creating User')
   const emoji = () => appNotify('info', 'works!')
   const retry = () => appNotify('info', 'works!', notify, { duration: 500 })
+
+  const handleChange = (checked: boolean) => {
+    console.log('Switcher value:', checked)
+  }
 
   return (
     <section className={classNames('container', styles.playground)}>
@@ -30,7 +36,7 @@ const Playground = () => {
           />
         )}
       />
-
+      <Switcher onChange={handleChange} />
       <div style={{ display: 'flex', gap: '10px' }}>
         <Button onClick={notify} text={'Success'} />
         <Button onClick={notifyWarning} text={'Failed'} />

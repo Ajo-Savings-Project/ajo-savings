@@ -1,11 +1,15 @@
 import { Router } from 'express'
 import {
-  loginUser,
   registerUser,
+  loginUser,
   refreshToken,
-  forgotPassword
-} from '../../controllers/userController'
-import { validateRefreshTokenMiddleWare } from '../../middlware/authorization/authentication'
+  forgotPassword,
+  getUpcomingUserActivities,
+} from '../../controllers/userControllers'
+import {
+  authorizationMiddleware,
+  validateRefreshTokenMiddleWare,
+} from '../../middlware/authorization/authentication'
 
 const router = Router()
 
@@ -119,7 +123,7 @@ const router = Router()
  *           content:
  *             application/json:
  *               example:
- *                 message: Registration Successful.
+ *                 message: "Registration Successful."
  *                 user:
  *                   type: object
  *                   properties:
@@ -223,7 +227,7 @@ router.post('/login', loginUser)
 /**
  * @swagger
  * paths:
- *   /api/v1/users/tokenrefresh:
+ *   /api/v1/users/token-refresh:
  *     post:
  *       summary: Refresh access token
  *       tags: [Users]
@@ -243,21 +247,21 @@ router.post('/login', loginUser)
  *           content:
  *             application/json:
  *               example:
- *                 message: Unauthorized
+ *                 message: "Unauthorized"
  *         403:
  *           description: Invalid refresh token
  *           content:
  *             application/json:
  *               example:
- *                 message: Invalid refresh token
+ *                 message: "Invalid refresh token"
  *         500:
  *           description: Internal Server Error
  *           content:
  *             application/json:
  *               example:
- *                 message: Internal Server Error
+ *                 message: "Internal Server Error"
  */
-router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
+router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
 
 /**
  * @swagger
@@ -285,7 +289,7 @@ router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
  *           content:
  *             application/json:
  *               example:
- *                 message: password reset link has been sent to your email.
+ *                 message: "password reset link has been sent to your email."
  *
  *         400:
  *           description: Bad request
@@ -314,3 +318,48 @@ router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
  */
 router.post('/forgotPassword', forgotPassword)
 export default router
+
+/**
+ * @swagger
+ * /api/v1/users/upcomingActivities:
+ *   get:
+ *     summary: Get upcoming user activities
+ *     description: Retrieves upcoming user activities based on user ID.
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success. Returns a list of upcoming user activities.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "retrieved user upcoming payments successfully"
+ *               contributions:
+ *                 - groupName: "Ajo Legends"
+ *                   contributionAmount: 5000
+ *                   date: "2024-01-05T16:26:39.500Z"
+ *                   image: ""
+ *                 - groupName: "Ajo Legends"
+ *                   contributionAmount: 5000
+ *                   date: "2024-01-12T16:26:39.500Z"
+ *                   image: ""
+ *                 # ... (more contributions)
+ *       404:
+ *         description: Error. User groups not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Error fetching user groups"
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Something went wrong, our team has been notified."
+ */
+router.get(
+  '/upcomingActivities',
+  authorizationMiddleware,
+  getUpcomingUserActivities
+)

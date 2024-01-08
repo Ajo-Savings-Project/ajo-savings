@@ -1,0 +1,16 @@
+.setting {
+  &Wrapper {
+    &TextWithInput {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    &Text {
+      padding-bottom: 15px;
+      > p {
+        padding-bottom: 10px;
+      }
+    }
+  }
+}

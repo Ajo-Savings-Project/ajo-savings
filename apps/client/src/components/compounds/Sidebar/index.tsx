@@ -87,7 +87,7 @@ const Sidebar = ({
                     return (
                       <li key={name} className={styles.sidebarList}>
                         <button
-                          onClick={handleClearSession}
+                          onClick={() => handleClearSession()}
                           className={styles.sidebarListContent}
                         >
                           {icon}
