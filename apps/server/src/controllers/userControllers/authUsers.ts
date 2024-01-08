@@ -176,8 +176,7 @@ export const loginUser = async (req: Request, res: Response) => {
       message: 'Invalid Credentials!',
     })
   } catch (error) {
-    console.log('error', error)
-
+    console.log('Error', error)
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [`This is our fault, our team are working to resolve this.`],
     })

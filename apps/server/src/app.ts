@@ -45,7 +45,6 @@ db.sync({
   .catch((err: HttpError) => {
     console.log('DB Error: ', err)
   })
-
 app.use('/api/v1', apiV1Routes)
 
 // catch 404 and forward to error handler
