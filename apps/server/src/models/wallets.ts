@@ -6,6 +6,7 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+import Groups from './groups'
 
 const TABLE_NAME = 'Wallets'
 
@@ -17,7 +18,10 @@ export enum WalletType {
   GROUP_WALLET = 'Group Wallet',
 }
 
-// const WalletType = ['Global', 'Savings', 'Group Wallet'] as const
+export enum OwnerType {
+  USER = 'user',
+  GROUP = 'group',
+}
 
 export interface Income {
   date: Date
@@ -29,7 +33,8 @@ class Wallets extends Model<
   InferCreationAttributes<Wallets>
 > {
   declare id: string
-  declare userId: string
+  declare ownerId: string
+  declare ownerType: 'user' | 'group'
   declare totalAmount: number
   declare type: string
   declare earnings: Income[]
@@ -43,12 +48,13 @@ Wallets.init(
       primaryKey: true,
       allowNull: false,
     },
-    userId: {
+    ownerId: {
       type: DataTypes.UUID,
-      references: {
-        model: Users,
-        key: 'id',
-      },
+      allowNull: false,
+    },
+    ownerType: {
+      type: DataTypes.ENUM(...Object.values(OwnerType)),
+      allowNull: false,
     },
     totalAmount: {
       type: DataTypes.INTEGER,
@@ -74,5 +80,17 @@ Wallets.init(
     timestamps: true,
   }
 )
+
+// Associations
+Wallets.belongsTo(Users, {
+  foreignKey: 'ownerId',
+  constraints: false,
+  as: 'user',
+})
+Wallets.belongsTo(Groups, {
+  foreignKey: 'ownerId',
+  constraints: false,
+  as: 'group',
+})
 
 export default Wallets

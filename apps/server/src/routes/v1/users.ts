@@ -5,6 +5,7 @@ import {
   refreshToken,
   forgotPassword,
   getUpcomingUserActivities,
+  getUserPersonalSavingsWallet,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -17,74 +18,6 @@ const router = Router()
  * @swagger
  * components:
  *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - firstName
- *         - lastName
- *         - email
- *         - phone
- *         - password
- *       properties:
- *         firstName:
- *           type: string
- *           description: First name of the user
- *         lastName:
- *           type: string
- *           description: Last name of the user
- *         email:
- *           type: string
- *           format: email
- *           description: Email address of the user
- *         phone:
- *           type: string
- *           description: Phone number of the user
- *         password:
- *           type: string
- *           format: password
- *           description: User password
- *         profilePic:
- *           type: string
- *           description: user profile picture
- *         role:
- *           type: string
- *         otp:
- *           type: string
- *           description: email verification otp
- *         otp_expiry:
- *           type: string
- *           format: date
- *         gender:
- *           type: string
- *         occupation:
- *           type: string
- *         bvn:
- *           type: string
- *         address:
- *           type: string
- *         identification_number:
- *           type: string
- *           description: identity document number
- *         identification_doc:
- *           type: string
- *           description: identity document type
- *         proof_of_address_doc:
- *           type: string
- *         date_of_birth:
- *           type: string
- *           format: date
- *         createdAt:
- *           type: string
- *           format: date
- *         updatedAt:
- *           type: string
- *           format: date
- *       example:
- *         firstName: John
- *         lastName: Carter
- *         email: johncarter@gmail.com
- *         phone: "07012345678"
- *         password: Ajo12345678@
  *     UserResponse:
  *       type: object
  *       properties:
@@ -99,10 +32,6 @@ const router = Router()
  *               type: string
  *             email:
  *               type: string
- */
-
-/**
- * @swagger
  * tags:
  *   name: Users
  *   description: All user APIs
@@ -362,4 +291,76 @@ router.get(
   '/upcomingActivities',
   authorizationMiddleware,
   getUpcomingUserActivities
+)
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Income:
+ *       type: object
+ *       properties:
+ *         date:
+ *           type: string
+ *           format: date
+ *         amount: string
+ *     Wallets:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         totalAmount:
+ *           type: number
+ *         totalIncome:
+ *           type: number
+ *         earnings:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Income'
+ *         type:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ * /api/v1/users/personal-wallets:
+ *   get:
+ *     summary: Get user personal svings wallet
+ *     description: Retrieves user's personal svings wallet .
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success. Returns a list of upcoming user activities.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "savings wallet fetched successfully"
+ *               data:
+ *                 - $ref: '#/components/schemas/Wallet'
+ *                 - $ref: '#/components/schemas/Wallet'
+ *                 - $ref: '#/components/schemas/Wallet'
+ *
+ *       404:
+ *         description: Error. User wallets not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Error fetching user wallets"
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Something went wrong, our team has been notified."
+ */
+router.get(
+  '/personal-wallets',
+  authorizationMiddleware,
+  getUserPersonalSavingsWallet
 )
