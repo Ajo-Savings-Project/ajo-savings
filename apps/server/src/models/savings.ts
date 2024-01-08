@@ -18,7 +18,7 @@ export enum frequency {
   ANNUALLY = 'Annually',
 }
 
-enum category {
+export enum category {
   TRAVEL = 'Travel',
   DREAM_HOME = 'Dream_Home',
   DREAM_CAR = 'Dream_Car',
