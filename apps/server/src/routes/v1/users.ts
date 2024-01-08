@@ -1,11 +1,14 @@
 import { Router } from 'express'
+
 import {
   registerUser,
   loginUser,
   refreshToken,
   forgotPassword,
   getUpcomingUserActivities,
+  resetPassword
 } from '../../controllers/userControllers'
+
 import {
   authorizationMiddleware,
   validateRefreshTokenMiddleWare,
@@ -317,11 +320,11 @@ router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
  *                 message: "Internal Server Error"
  */
 router.post('/forgotPassword', forgotPassword)
-export default router
 
 /**
  * @swagger
- * /api/v1/users/upcomingActivities:
+ 
+* /api/v1/users/upcomingActivities:
  *   get:
  *     summary: Get upcoming user activities
  *     description: Retrieves upcoming user activities based on user ID.
@@ -358,8 +361,82 @@ export default router
  *             example:
  *               message: "Something went wrong, our team has been notified."
  */
-router.get(
-  '/upcomingActivities',
-  authorizationMiddleware,
+router.get('/upcomingActivities',
+authorizationMiddleware,
   getUpcomingUserActivities
 )
+
+/**
+ * @swagger
+ * /api/v1/users/resetPassword:
+ *   post:
+ *     summary: Reset user password
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: verify
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Verification token received in the email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: New user password
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User email address
+ *               verify:
+ *                 type: string
+ *                 description: Verification token received in the email
+ *             required:
+ *               - newPassword
+ *               - email
+ *               - verify
+ *           example:
+ *             newPassword: "DUBUM9&%"
+ *             email: "nduulenu@gmail.com"
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Password reset successful."
+ *       400:
+ *         description: Bad request or invalid request body
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Invalid request body."
+ *               errors: [...]
+ *       401:
+ *         description: Invalid or expired verification token
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Invalid or expired verification token."
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "User not found."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "This is our fault, our team is working to resolve this."
+ */
+router.post('/resetPassword', resetPassword)
+
+export default router

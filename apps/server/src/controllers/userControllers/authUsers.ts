@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 import { v4 as uuidV4 } from 'uuid'
 import * as bgJobs from '../../backgroundJobs'
-import Env from "../../config/env";
+import Env from '../../config/env'
 import {
   HTTP_STATUS_CODE,
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
@@ -17,13 +17,14 @@ import {
   Jwt,
   PasswordHarsher,
   passwordUtils,
-  generateLongString
+  generateLongString,
 } from '../../utils/helpers'
 import {
   forgotPasswordSchema,
   loginSchema,
   refreshTokenSchema,
   registerSchema,
+  resetPasswordSchema,
 } from '../../utils/validators'
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -171,10 +172,13 @@ export const loginUser = async (req: Request, res: Response) => {
         })
       }
     }
+
     return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).send({
       message: 'Invalid Credentials!',
     })
   } catch (error) {
+    console.log('error', error)
+
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [`This is our fault, our team are working to resolve this.`],
     })
@@ -224,6 +228,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       })
     }
   } catch (error) {
+    console.log('error', error)
+
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).send({
       conde: JWT_INVALID_STATUS_CODE,
       message: 'Something has gone wrong.',
@@ -279,12 +285,60 @@ export const forgotPassword = async (req: Request, res: Response) => {
       message: isValidBody.error.issues,
     })
   } catch (error) {
-    console.log(error)
     // TODO: send to error logger - error
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: [
         { message: `This is our fault, our team are working to resolve this.` },
       ],
+    })
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const validResetBody = resetPasswordSchema.strict().safeParse(req.body)
+
+    if (!validResetBody.success) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid request body.',
+        errors: validResetBody.error,
+      })
+    }
+    const { newPassword, email } = validResetBody.data
+    const { verify } = req.query
+
+    if (!verify) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid or missing verification token.',
+      })
+    }
+    const resetToken = await UserResetPasswordToken.findOne({
+      where: { id: verify as string },
+    })
+
+    // Lets check if token is found, valid & unexpired
+    if (!resetToken || !Jwt.isTokenExpired(resetToken.token)) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Invalid or expired verification token.',
+      })
+    }
+
+    await Users.findOne({ where: { email } })
+
+    const hashedPassword = await PasswordHarsher.hash(newPassword)
+
+    // Lets update the password
+    await Users.update({ password: hashedPassword }, { where: { email } })
+
+    // Let's invalidate the reset token to prevent its reuse
+    await resetToken.destroy()
+
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: [`Password reset successful.`],
+    })
+  } catch (error) {
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: [`This is our fault, our team is working to resolve this.`],
     })
   }
 }

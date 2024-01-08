@@ -33,3 +33,8 @@ export const createGroupSchema = z.object({
   numberOfParticipants: z.number(),
   duration: z.string(),
 })
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email({ message: 'email is invalid' }),
+  newPassword: z.string().min(5, passwordUtils.error),
+})
