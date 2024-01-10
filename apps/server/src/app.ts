@@ -18,7 +18,11 @@ const port = ENV.PORT || 5500
 
 app.use(
   cors({
-    origin: [ENV.FE_BASE_URL as string, `http://localhost:${port}`],
+    origin: [
+      ENV.FE_BASE_URL as string,
+      // CORS allow use of swagger on local environment
+      ENV.IS_PROD ? '' : `http://localhost:${port}`,
+    ].filter(Boolean),
     methods: ['GET', 'POST', 'DELETE'],
     credentials: true,
   })
@@ -67,5 +71,6 @@ app.listen(port, () => {
   console.log(`\nLocal baseUrl, use @ http://localhost:${port}/api/`)
   console.log(`\nBull UI, open @ http://localhost:${port}/admin/queues`)
   //you can use docker: docker run -d -p 6379:6379 redis
-  console.log('\nMake sure Redis is running on port 6379 by default\n')
+  console.log('\nMake sure Redis is running on port 6379 by default')
+  console.log('you can use docker: docker run -d -p 6379:6379 redis\n')
 })
