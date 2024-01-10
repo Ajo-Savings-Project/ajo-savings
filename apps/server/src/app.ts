@@ -14,9 +14,11 @@ import cors from 'cors'
 dotenv.config()
 const app = express()
 
+const port = ENV.PORT || 5500
+
 app.use(
   cors({
-    origin: ENV.FE_BASE_URL,
+    origin: [ENV.FE_BASE_URL as string, `http://localhost:${port}`],
     methods: ['GET', 'POST', 'DELETE'],
     credentials: true,
   })
@@ -57,8 +59,6 @@ app.use(function (err: HttpError, req: Request, res: Response) {
   res.status(err.status || 500)
   res.render('error')
 })
-
-const port = ENV.PORT || 5500
 
 app.listen(port, () => {
   console.log(
