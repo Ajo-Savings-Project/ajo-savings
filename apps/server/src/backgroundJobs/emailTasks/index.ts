@@ -1,6 +1,9 @@
-import {mailResetPassword} from "./jobs/resetPasswordJob";
+import { mailResetPassword } from './jobs/resetPasswordJob'
 import { mailOTP } from './jobs/signupVerifyJob'
-import {resetPasswordSendEmailQueue, signUpSendVerificationEmailQueue} from './queues'
+import {
+  resetPasswordSendEmailQueue,
+  signUpSendVerificationEmailQueue,
+} from './queues'
 
 //  consumer/worker
 signUpSendVerificationEmailQueue.process((job) => {

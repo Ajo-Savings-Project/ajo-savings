@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 import { v4 as uuidV4 } from 'uuid'
 import * as bgJobs from '../../backgroundJobs'
-import Env from "../../config/env";
+import Env from '../../config/env'
 import {
   HTTP_STATUS_CODE,
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
@@ -17,7 +17,7 @@ import {
   Jwt,
   PasswordHarsher,
   passwordUtils,
-  generateLongString
+  generateLongString,
 } from '../../utils/helpers'
 import {
   forgotPasswordSchema,

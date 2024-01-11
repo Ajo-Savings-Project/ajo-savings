@@ -19,7 +19,6 @@ const HomePage = () => {
       <UpcomingActivities />
       <ChartWithUpcoming />
       <TransactionHistory />
-      
     </>
   )
 }
