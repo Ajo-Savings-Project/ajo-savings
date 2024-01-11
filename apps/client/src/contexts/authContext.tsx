@@ -9,6 +9,7 @@ const contextValues = {
   lastName: '',
   email: '',
   id: '',
+  kycComplete: false,
 }
 
 type ContextValueT = typeof contextValues
@@ -19,12 +20,14 @@ interface AuthContextI extends ContextValueT {
     token?: string
   }) => void
   handleClearSession: (options?: { auto: boolean }) => void
+  handleStateUpdate: (updateState: Partial<ContextValueT>) => void
 }
 
 const AuthContext = createContext<AuthContextI>({
   ...contextValues,
   handleAuthSession: () => {},
   handleClearSession: () => {},
+  handleStateUpdate: () => {},
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -37,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     lastName: '',
     email: '',
     id: '',
+    kycComplete: false,
   })
 
   const handleAuthSession = (
@@ -70,6 +74,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.clear()
   }
 
+  const handleStateUpdate = (newState: Partial<ContextValueT>) => {
+    setState((prev) => {
+      return { ...prev, ...newState }
+    })
+  }
   // automatically append token to session on refresh
   if (sessionIsActive && !request.defaults.headers['Authorization']) {
     request.defaults.headers['Authorization'] = `Bearer ${sessionIsActive}`
@@ -77,7 +86,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, handleAuthSession, handleClearSession }}
+      value={{
+        ...state,
+        handleAuthSession,
+        handleClearSession,
+        handleStateUpdate,
+      }}
     >
       {children}
     </AuthContext.Provider>
