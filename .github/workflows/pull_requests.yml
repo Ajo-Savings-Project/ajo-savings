@@ -30,4 +30,5 @@ jobs:
       - name: Format and Test
         run: | 
           yarn lint
+          yarn format
           yarn test

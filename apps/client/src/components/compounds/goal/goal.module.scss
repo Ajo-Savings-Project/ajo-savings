@@ -1,94 +1,88 @@
-
 .container {
   max-width: 396px;
   height: auto;
   padding: 1rem;
   background: white;
 
-  &Header{
+  &Header {
     display: flex;
     justify-content: space-between;
 
-    .view{
+    .view {
       text-decoration: none;
     }
   }
-    
-    .goalSection{
-  
-      .infoSection{
-        display: flex;
-        justify-content: space-between;
-        padding-top: 0.5rem;
-  
-        .goal{
-          display: flex;
-          gap: 10px;
 
-          .image{
-            width: 30px;
-            height: 40px;
-          }
-        
-         .info{
-          .amount{
+  .goalSection {
+    .infoSection {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+
+      .goal {
+        display: flex;
+        gap: 10px;
+
+        .image {
+          width: 30px;
+          height: 40px;
+        }
+
+        .info {
+          .amount {
             display: flex;
             padding-top: 3px;
-                   
-            .targetAmount{
-              color:#D9D9D9;
+
+            .targetAmount {
+              color: #d9d9d9;
             }
           }
-         }
-        }
-        .percentage{
-          padding: 10px 10px; 
         }
       }
-  
+      .percentage {
+        padding: 10px 10px;
+      }
+    }
+
+    .dashedLinesContainer {
+      display: flex;
+      width: 300px;
+      padding-top: 10px;
+
+      .dashedLine,
+      .dashedLineLeft {
+        height: 4px;
+        width: 150px;
+        border-bottom: 4px solid;
+        font-weight: bold;
+        border-radius: 3px;
+        margin: 0 5px;
+      }
+
+      .dashedLine {
+        border-color: #0d72b9;
+      }
+
+      .dashedLineLeft {
+        border-color: #d9d9d9;
+      }
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    &Header,
+    .infoSection,
+    .goal,
+    .amount {
+      flex-direction: column;
+    }
+
+    .goalSection {
       .dashedLinesContainer {
         display: flex;
-        width: 300px;
-        padding-top: 10px;
-  
-        .dashedLine,
-        .dashedLineLeft {
-          height: 4px;
-          width: 150px;
-          border-bottom: 4px solid;
-          font-weight: bold;
-          border-radius: 3px;
-          margin: 0 5px;
-        }
-  
-        .dashedLine {
-          border-color: #0d72b9;
-        }
-  
-        .dashedLineLeft {
-          border-color: #d9d9d9;
-        }
+        width: 150px;
+        padding-top: 5px;
       }
     }
-
-    @media screen and (max-width: 450px) {
-
-        &Header,
-        .infoSection,
-        .goal,
-        .amount{
-            flex-direction: column;
-            
-        }
-      
-        .goalSection{
-          .dashedLinesContainer {
-            display: flex;
-            width: 150px;
-            padding-top: 5px;
-      
-          }
-        }
-    }
-   
-  } 
+  }
+}

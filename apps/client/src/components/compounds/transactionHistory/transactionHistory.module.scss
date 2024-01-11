@@ -1,83 +1,78 @@
 .container {
-    width: 100%;
-    max-width: 617px;
-    height: auto;
-    padding: 1rem;
-  
-    &Header {
+  width: 100%;
+  max-width: 617px;
+  height: auto;
+  padding: 1rem;
+
+  &Header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+
+    .select {
       display: flex;
-      justify-content: space-between;
-      padding: 10px;
-    
-      .select {
-        display: flex;
-        gap: 10px;
-  
-        .selected,
-        .button {
-          cursor: pointer;
-          &:hover {
-            color: #2f80ed;
-            border-bottom: 2px solid #2f80ed;
-          }
+      gap: 10px;
+
+      .selected,
+      .button {
+        cursor: pointer;
+        &:hover {
+          color: #2f80ed;
+          border-bottom: 2px solid #2f80ed;
         }
       }
     }
-  
-    &Section{
-        margin-top: 10px;
-        
-        table {
-        width: 100%;
-        border-collapse: collapse;
-        overflow-x: auto;
-        white-space: nowrap;
-        margin-top: 10px;
+  }
 
-        tr{
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee; 
-        
-            th,td{
-            padding: 0.5rem;
-            text-align: left;
-            }
+  &Section {
+    margin-top: 10px;
 
-           
-            th:first-child {
-            margin-right: 20px;
-            }
-            th:nth-child(2) {
-            margin-right: 40px;
-            }
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-top: 10px;
+
+      tr {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #eee;
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
         }
 
-        .head{
-            color: #667085;
+        th:first-child {
+          margin-right: 20px;
         }
-
+        th:nth-child(2) {
+          margin-right: 40px;
+        }
+      }
     }
 
-    @media only screen and (max-width: 450px){
-
-        &Header{
-            flex-direction: column;
-            gap: 1rem;
-            
-        }
-        table {
-          display: block;
-          white-space: nowrap;
-          overflow-x: auto;
-
-          th, td {
-            display: inline-block;
-          }
-           
-        }
+    .head {
+      color: #667085;
     }
   }
-  
 
+  @media only screen and (max-width: 450px) {
+    &Header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    table {
+      display: block;
+      white-space: nowrap;
+      overflow-x: auto;
+
+      th,
+      td {
+        display: inline-block;
+      }
+    }
+  }
+}
