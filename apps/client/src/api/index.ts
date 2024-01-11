@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { ZodIssue } from 'zod'
 import { SESSION_COUNT_KEY } from '../appConstants'
 import { appNotify } from '../components'
 
@@ -38,7 +39,12 @@ request.interceptors.response.use(
     console.log('response success', response)
     return response
   },
-  async (error: AxiosError<{ message: string | string[]; code: string }>) => {
+  async (
+    error: AxiosError<{
+      message: string | string[] | ZodIssue[]
+      code: string
+    }>
+  ) => {
     switch (error.code) {
       case 'ERR_NETWORK':
         appNotify(
@@ -52,11 +58,20 @@ request.interceptors.response.use(
         if (!config.silent) {
           if (error.response) {
             if (error.response.data.message) {
-              let hideMsg = error.response.data.message
-              hideMsg = typeof hideMsg === 'string' ? hideMsg : hideMsg[0]
+              const messageResponse = error.response.data.message
+              if (typeof messageResponse !== 'string') {
+                if (messageResponse[0] !== ('Unauthorized' || 'unauthorized')) {
+                  messageResponse.forEach((res) => {
+                    const message = typeof res === 'string' ? res : res.message
+                    appNotify('error', message)
+                  })
+                }
+              }
               // don't show unauthorised messages
-              if (!hideMsg.toLowerCase().includes('unauthorized')) {
-                appNotify('error', error.response.data.message)
+              else if (
+                !messageResponse.toLowerCase().includes('unauthorized')
+              ) {
+                appNotify('error', error.response.data.message as string)
               }
             } else {
               // TODO: log to server
