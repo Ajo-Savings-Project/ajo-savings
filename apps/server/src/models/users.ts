@@ -12,6 +12,11 @@ export enum role {
   CONTRIBUTOR = 'Contributor', //NORMAL USER
 }
 
+export enum authMethod {
+  BASIC = 'Basic',
+  OAUTH = 'OAuth',
+}
+
 const TABLE_NAME = 'Users'
 
 // https://sequelize.org/docs/v6/other-topics/typescript/
@@ -41,8 +46,7 @@ class Users extends Model<
   declare resetTokenExpires: CreationOptional<Date>
   declare isVerified: boolean
   declare resetTokenExpiry: CreationOptional<Date>
-  declare createdAt: CreationOptional<Date>
-  declare updatedAt: CreationOptional<Date>
+  declare authMethod: string
 }
 
 Users.init(
@@ -86,6 +90,10 @@ Users.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    authMethod: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     isVerified: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
@@ -101,14 +109,6 @@ Users.init(
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     gender: {

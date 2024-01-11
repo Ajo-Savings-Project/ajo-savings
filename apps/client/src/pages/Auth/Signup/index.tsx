@@ -9,6 +9,7 @@ import { RegisterSchema, useRegisterMutation } from './request'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import request from '../../../api/index.ts'
 
 type RegisterSchemaType = z.infer<typeof RegisterSchema>
 
@@ -31,6 +32,23 @@ const SignupPage = () => {
     navigate(routes.auth.login.abs_path, { state: res!.user })
   }
 
+  interface AuthResponse {
+    url: string
+  }
+  function relocate(url: string) {
+    window.location.href = url
+  }
+
+  async function auth() {
+    try {
+      const response = await request.post('/oauth/request')
+      const data: AuthResponse = response.data
+      relocate(data.url)
+    } catch (error) {
+      console.error('Error during authentication: ', error)
+    }
+  }
+
   return (
     <div className={styles.loginDiv}>
       <div className={styles.loginDivAjo}>
@@ -43,9 +61,9 @@ const SignupPage = () => {
         <Text content={'Welcome back to Ajó Savings.'} />
       </div>
       <div className={styles.loginDivFormContainer}>
-        <Button className={styles.googleButton}>
+        <Button className={styles.googleButton} onClick={auth}>
           <GoogleIcon />
-          Sign in with Google
+          Sign up with Google
         </Button>
         <div className={styles.divider}>
           <Text content={'OR'} color={'Gray'} size={'Small'} />

@@ -10,6 +10,7 @@ import { HEADER_TITLE } from '../../../appConstants'
 import styles from './login.module.scss'
 import { useLoginMutation, LoginSchema } from './requests.ts'
 import GoogleIcon from './GoogleGoogleIcon.svg?react'
+import request from '../../../api/index.ts'
 
 type LoginSchemaType = z.infer<typeof LoginSchema>
 
@@ -36,6 +37,23 @@ const LoginPage = () => {
     if (data) handleAuthSession(data.data)
   }
 
+  interface AuthResponse {
+    url: string
+  }
+  function navigate(url: string) {
+    window.location.href = url
+  }
+
+  async function auth() {
+    try {
+      const response = await request.post('/oauth/request')
+      const data: AuthResponse = response.data
+      navigate(data.url)
+    } catch (error) {
+      console.error('Error during authentication: ', error)
+    }
+  }
+
   return (
     <div className={styles.loginDiv}>
       <div className={styles.loginDivAjo}>
@@ -54,7 +72,7 @@ const LoginPage = () => {
         />
       </div>
       <div className={styles.loginDivFormContainer}>
-        <Button className={styles.googleButton}>
+        <Button className={styles.googleButton} onClick={auth}>
           <GoogleIcon />
           Sign in with Google
         </Button>
