@@ -1,8 +1,8 @@
 import { JwtPayload } from 'jsonwebtoken'
 import { Response } from 'express'
 import { v4 } from 'uuid'
-import Savings, { frequency, category } from '../models/savings'
-import { HTTP_STATUS_CODE } from '../constants/httpStatusCode'
+import Savings, { frequency, category } from '../../models/savings'
+import { HTTP_STATUS_CODE } from '../../constants/httpStatusCode'
 
 //Define the type of the attributes for the Savings Model
 type SavingsAttributes = {
