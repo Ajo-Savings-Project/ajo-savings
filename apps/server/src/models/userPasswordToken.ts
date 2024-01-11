@@ -13,6 +13,7 @@ class UserResetPasswordToken extends Model<
   InferCreationAttributes<UserResetPasswordToken>
 > {
   declare id: string
+  declare secret: string
   declare token: string
 }
 
@@ -21,6 +22,10 @@ UserResetPasswordToken.init(
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
+      allowNull: false,
+    },
+    secret: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     token: {

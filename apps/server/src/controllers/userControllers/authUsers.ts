@@ -245,16 +245,22 @@ export const forgotPassword = async (req: Request, res: Response) => {
       if (user) {
         const { otp, expiry: tokenExpiry } = GenerateOTP()
         const longString = generateLongString(80) //generate 80 chars long random string
+        const secret = generateLongString(20) //generate 80 chars long random string
 
         // create unique verify token
-        const token = await Jwt.sign({
-          otp: otp.toString(),
-          tokenExpiry: tokenExpiry.getTime().toString(),
-        })
+        const token = await Jwt.sign(
+          {
+            id: user.id,
+            otp: otp.toString(),
+            tokenExpiry: tokenExpiry.getTime().toString(),
+          },
+          { _secret: Env.JWT_SECRET + longString }
+        )
 
         //create password reset data instance
         await UserResetPasswordToken.create({
           id: longString,
+          secret,
           token,
         })
 
@@ -265,13 +271,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
           email: email,
           message: link,
         })
-
-        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-          message: `Password reset link will be sent to your email if you have an account with us.`,
-        })
       }
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        message: `Account not found`,
+
+      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+        message: `Password reset link will be sent to your email if you have an account with us.`,
       })
     }
 
