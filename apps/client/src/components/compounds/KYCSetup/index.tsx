@@ -1,10 +1,27 @@
+import { Modal } from '..'
+import Form from './Form'
+import styles from './kyc.module.scss'
+import { useAuth } from 'contexts'
 const KYCSetup = () => {
-  const KYCComplete = true
+  const { kycComplete } = useAuth()
 
-  if (KYCComplete) {
+  if (kycComplete) {
     return null
   }
-  return <div>Show KYCSetup</div>
+  return (
+    <Modal
+      modalContentClassName={styles.modal}
+      renderOnOpen={({ onOpen }) => (
+        <div className={styles.modalHeader}>
+          Complete account setup.{' '}
+          <button className={styles.modalHeaderBtn} onClick={onOpen}>
+            click here
+          </button>
+        </div>
+      )}
+      renderModalContent={() => <Form />}
+    />
+  )
 }
 
 export default KYCSetup

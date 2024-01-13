@@ -39,33 +39,6 @@ class Wallets extends Model<
   declare type: string
   declare earnings: Income[]
   declare totalIncome: number
-
-  static async getTotalIncome(
-    userId: string
-  ): Promise<{ totalIncome: number; months: string[] }> {
-    const results = await this.findAll({
-      attributes: [
-        [
-          db.fn('COALESCE', db.fn('SUM', db.col('totalIncome')), 0),
-          'totalIncome',
-        ],
-        [
-          db.fn('COALESCE', db.fn('TO_CHAR', db.col('createdAt'), 'Mon')),
-          'month',
-        ],
-      ],
-      group: [db.fn('TO_CHAR', db.col('createdAt'), 'Mon'), db.col('id')],
-      order: [db.fn('TO_CHAR', db.col('createdAt'), 'YYYY-MM')],
-      where: { userId },
-    })
-
-    const totalIncome = results.map((result) => result.get('totalIncome') || 0)
-    const months = results.map(
-      (result) => (result.get('month') as string) || ''
-    )
-
-    return { totalIncome: totalIncome[0] || 0, months }
-  }
 }
 
 Wallets.init(

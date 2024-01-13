@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { getTotalIncomeForChart } from '../../controllers/chartControllers/getTotalIncome'
-import { authorizationMiddleware } from '../../middlware/authorization/authentication'
+import { getTotalIncomeForChart } from '../../controllers/userControllers/getTotalIncomeForChart'
+// import { authorizationMiddleware } from '../../middlware/authorization/authentication'
 // import { authorizationMiddleware } from '../../middlware/authorization/authentication'
 const router = Router()
 
@@ -134,6 +134,6 @@ const router = Router()
  *                 message: "Something went wrong, our team has been notified."
  */
 
-router.get('/:id', authorizationMiddleware, getTotalIncomeForChart)
+router.get('/', getTotalIncomeForChart)
 
 export default router

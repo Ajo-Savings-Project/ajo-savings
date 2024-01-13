@@ -14,6 +14,7 @@ const LoginResponseSchema = z.object({
     email: z.string(),
     firstName: z.string(),
     lastName: z.string(),
+    kycComplete: z.boolean(),
   }),
 })
 

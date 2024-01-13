@@ -166,6 +166,8 @@ export const loginUser = async (req: Request, res: Response) => {
             email: confirmUser.email,
             firstName: confirmUser.firstName,
             lastName: confirmUser.lastName,
+            //TODO : implement kyc complete
+            kycComplete: false,
           },
           token: accessToken,
         })

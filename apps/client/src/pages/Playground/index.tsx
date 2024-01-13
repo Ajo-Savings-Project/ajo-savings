@@ -12,6 +12,8 @@ import {
 } from 'components'
 import styles from './play.module.scss'
 
+import Form from 'components/compounds/KYCSetup/Form'
+
 const textContent = 'the quick brown fox jumps over the lazy dog'
 
 const Playground = () => {
@@ -50,6 +52,8 @@ const Playground = () => {
         level={1}
         content={'Ajo Component Playground'}
       />
+
+      <Form />
 
       <section>
         <Text
