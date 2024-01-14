@@ -62,6 +62,7 @@ const Form = () => {
       setProofOfAddressFiles(proofOfAddressFiles)
     }
   }
+
   //Browsing through file... implementation
 
   const handleFileInputChange = (
