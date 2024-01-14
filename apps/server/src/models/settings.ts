@@ -13,17 +13,17 @@ class Settings extends Model<
   InferCreationAttributes<Settings>
 > {
   declare id: string
-  declare owner_id: string
-  declare email_notification?: boolean
-  declare contribution_reminder?: boolean
-  declare group_join_request?: boolean
-  declare two_factor_authentication?: boolean
-  declare password_update?: boolean
-  declare profile_visibility?: boolean
-  declare email_privacy?: boolean
-  declare savings_group_update?: boolean
-  declare personal_saving_alert?: boolean
-  declare deactivate_account?: boolean
+  declare ownerId: string
+  declare emailNotification?: boolean
+  declare contributionReminder?: boolean
+  declare groupJoinRequest?: boolean
+  declare twoFactorAuthentication?: boolean
+  declare passwordUpdate?: boolean
+  declare profileVisibility?: boolean
+  declare emailPrivacy?: boolean
+  declare savingsGroupUpdate?: boolean
+  declare personalSavingAlert?: boolean
+  declare deactivateAccount?: boolean
 }
 
 Settings.init(
@@ -33,56 +33,56 @@ Settings.init(
       primaryKey: true,
       allowNull: false,
     },
-    owner_id: {
+    ownerId: {
       type: DataTypes.UUID,
     },
-    email_notification: {
+    emailNotification: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    contribution_reminder: {
+    contributionReminder: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    group_join_request: {
+    groupJoinRequest: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    two_factor_authentication: {
+    twoFactorAuthentication: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    password_update: {
+    passwordUpdate: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
 
-    profile_visibility: {
+    profileVisibility: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    email_privacy: {
+    emailPrivacy: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
-    savings_group_update: {
+    savingsGroupUpdate: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
-    personal_saving_alert: {
+    personalSavingAlert: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
-    deactivate_account: {
+    deactivateAccount: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,

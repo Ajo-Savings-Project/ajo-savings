@@ -310,7 +310,9 @@ router.get(
  *       properties:
  *         id:
  *           type: string
- *         userId:
+ *         ownerId:
+ *           type: string
+ *         ownerType:
  *           type: string
  *         totalAmount:
  *           type: number
@@ -365,6 +367,7 @@ router.get(
   authorizationMiddleware,
   getUserPersonalSavingsWallet
 )
+
 
 /**
  * @swagger

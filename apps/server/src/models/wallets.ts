@@ -21,6 +21,7 @@ export enum WalletType {
 export enum OwnerType {
   USER = 'user',
   GROUP = 'group',
+  SAVINGS_GOAL = 'savings-goal',
 }
 
 export interface Income {

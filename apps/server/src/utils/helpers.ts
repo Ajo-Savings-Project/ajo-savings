@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { ENV } from '../config'
+import { v4 } from 'uuid'
+import Transactions from '../models/transactions'
 
 export const passwordUtils = {
   length: 5,
@@ -132,4 +134,30 @@ export class DateHandler {
 
     return nextFriday
   }
+}
+
+export interface TransactionDetails {
+  walletId: string
+  ownerId: string
+  amount: number
+  status: string
+  action: string
+  type: string
+  receiverId?: string
+  senderId?: string
+}
+
+export const createTransaction = async (details: TransactionDetails) => {
+  const transaction = await Transactions.create({
+    id: v4(),
+    walletId: details.walletId,
+    ownerId: details.ownerId,
+    amount: details.amount,
+    status: details.status,
+    action: details.action,
+    type: details.type,
+    receiverId: details.receiverId,
+    senderId: details.senderId,
+  })
+  return transaction
 }

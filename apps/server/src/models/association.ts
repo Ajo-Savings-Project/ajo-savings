@@ -7,36 +7,28 @@ import Payments from './payment'
 import Settings from './settings'
 
 // Define your associations here
-Wallets.hasMany(Transactions, {
-  foreignKey: 'wallet_id',
-})
+Wallets.hasMany(Transactions, { foreignKey: 'walletId' })
 
-Transactions.belongsTo(Wallets, {
-  foreignKey: 'wallet_id',
-})
+Transactions.belongsTo(Wallets, { foreignKey: 'walletId' })
 
-Transactions.belongsTo(Users, {
-  foreignKey: 'owner_id',
-})
+Transactions.belongsTo(Users, { foreignKey: 'ownerId' })
 
-Users.hasMany(Transactions, {
-  foreignKey: 'owner_id',
-})
+Users.hasMany(Transactions, { foreignKey: 'ownerId' })
 
-Savings.belongsTo(Users, {
-  foreignKey: 'user_id',
-})
+Users.hasMany(Savings, { foreignKey: 'userId' })
 
-Groups.hasMany(Transactions, {
-  foreignKey: 'owner_id',
-})
+Savings.belongsTo(Users, { foreignKey: 'userId' })
 
-Users.hasMany(Payments, {
-  foreignKey: 'owner_id',
-})
+Savings.hasMany(Transactions, { foreignKey: 'ownerId' })
 
-Settings.belongsTo(Users, {
-  foreignKey: 'owner_id',
-})
+Groups.hasMany(Transactions, { foreignKey: 'ownerId' })
 
-Wallets.belongsTo(Users, { foreignKey: 'user_id' })
+Users.hasMany(Payments, { foreignKey: 'ownerId' })
+
+Settings.belongsTo(Users, { foreignKey: 'ownerId' })
+
+Wallets.belongsTo(Users, { foreignKey: 'ownerId' })
+
+Wallets.belongsTo(Groups, { foreignKey: 'ownerId' })
+
+Wallets.belongsTo(Savings, { foreignKey: 'ownerId' })

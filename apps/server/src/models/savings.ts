@@ -32,7 +32,7 @@ class Savings extends Model<
   InferCreationAttributes<Savings>
 > {
   declare id: string
-  declare user_id: string
+  declare userId: string
   declare name: string
   declare target: string
   declare target_amount: number
@@ -41,7 +41,6 @@ class Savings extends Model<
   declare category: string
   declare startDate: string
   declare endDate: string
-  declare created_at: Date
 }
 
 Savings.init(
@@ -51,7 +50,7 @@ Savings.init(
       primaryKey: true,
       allowNull: false,
     },
-    user_id: {
+    userId: {
       type: DataTypes.UUID,
       references: {
         model: Users,
@@ -91,11 +90,6 @@ Savings.init(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.DATE,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
   },
   {
