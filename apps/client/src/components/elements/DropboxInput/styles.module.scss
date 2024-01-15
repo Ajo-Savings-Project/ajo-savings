@@ -1,0 +1,11 @@
+.dropbox {
+  padding: 10px;
+  border: 1px dashed black;
+
+  &Browser {
+    color: var(--primary-600);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}

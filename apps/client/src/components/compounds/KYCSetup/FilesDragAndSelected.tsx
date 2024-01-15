@@ -2,6 +2,7 @@ import { Text } from 'components'
 import { useState, useRef } from 'react'
 import { appNotify } from 'components'
 import { handleFileInputChange } from 'utils/handleFileInputChange'
+import DropboxInput from '../../elements/DropboxInput'
 import { MAX_FILE_SIZE_MB } from './constant'
 import styles from './kyc.module.scss'
 
@@ -88,6 +89,16 @@ const FilesDragAndSelected = () => {
   }
   return (
     <>
+      <DropboxInput
+        onGetFile={(p) => {
+          console.log(p)
+        }}
+      />
+      <DropboxInput
+        onGetFile={(p) => {
+          console.log(p)
+        }}
+      />
       <div>
         <Text
           size="Default"

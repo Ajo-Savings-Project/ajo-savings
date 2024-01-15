@@ -1,26 +1,48 @@
-import { Text, Select, Input, Button } from 'components'
-import { useRef } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Button,
+  Input,
+  ReactHookFormErrorRender,
+  Select,
+  Text,
+  DropboxInput,
+} from 'components'
 import { useAuth } from 'contexts'
-import styles from './kyc.module.scss'
+import { useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { LoginSchema } from '../../../pages/Auth/Login/requests.ts'
 import Close from '../KYCSetup/close.svg?react'
-import FilesDragAndSelected from './FilesDragAndSelected'
+import styles from './kyc.module.scss'
 
 interface Close {
   onClose: () => void
 }
+
 const Form = ({ onClose }: Close) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
+  })
+
   const { handleStateUpdate } = useAuth()
 
   const genderRef = useRef<HTMLSelectElement>(null)
   const occupationRef = useRef<HTMLSelectElement>(null)
-  const dobRef = useRef<HTMLInputElement>(null)
   const idTypeRef = useRef<HTMLSelectElement>(null)
   const bvnef = useRef<HTMLInputElement>(null)
   const idNumberRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = () => {
+  const makeApiCallSubmit = () => {
     handleStateUpdate({ kycComplete: true })
   }
+
+  const handleDocUpload =
+    (type: string) => (resp: { files: FileList | null; preview: string }) => {
+      console.log(type, resp)
+    }
 
   return (
     <div className={styles.container}>
@@ -47,7 +69,7 @@ const Form = ({ onClose }: Close) => {
           </span>
         </Text>
       </div>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit(makeApiCallSubmit)}>
         <div className={styles.flexDiv}>
           <Select
             id="gender"
@@ -75,13 +97,11 @@ const Form = ({ onClose }: Close) => {
         </div>
         <div className={styles.flexDiv}>
           <Input
-            id="dob"
-            name="dob"
-            ref={dobRef}
             label={'Date of Birth'}
             type="date"
             className={styles.Dob}
-          />{' '}
+            {...register('dob')}
+          />
           <Select
             id="idType"
             name="idType"
@@ -119,14 +139,26 @@ const Form = ({ onClose }: Close) => {
           placeholder="Input your Identification Num"
           className={styles.Idnumber}
         />
-        <FilesDragAndSelected />
+        <div>
+          <Text>label</Text>
+          <DropboxInput
+            subtext={'subtext'}
+            summary={'summary'}
+            onGetFile={handleDocUpload('identification-doc')}
+          />
+        </div>
+        <div>
+          <Text>label</Text>
+          <DropboxInput onGetFile={handleDocUpload('proof-address')} />
+        </div>
 
         <Button
-          onClick={handleSubmit}
           style={{ width: '100%', marginTop: '24px' }}
           text="Submit"
+          type={'submit'}
         />
       </form>
+      <ReactHookFormErrorRender errors={errors} />
     </div>
   )
 }
