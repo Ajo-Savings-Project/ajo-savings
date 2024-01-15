@@ -3,8 +3,13 @@ import React, { useState, useRef } from 'react'
 import { useAuth } from 'contexts'
 import styles from './kyc.module.scss'
 import { appNotify } from 'components'
+import Close from '../KYCSetup/close.svg?react'
 
-const Form = () => {
+interface Close {
+  onClose: () => void
+}
+
+const Form = ({ onClose }: Close) => {
   const [idDocsFiles, setIdDocsFiles] = useState<FileList | null>(null)
   const [proofOfAddressFiles, setProofOfAddressFiles] =
     useState<FileList | null>(null)
@@ -12,6 +17,18 @@ const Form = () => {
   const [proofOfAddressPreview, setProofOfAddressPreview] = useState<
     string | null
   >(null)
+  const [idDocsPreviewName, setIdDocsPreviewName] = useState<string | null>(
+    null
+  )
+  const [proofOfAddressPreviewName, setProofOfAddressPreviewName] = useState<
+    string | null
+  >(null)
+  const [selectedIdDocsFileName, setSelectedIdDocsFileName] = useState<
+    string | null
+  >(null)
+  const [selectedProofOfAddressFileName, setSelectedProofOfAddressFileName] =
+    useState<string | null>(null)
+
   const { handleStateUpdate } = useAuth()
 
   const genderRef = useRef<HTMLSelectElement>(null)
@@ -35,9 +52,11 @@ const Form = () => {
   const handleDropIdDocs = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault()
     const files = e.dataTransfer.files
-    setIdDocsFiles(files)
 
     if (files.length > 0 && files[0].size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setIdDocsFiles(files)
+      const fileName = files[0].name
+      setIdDocsPreviewName(fileName)
       const reader = new FileReader()
       reader.onload = () => setIdDocsPreview(reader.result as string)
       reader.readAsDataURL(files[0])
@@ -51,9 +70,11 @@ const Form = () => {
     e.preventDefault()
 
     const files = e.dataTransfer.files
-    setProofOfAddressFiles(files)
 
     if (files.length > 0 && files[0].size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setProofOfAddressFiles(files)
+      const fileName = files[0].name
+      setProofOfAddressPreviewName(fileName)
       const reader = new FileReader()
       reader.onload = () => setProofOfAddressPreview(reader.result as string)
       reader.readAsDataURL(files[0])
@@ -67,13 +88,19 @@ const Form = () => {
 
   const handleFileInputChange = (
     inputFiles: FileList | null,
-    setPreview: React.Dispatch<React.SetStateAction<string | null>>
+    setPreview: React.Dispatch<React.SetStateAction<string | null>>,
+    setFileName: React.Dispatch<React.SetStateAction<string | null>>
   ) => {
     if (inputFiles && inputFiles.length > 0) {
-      if (inputFiles[0].size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
+      const file = inputFiles[0]
+      if (file.size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
         const reader = new FileReader()
         reader.onload = () => setPreview(reader.result as string)
-        reader.readAsDataURL(inputFiles[0])
+        reader.readAsDataURL(file)
+
+        //Extract file name
+        const fileName = file.name
+        setFileName(fileName)
       } else {
         appNotify('error', 'File size exceeds the maximum allowed size (50MB).')
       }
@@ -82,17 +109,30 @@ const Form = () => {
 
   const handleIdDocsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    handleFileInputChange(e.target.files, setIdDocsPreview)
+    handleFileInputChange(
+      e.target.files,
+      setIdDocsPreview,
+      setSelectedIdDocsFileName
+    )
   }
   const handleProofOfAddressInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     e.preventDefault()
-    handleFileInputChange(e.target.files, setProofOfAddressPreview)
+    handleFileInputChange(
+      e.target.files,
+      setProofOfAddressPreview,
+      setSelectedProofOfAddressFileName
+    )
   }
 
   return (
     <div className={styles.container}>
+      <div className={styles.closeBtn}>
+        <button type="button" className={styles.Btn} onClick={onClose}>
+          <Close />
+        </button>
+      </div>
       <div className={styles.containerHeaderText}>
         <Text
           size="Subheading"
@@ -190,7 +230,10 @@ const Form = () => {
           >
             Upload Identification Document
           </Text>
-          {!idDocsFiles && !idDocsPreview ? (
+          {!idDocsFiles &&
+          !idDocsPreview &&
+          !idDocsPreviewName &&
+          !selectedIdDocsFileName ? (
             <div
               className={styles.IdDocs}
               onDrop={handleDropIdDocs}
@@ -234,11 +277,26 @@ const Form = () => {
               </Text>
             </div>
           ) : (
-            <img
-              src={idDocsPreview!}
-              alt="Identification Document Preview"
-              className={styles.IdPreviewImg}
-            />
+            <div className={`${styles.idDocsImgText} ${styles.fadeIn}`}>
+              <img
+                src={idDocsPreview!}
+                alt="Identification Document Preview"
+                className={styles.IdPreviewImg}
+              />
+              {selectedIdDocsFileName ? (
+                <Text
+                  size="Default"
+                  content={selectedIdDocsFileName}
+                  className={styles.texts}
+                />
+              ) : (
+                <Text
+                  size="Default"
+                  content={idDocsPreviewName!}
+                  className={styles.texts}
+                />
+              )}
+            </div>
           )}
         </div>
 
@@ -249,7 +307,10 @@ const Form = () => {
           >
             Upload Proof of Address
           </Text>
-          {!proofOfAddressFiles && !proofOfAddressPreview ? (
+          {!proofOfAddressFiles &&
+          !proofOfAddressPreview &&
+          !proofOfAddressPreviewName &&
+          !selectedProofOfAddressFileName ? (
             <div
               className={styles.IdDocs}
               onDrop={handleDropProofOfAdress}
@@ -293,11 +354,25 @@ const Form = () => {
               </Text>
             </div>
           ) : (
-            <img
-              src={proofOfAddressPreview!}
-              alt="Proof of Address  Preview"
-              className={styles.proofOfAddressPreviewImg}
-            />
+            <div className={styles.proofOfAddressImgText}>
+              <img
+                src={proofOfAddressPreview!}
+                alt="Proof of Address  Preview"
+                className={styles.proofOfAddressPreviewImg}
+              />
+              {selectedProofOfAddressFileName ? (
+                <Text
+                  content={selectedProofOfAddressFileName}
+                  className={styles.texts}
+                />
+              ) : (
+                <Text
+                  size="Default"
+                  content={proofOfAddressPreviewName!}
+                  className={styles.texts}
+                />
+              )}
+            </div>
           )}
         </div>
 

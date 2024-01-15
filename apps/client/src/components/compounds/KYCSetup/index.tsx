@@ -19,7 +19,7 @@ const KYCSetup = () => {
           </button>
         </div>
       )}
-      renderModalContent={() => <Form />}
+      renderModalContent={({ onClose }) => <Form onClose={onClose} />}
     />
   )
 }

@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { PropsWithChildren } from 'react'
 import { Card } from 'components'
 import styles from './styles.module.scss'
-import Close from './close.svg?react'
+import Close from '../images/Close.svg?react'
 
 interface CardProps {
   onClick: () => void
