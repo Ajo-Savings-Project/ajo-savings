@@ -306,11 +306,12 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const { newPassword } = req.body
 
-    if (!newPassword) {
+    if (!newPassword || !passwordUtils.regex.test(newPassword)) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: 'Invalid or missing new-password in the request.',
+        message: passwordUtils.error,
       })
     }
+
     // Check for reset-token instance using query-string(id)
     const resetTokenInstance = await UserResetPasswordToken.findOne({
       where: { id: longString as string, used: false },
