@@ -24,10 +24,12 @@ export class PasswordHarsher {
 }
 
 export class Jwt {
-  static async sign<TokenPayload extends Record<string, string>>(
-    payload: TokenPayload,
-    options?: jwt.SignOptions & { _secret?: string }
-  ) {
+  static async sign<
+    TokenPayload extends Record<
+      string,
+      string | Record<string, unknown> | Array<unknown>
+    >,
+  >(payload: TokenPayload, options?: jwt.SignOptions & { _secret?: string }) {
     const { _secret, ...restOptions } = options ?? {}
     return jwt.sign(payload, _secret ?? ENV.JWT_SECRET!, restOptions)
   }
