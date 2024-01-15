@@ -1,34 +1,14 @@
 import { Text, Select, Input, Button } from 'components'
-import React, { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { useAuth } from 'contexts'
 import styles from './kyc.module.scss'
-import { appNotify } from 'components'
 import Close from '../KYCSetup/close.svg?react'
+import FilesDragAndSelected from './FilesDragAndSelected'
 
 interface Close {
   onClose: () => void
 }
-
 const Form = ({ onClose }: Close) => {
-  const [idDocsFiles, setIdDocsFiles] = useState<FileList | null>(null)
-  const [proofOfAddressFiles, setProofOfAddressFiles] =
-    useState<FileList | null>(null)
-  const [idDocsPreview, setIdDocsPreview] = useState<string | null>(null)
-  const [proofOfAddressPreview, setProofOfAddressPreview] = useState<
-    string | null
-  >(null)
-  const [idDocsPreviewName, setIdDocsPreviewName] = useState<string | null>(
-    null
-  )
-  const [proofOfAddressPreviewName, setProofOfAddressPreviewName] = useState<
-    string | null
-  >(null)
-  const [selectedIdDocsFileName, setSelectedIdDocsFileName] = useState<
-    string | null
-  >(null)
-  const [selectedProofOfAddressFileName, setSelectedProofOfAddressFileName] =
-    useState<string | null>(null)
-
   const { handleStateUpdate } = useAuth()
 
   const genderRef = useRef<HTMLSelectElement>(null)
@@ -37,93 +17,9 @@ const Form = ({ onClose }: Close) => {
   const idTypeRef = useRef<HTMLSelectElement>(null)
   const bvnef = useRef<HTMLInputElement>(null)
   const idNumberRef = useRef<HTMLInputElement>(null)
-  const idDocsInputRef = useRef<HTMLInputElement>(null)
-  const proofOfAddressInputRef = useRef<HTMLInputElement>(null)
-
-  const MAX_FILE_SIZE_MB = 50
 
   const handleSubmit = () => {
     handleStateUpdate({ kycComplete: true })
-  }
-
-  const handleDragOver = (e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault()
-  }
-  const handleDropIdDocs = (e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault()
-    const files = e.dataTransfer.files
-
-    if (files.length > 0 && files[0].size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setIdDocsFiles(files)
-      const fileName = files[0].name
-      setIdDocsPreviewName(fileName)
-      const reader = new FileReader()
-      reader.onload = () => setIdDocsPreview(reader.result as string)
-      reader.readAsDataURL(files[0])
-    } else {
-      appNotify('error', 'File size exceeds the maximum allowed size (50MB).')
-      setIdDocsFiles(idDocsFiles)
-    }
-  }
-
-  const handleDropProofOfAdress = (e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault()
-
-    const files = e.dataTransfer.files
-
-    if (files.length > 0 && files[0].size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setProofOfAddressFiles(files)
-      const fileName = files[0].name
-      setProofOfAddressPreviewName(fileName)
-      const reader = new FileReader()
-      reader.onload = () => setProofOfAddressPreview(reader.result as string)
-      reader.readAsDataURL(files[0])
-    } else {
-      appNotify('error', 'File size exceeds the maximum allowed size (50MB).')
-      setProofOfAddressFiles(proofOfAddressFiles)
-    }
-  }
-
-  //Browsing through file... implementation
-
-  const handleFileInputChange = (
-    inputFiles: FileList | null,
-    setPreview: React.Dispatch<React.SetStateAction<string | null>>,
-    setFileName: React.Dispatch<React.SetStateAction<string | null>>
-  ) => {
-    if (inputFiles && inputFiles.length > 0) {
-      const file = inputFiles[0]
-      if (file.size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
-        const reader = new FileReader()
-        reader.onload = () => setPreview(reader.result as string)
-        reader.readAsDataURL(file)
-
-        //Extract file name
-        const fileName = file.name
-        setFileName(fileName)
-      } else {
-        appNotify('error', 'File size exceeds the maximum allowed size (50MB).')
-      }
-    }
-  }
-
-  const handleIdDocsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    handleFileInputChange(
-      e.target.files,
-      setIdDocsPreview,
-      setSelectedIdDocsFileName
-    )
-  }
-  const handleProofOfAddressInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    e.preventDefault()
-    handleFileInputChange(
-      e.target.files,
-      setProofOfAddressPreview,
-      setSelectedProofOfAddressFileName
-    )
   }
 
   return (
@@ -223,158 +119,7 @@ const Form = ({ onClose }: Close) => {
           placeholder="Input your Identification Num"
           className={styles.Idnumber}
         />
-        <div>
-          <Text
-            size="Default"
-            style={{ fontWeight: '700', marginBottom: '10px' }}
-          >
-            Upload Identification Document
-          </Text>
-          {!idDocsFiles &&
-          !idDocsPreview &&
-          !idDocsPreviewName &&
-          !selectedIdDocsFileName ? (
-            <div
-              className={styles.IdDocs}
-              onDrop={handleDropIdDocs}
-              onDragOver={handleDragOver}
-            >
-              <input
-                id="idDocsInput"
-                type="file"
-                name="idDocsInput"
-                ref={idDocsInputRef}
-                onChange={(e) => handleIdDocsInputChange(e)}
-                hidden
-              />
-
-              <Text size="Small" className={styles.IdDocsText}>
-                <span>
-                  Drop your files here or{' '}
-                  <button
-                    type="button"
-                    onClick={() => idDocsInputRef.current!.click()}
-                    style={{
-                      color: 'var(--primary-600)',
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Browse
-                  </button>
-                </span>{' '}
-                <br />
-                <p
-                  style={{
-                    textAlign: 'center',
-                    color: 'var(--gray-400)',
-                    marginTop: '17.5px',
-                  }}
-                >
-                  Maximum size: 50MB
-                </p>
-              </Text>
-            </div>
-          ) : (
-            <div className={`${styles.idDocsImgText} ${styles.fadeIn}`}>
-              <img
-                src={idDocsPreview!}
-                alt="Identification Document Preview"
-                className={styles.IdPreviewImg}
-              />
-              {selectedIdDocsFileName ? (
-                <Text
-                  size="Default"
-                  content={selectedIdDocsFileName}
-                  className={styles.texts}
-                />
-              ) : (
-                <Text
-                  size="Default"
-                  content={idDocsPreviewName!}
-                  className={styles.texts}
-                />
-              )}
-            </div>
-          )}
-        </div>
-
-        <div>
-          <Text
-            size="Default"
-            style={{ fontWeight: '700', marginBottom: '10px' }}
-          >
-            Upload Proof of Address
-          </Text>
-          {!proofOfAddressFiles &&
-          !proofOfAddressPreview &&
-          !proofOfAddressPreviewName &&
-          !selectedProofOfAddressFileName ? (
-            <div
-              className={styles.IdDocs}
-              onDrop={handleDropProofOfAdress}
-              onDragOver={handleDragOver}
-            >
-              <input
-                id="proofOfAddressInput"
-                type="file"
-                name="proofOfAddressInput"
-                ref={proofOfAddressInputRef}
-                onChange={(e) => handleProofOfAddressInputChange(e)}
-                hidden
-              />
-
-              <Text size="Small" className={styles.IdDocsText}>
-                <span>
-                  Drop your files here or{' '}
-                  <button
-                    type="button"
-                    onClick={() => proofOfAddressInputRef.current!.click()}
-                    style={{
-                      color: 'var(--primary-600)',
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Browse
-                  </button>
-                </span>
-                <br />
-                <p
-                  style={{
-                    textAlign: 'center',
-                    color: 'var(--gray-400)',
-                    marginTop: '17.5px',
-                  }}
-                >
-                  Maximum size: 50MB
-                </p>
-              </Text>
-            </div>
-          ) : (
-            <div className={styles.proofOfAddressImgText}>
-              <img
-                src={proofOfAddressPreview!}
-                alt="Proof of Address  Preview"
-                className={styles.proofOfAddressPreviewImg}
-              />
-              {selectedProofOfAddressFileName ? (
-                <Text
-                  content={selectedProofOfAddressFileName}
-                  className={styles.texts}
-                />
-              ) : (
-                <Text
-                  size="Default"
-                  content={proofOfAddressPreviewName!}
-                  className={styles.texts}
-                />
-              )}
-            </div>
-          )}
-        </div>
+        <FilesDragAndSelected />
 
         <Button
           onClick={handleSubmit}
