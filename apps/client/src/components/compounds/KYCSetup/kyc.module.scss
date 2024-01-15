@@ -1,18 +1,21 @@
 .modal {
-  max-width: 800px;
+  width: 600px;
   position: absolute;
-  transition:
-    transform 3s ease-in-out,
-    opacity 3s ease-in-out;
-  top: 0;
-  bottom: 0;
   background-color: var(--white);
   padding: 32px 40px;
+  top: 0;
+  right: 0;
+  bottom: 0;
   &Header {
-    padding: 10px 50px;
+    position: sticky;
+    top: 0;
+    padding: 10px;
+    width: calc(100% + 80px);
+    transform: translate(-40px, -24px);
     text-align: center;
     background-color: var(--primary-600);
     color: var(--white);
+    z-index: 5;
     &Btn {
       background-color: transparent;
       border: none;
@@ -23,16 +26,8 @@
   }
 }
 .container {
-  .closeBtn {
-    text-align: end;
-  }
-  .Btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-  }
   &HeaderText {
-    text-align: center;
+    text-align: start;
 
     &Big {
       font-size: 20px;
@@ -55,9 +50,7 @@
     width: 100%;
     margin-bottom: 15px;
   }
-  .IdDocs,
-  .idDocsImgText,
-  .proofOfAddressImgText {
+  .IdDocs {
     width: 100%;
     height: 129px;
     border: 2px dashed var(--gray-400);
@@ -65,37 +58,14 @@
     justify-content: center;
     align-items: center;
   }
-  .idDocsImgText,
-  .proofOfAddressImgText {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-
-    .IdPreviewImg,
-    .proofOfAddressPreviewImg {
-      width: 100px;
-      height: 100px;
-    }
-
-    .texts {
-      font-weight: bold;
-      color: var(--gray-400);
-    }
+  .IdPreviewImg,
+  .proofOfAddressPreviewImg {
+    width: 100%;
+    height: 200px;
   }
 }
 
-@media (min-width: '600px') {
-  .modal {
-    width: 600px;
-    position: absolute;
-    background-color: var(--white);
-    padding: 32px 40px;
-    top: 0;
-    right: 0;
-    bottom: 0;
-  }
+@media (min-width: 600px) {
   .container {
     &HeaderText {
       margin: auto;
@@ -123,18 +93,17 @@
     .IdAddress {
       margin-bottom: 20px;
     }
-    .flexDiv {
-      display: flex;
-      align-items: center;
-      margin-bottom: 24px;
-      gap: 24px;
-      justify-content: space-between;
-    }
-    .idDocsImgText,
-    .proofOfAddressImgText {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  }
+  .flexDiv {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 24px;
+    justify-content: space-between;
+  }
+  .IdPreviewImg,
+  .proofOfAddressPreviewImg {
+    width: 100%;
+    height: 200px;
   }
 }

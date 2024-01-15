@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '../contexts'
 
-let timeout: number
+let timeout: NodeJS.Timeout
 const AutoLogOut = () => {
   const { handleClearSession } = useAuth()
 

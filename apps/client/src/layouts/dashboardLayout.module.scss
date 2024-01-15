@@ -48,7 +48,7 @@
     background-color: var(--grey-50, #f9fafb);
   }
 
-  @container (width < 800 px) {
+  @media screen and (max-width: 800px) {
     &Main,
     &Header {
       padding: 20px;
