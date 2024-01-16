@@ -51,5 +51,5 @@ git push origin HEAD -f
 
 # Starting the server in production mode.
 
-1. navigate to server directory ("./apps/server")
+1. navigate to server directories ("./apps/server")
 2. run yarn prod
