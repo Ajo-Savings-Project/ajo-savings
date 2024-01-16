@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router-dom'
 import './index.css'
 import { pagesRouter } from './router'
 import { Toaster } from 'react-hot-toast'
+import 'animate.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {

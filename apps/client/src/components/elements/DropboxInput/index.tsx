@@ -33,6 +33,7 @@ const DropboxInput = ({
   ...rest
 }: DropboxI) => {
   const [files, setFiles] = useState<FileList | null>(null)
+  const [preview, setPreview] = useState<string>()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -48,6 +49,7 @@ const DropboxInput = ({
           if (onGetFile) {
             onGetFile({ files: _files, preview: reader.result as string })
           }
+          setPreview(reader.result as string)
         }
       } else {
         appNotify(
@@ -111,14 +113,35 @@ const DropboxInput = ({
             )}
           </Text>
 
-          <Text size="Small" className={styles.IdDocsText} content={summary} />
+          <Text
+            size="Small"
+            className={styles.IdDocsSubText}
+            content={summary}
+          />
         </>
       ) : (
         <>
-          {files[0].name}
-          <button type={'button'} onClick={handleRemoveSelection}>
-            x
-          </button>
+          <div className={styles.Docs}>
+            <img
+              src={preview}
+              alt="Drag and Drop your file here"
+              className={styles.DocsImg}
+            />
+            <div className={styles.BtnName}>
+              <button
+                className={styles.Removebtn}
+                type={'button'}
+                onClick={handleRemoveSelection}
+              >
+                Remove
+              </button>
+              <Text
+                size="Default"
+                content={files[0].name}
+                className={styles.DocsText}
+              />
+            </div>
+          </div>
         </>
       )}
 

@@ -8,32 +8,36 @@ import {
   DropboxInput,
 } from 'components'
 import { useAuth } from 'contexts'
-import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { LoginSchema } from '../../../pages/Auth/Login/requests.ts'
+import { z } from 'zod'
 import Close from '../KYCSetup/close.svg?react'
 import styles from './kyc.module.scss'
 
 interface Close {
   onClose: () => void
 }
+type FormData = z.infer<typeof Schema>
+
+const Schema = z.object({
+  gender: z.string(),
+  occupation: z.string(),
+  dob: z.string(),
+  idType: z.string(),
+  bvn: z.string(),
+  address: z.string(),
+  idNumber: z.string(),
+})
 
 const Form = ({ onClose }: Close) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(LoginSchema),
+  } = useForm<FormData>({
+    resolver: zodResolver(Schema),
   })
 
   const { handleStateUpdate } = useAuth()
-
-  const genderRef = useRef<HTMLSelectElement>(null)
-  const occupationRef = useRef<HTMLSelectElement>(null)
-  const idTypeRef = useRef<HTMLSelectElement>(null)
-  const bvnef = useRef<HTMLInputElement>(null)
-  const idNumberRef = useRef<HTMLInputElement>(null)
 
   const makeApiCallSubmit = () => {
     handleStateUpdate({ kycComplete: true })
@@ -41,13 +45,13 @@ const Form = ({ onClose }: Close) => {
 
   const handleDocUpload =
     (type: string) => (resp: { files: FileList | null; preview: string }) => {
-      console.log(type, resp)
+      console.log('TYPE', type, 'RESP', resp)
     }
 
   return (
     <div className={styles.container}>
       <div className={styles.closeBtn}>
-        <button type="button" className={styles.Btn} onClick={onClose}>
+        <button type="button" className={`${styles.Btn} }`} onClick={onClose}>
           <Close />
         </button>
       </div>
@@ -73,8 +77,6 @@ const Form = ({ onClose }: Close) => {
         <div className={styles.flexDiv}>
           <Select
             id="gender"
-            name="gender"
-            ref={genderRef}
             label={' Gender'}
             options={[
               { label: 'Select your gender', value: '0' },
@@ -82,17 +84,18 @@ const Form = ({ onClose }: Close) => {
               { label: 'Female', value: '2' },
             ]}
             className={styles.flex}
+            {...register('gender')}
           />
+
           <Select
             id="occupation"
-            name="occupation"
-            ref={occupationRef}
             label={'Occupation'}
             options={[
               { label: 'Select your Occupation', value: '1' },
               { label: 'label', value: '2' },
             ]}
             className={styles.occupation}
+            {...register('occupation')}
           />
         </div>
         <div className={styles.flexDiv}>
@@ -104,52 +107,60 @@ const Form = ({ onClose }: Close) => {
           />
           <Select
             id="idType"
-            name="idType"
-            ref={idTypeRef}
             label={'Identification Type'}
             options={[
               { label: 'Select your type', value: '1' },
               { label: 'label', value: '2' },
             ]}
             className={styles.Identity}
+            {...register('idType')}
           />
         </div>
 
         <Input
           id="bvn"
-          name="bvn"
-          ref={bvnef}
           label={'BVN'}
           placeholder="Input your BVN"
           className={styles.Bvn}
+          {...register('bvn')}
         />
         <Input
+          id="address"
           type="text"
           label={'Address'}
           placeholder="Input your Address"
           className={styles.Address}
+          {...register('address')}
         />
 
         <Input
           id="idNumber"
-          name="idNumber"
-          ref={idNumberRef}
           label={'Identification Number'}
           type="text"
           placeholder="Input your Identification Num"
           className={styles.Idnumber}
+          {...register('idNumber')}
         />
         <div>
-          <Text>label</Text>
+          <Text size="Default" className={styles.label}>
+            Upload Identification Document
+          </Text>
           <DropboxInput
-            subtext={'subtext'}
-            summary={'summary'}
+            subtext={'Drop your files here or'}
+            summary={'Maximum size: 50MB'}
             onGetFile={handleDocUpload('identification-doc')}
           />
         </div>
         <div>
-          <Text>label</Text>
-          <DropboxInput onGetFile={handleDocUpload('proof-address')} />
+          <Text size="Default" className={styles.label}>
+            Upload Proof of Address
+          </Text>
+
+          <DropboxInput
+            subtext={'Drop your files here or'}
+            summary={'Maximum size: 50MB'}
+            onGetFile={handleDocUpload('proof-address')}
+          />
         </div>
 
         <Button

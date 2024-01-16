@@ -10,7 +10,7 @@ const KYCSetup = () => {
   }
   return (
     <Modal
-      modalContentClassName={styles.modal}
+      modalContentClassName={`${styles.modal} ${'animate__animated animate__slideInUp animate__delay-3'}`}
       renderOnOpen={({ onOpen }) => (
         <div className={styles.modalHeader}>
           Complete account setup.{' '}

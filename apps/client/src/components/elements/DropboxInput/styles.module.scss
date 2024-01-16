@@ -1,11 +1,43 @@
 .dropbox {
   padding: 10px;
-  border: 1px dashed black;
+  border: 1px dashed var(--gray-400);
+  text-align: center;
+  margin: 8px 0px;
+  padding: 40px;
 
   &Browser {
     color: var(--primary-600);
     background: none;
     border: none;
     cursor: pointer;
+  }
+  .IdDocsText {
+    padding-top: 5px;
+  }
+  .IdDocsSubText {
+    padding-top: 5px;
+    color: var(--gray-400);
+  }
+  .Docs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &Img {
+      width: 100px;
+      height: 100px;
+    }
+    &Text {
+      color: var(--gray-400);
+    }
+    .Removebtn {
+      background-color: red;
+      margin-bottom: 5px;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      padding: 10px 15px;
+      font: Inter;
+      cursor: pointer;
+    }
   }
 }
