@@ -130,7 +130,7 @@ const getUserData = async (access_token: unknown, res: Response) => {
       )
     }
   } catch (error) {
-    return res.redirect(ENV.FE_BASE_URL + `/auth/login?type=error}`)
+    return res.redirect(ENV.FE_BASE_URL + `/auth/login?type=error`)
   }
 }
 

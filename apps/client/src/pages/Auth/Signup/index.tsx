@@ -1,19 +1,34 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { Button, Text, Input, ReactHookFormErrorRender } from 'components'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import {
+  Button,
+  Text,
+  Input,
+  ReactHookFormErrorRender,
+  appNotify,
+} from 'components'
 import { routes } from 'router'
+import { useEffect, useState } from 'react'
 import { HEADER_TITLE } from 'appConstants'
 import classNames from 'classnames'
 import GoogleIcon from '../Login/GoogleGoogleIcon.svg?react'
 import styles from '../Login/login.module.scss'
-import { RegisterSchema, useRegisterMutation } from './request'
+import {
+  RegisterSchema,
+  RegisterResponseSchema,
+  useRegisterMutation,
+} from './request'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { jwtDecode } from '../../../utils/jwtDecode.ts'
 import request from '../../../api/index.ts'
+import { useAuth } from 'contexts'
 
 type RegisterSchemaType = z.infer<typeof RegisterSchema>
 
 const SignupPage = () => {
+  const { search, pathname } = useLocation()
+
   const navigate = useNavigate()
   const {
     register,
@@ -22,6 +37,8 @@ const SignupPage = () => {
   } = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
   })
+
+  const { handleAuthSession } = useAuth()
 
   const apiSignUp = useRegisterMutation()
 
@@ -32,22 +49,39 @@ const SignupPage = () => {
     navigate(routes.auth.login.abs_path, { state: res!.user })
   }
 
-  interface AuthResponse {
-    url: string
-  }
-  function relocate(url: string) {
-    window.location.href = url
-  }
+  const [oauthLoading, setOauthLoading] = useState(false)
 
   async function auth() {
     try {
-      const response = await request.post('/oauth/request')
-      const data: AuthResponse = response.data
-      relocate(data.url)
-    } catch (error) {
-      console.error('Error during authentication: ', error)
+      setOauthLoading(true)
+      const response = await request.post<{ url: string }>('/oauth/request')
+      window.location.href = response.data.url
+    } catch (e) {
+      setOauthLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (search) {
+      const params = new URLSearchParams(search)
+      const type = params.get('type')
+      const token = params.get('oauth_token')
+      console.log(type, token)
+      window.history.pushState(null, '', pathname)
+      if (type === 'success') {
+        const res = jwtDecode<z.infer<typeof RegisterResponseSchema>>(
+          token as string
+        )
+        setOauthLoading(false)
+        setTimeout(() => {
+          handleAuthSession(res.data)
+        }, 1000)
+      } else {
+        appNotify('error', 'Something went wrong')
+        setOauthLoading(false)
+      }
+    }
+  }, [handleAuthSession, pathname, search])
 
   return (
     <div className={styles.loginDiv}>
@@ -61,7 +95,12 @@ const SignupPage = () => {
         <Text content={'Welcome back to Ajó Savings.'} />
       </div>
       <div className={styles.loginDivFormContainer}>
-        <Button className={styles.googleButton} onClick={auth}>
+        <Button
+          className={styles.googleButton}
+          onClick={auth}
+          disabled={oauthLoading}
+        >
+          {oauthLoading && '>>>> '}
           <GoogleIcon />
           Sign up with Google
         </Button>
@@ -116,7 +155,11 @@ const SignupPage = () => {
             {...register('confirmPassword')}
           />
 
-          <Button text={'sign up'} type="submit" />
+          <Button
+            disabled={apiSignUp.isLoading}
+            text={'sign up'}
+            type="submit"
+          />
         </form>
         <ReactHookFormErrorRender errors={errors} />
 
