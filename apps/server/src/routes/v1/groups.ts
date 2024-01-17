@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createGroup } from '../../controllers/groupControllers/createGroup'
+import { createGroup } from '../../controllers/groupControllers'
 import { authorizationMiddleware } from '../../middlware/authorization/authentication'
 import { upload } from '../../middlware/upload'
 

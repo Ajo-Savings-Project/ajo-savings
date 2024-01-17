@@ -1,20 +1,33 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
-import { Button, Input, ReactHookFormErrorRender, Text } from 'components'
+import {
+  appNotify,
+  Button,
+  Input,
+  ReactHookFormErrorRender,
+  Text,
+} from 'components'
 import { useAuth } from 'contexts'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 import { routes } from 'router'
 import { HEADER_TITLE } from '../../../appConstants'
+import { jwtDecode } from '../../../utils/jwtDecode.ts'
 import styles from './login.module.scss'
-import { useLoginMutation, LoginSchema } from './requests.ts'
+import {
+  useLoginMutation,
+  LoginSchema,
+  LoginResponseSchema,
+} from './requests.ts'
 import GoogleIcon from './GoogleGoogleIcon.svg?react'
+import request from '../../../api/index.ts'
 
 type LoginSchemaType = z.infer<typeof LoginSchema>
 
 const LoginPage = () => {
-  const { state } = useLocation()
+  const { state, search, pathname } = useLocation()
 
   const {
     register,
@@ -36,6 +49,40 @@ const LoginPage = () => {
     if (data) handleAuthSession(data.data)
   }
 
+  const [oauthLoading, setOauthLoading] = useState(false)
+
+  async function auth() {
+    try {
+      setOauthLoading(true)
+      const response = await request.post<{ url: string }>('/oauth/request')
+      window.location.href = response.data.url
+    } catch (e) {
+      setOauthLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (search) {
+      const params = new URLSearchParams(search)
+      const type = params.get('type')
+      const token = params.get('oauth_token')
+      console.log(type, token)
+      window.history.pushState(null, '', pathname)
+      if (type === 'success') {
+        const res = jwtDecode<z.infer<typeof LoginResponseSchema>>(
+          token as string
+        )
+        setOauthLoading(false)
+        setTimeout(() => {
+          handleAuthSession(res.data)
+        }, 1000)
+      } else {
+        appNotify('error', 'Something went wrong')
+        setOauthLoading(false)
+      }
+    }
+  }, [handleAuthSession, pathname, search])
+
   return (
     <div className={styles.loginDiv}>
       <div className={styles.loginDivAjo}>
@@ -54,7 +101,12 @@ const LoginPage = () => {
         />
       </div>
       <div className={styles.loginDivFormContainer}>
-        <Button className={styles.googleButton}>
+        <Button
+          className={styles.googleButton}
+          onClick={auth}
+          disabled={oauthLoading}
+        >
+          {oauthLoading && '>>>> '}
           <GoogleIcon />
           Sign in with Google
         </Button>
@@ -79,7 +131,7 @@ const LoginPage = () => {
           <Link to={routes.auth['reset-password'].abs_path}>
             Forgot password
           </Link>
-          <Button text={'login'} type="submit" />
+          <Button disabled={apiLogin.isLoading} text={'login'} type="submit" />
         </form>
         <ReactHookFormErrorRender errors={errors} />
         <Text
