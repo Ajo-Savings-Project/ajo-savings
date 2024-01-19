@@ -12,17 +12,17 @@ const TABLE_NAME = 'Wallets'
 
 // https://sequelize.org/docs/v6/other
 
-export enum WalletType {
-  GLOBAL = 'Global',
-  SAVINGS = 'Savings',
-  GROUP_WALLET = 'Group Wallet',
-}
+export const WalletType = {
+  GLOBAL: 'Global',
+  SAVINGS: 'Savings',
+  GROUP_WALLET: 'Group Wallet',
+} as const
 
-export enum OwnerType {
-  USER = 'user',
-  GROUP = 'group',
-  SAVINGS_GOAL = 'savings-goal',
-}
+export const OwnerType = {
+  USER: 'user',
+  GROUP: 'group',
+  SAVINGS_GOAL: 'savings-goal',
+} as const
 
 export interface Income {
   date: Date

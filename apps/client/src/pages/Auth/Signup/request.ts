@@ -16,7 +16,7 @@ export const RegisterSchema = z
     message: "Passwords don't match",
     path: ['confirmPassword'],
   })
-const RegisterResponseSchema = z.object({
+export const RegisterResponseSchema = z.object({
   message: z.string(),
   user: object({
     firstName: z.string(),

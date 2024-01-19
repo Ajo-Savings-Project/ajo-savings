@@ -7,13 +7,14 @@ export const LoginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 })
 
-const LoginResponseSchema = z.object({
+export const LoginResponseSchema = z.object({
   token: z.string(),
   user: z.object({
     id: z.string(),
     email: z.string(),
     firstName: z.string(),
     lastName: z.string(),
+    kycComplete: z.boolean(),
   }),
 })
 

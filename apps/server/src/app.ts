@@ -16,17 +16,23 @@ const app = express()
 
 const port = ENV.PORT || 5500
 
-app.use(
-  cors({
-    origin: [
-      ENV.FE_BASE_URL as string,
-      // CORS allow use of swagger on local environment
-      ENV.IS_PROD ? '' : `http://localhost:${port}`,
-    ].filter(Boolean),
-    methods: ['GET', 'POST', 'DELETE'],
-    credentials: true,
-  })
-)
+const allowedOrigins: Array<string> = [
+  ENV.FE_BASE_URL as string,
+  // CORS allow use of swagger on local environment
+  ENV.IS_PROD ? '' : `http://localhost:${port}`,
+].filter(Boolean)
+
+const corsOptions: cors.CorsOptions = {
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'DELETE'],
+  credentials: true,
+}
+
+app.use(cors(corsOptions))
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Referrer-Policy', 'no-referrer-when-downgrade') // this header is needed when using http and not https
+  next()
+})
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

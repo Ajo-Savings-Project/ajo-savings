@@ -10,7 +10,7 @@ import {
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   REFRESH_TOKEN,
 } from '../../constants'
-import Users, { role } from '../../models/users'
+import Users, { authMethod, role } from '../../models/users'
 import UserResetPasswordToken from '../../models/userPasswordToken'
 import {
   GenerateOTP,
@@ -66,6 +66,7 @@ export const registerUser = async (req: Request, res: Response) => {
           role: role.CONTRIBUTOR,
           otp,
           otp_expiry: otpInfo.expiry,
+          authMethod: authMethod.BASIC,
           gender: '',
           occupation: '',
           bvn: '',
