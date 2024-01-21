@@ -12,6 +12,7 @@ import {
 } from '../../constants'
 import Users, { authMethod, role } from '../../models/users'
 import UserResetPasswordToken from '../../models/userPasswordToken'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import {
   GenerateOTP,
   Jwt,
@@ -24,6 +25,7 @@ import {
   loginSchema,
   refreshTokenSchema,
   registerSchema,
+  changePasswordSchema,
 } from '../../utils/validators'
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -251,7 +253,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
       if (user) {
         const { otp, expiry: tokenExpiry } = GenerateOTP()
         const longString = generateLongString(80) //generate 80 chars long random string
-        const secret = generateLongString(20) //generate 80 chars long random string
+        const secret = generateLongString(20) //generate 20 chars long random string
         const expiresIn = 300 // seconds
 
         // create unique verify token
@@ -357,6 +359,71 @@ export const resetPassword = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: 'This is our fault, our team is working to resolve this.',
+    })
+  }
+}
+
+export const changePassword = async (req: RequestExt, res: Response) => {
+  const passwordRegex = passwordUtils.regex
+
+  try {
+    const { _userId: userId, ...rest } = req.body
+
+    const requestData = changePasswordSchema.strict().safeParse(rest)
+
+    if (!requestData.success) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: requestData.error.issues,
+      })
+    }
+
+    const _data = requestData.data
+
+    if (!passwordRegex.test(_data.newPassword)) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: passwordUtils.error,
+      })
+    }
+
+    const user = await Users.findOne({
+      where: { id: userId },
+    })
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
+        message: 'User not found',
+      })
+    }
+
+    // check if the current password is correct
+    const confirmPassword = await PasswordHarsher.compare(
+      _data.password,
+      user.password
+    )
+
+    if (!confirmPassword)
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Wrong password',
+      })
+
+    const hashedPassword = await PasswordHarsher.hash(_data.newPassword)
+
+    // update the password
+    const updatedPassword = await Users.update(
+      { password: hashedPassword },
+      { where: { id: userId } }
+    )
+
+    if (updatedPassword) {
+      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+        message: 'Password updated successfully',
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: `Internal Server Error`,
     })
   }
 }

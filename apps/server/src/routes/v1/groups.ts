@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { createGroup } from '../../controllers/groupControllers'
-import { authorizationMiddleware } from '../../middlware/authorization/authentication'
-import { upload } from '../../middlware/upload'
+import { authorizationMiddleware } from '../../middleware/authorization/authentication'
+import { upload } from '../../middleware/upload'
 
 const router = Router()
 /**

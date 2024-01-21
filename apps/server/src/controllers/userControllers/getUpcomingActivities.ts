@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE } from '../../constants'
-import { RequestExt } from '../../middlware/authorization/authentication'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import Groups, { frequency } from '../../models/groups'
 import { DateHandler } from '../../utils/helpers'
 
