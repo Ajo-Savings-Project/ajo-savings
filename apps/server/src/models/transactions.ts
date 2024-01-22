@@ -3,6 +3,7 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
 import Wallets from './wallets'
@@ -10,22 +11,23 @@ import Users from './users'
 
 const TABLE_NAME = 'Transactions'
 
-export enum action {
-  DEBIT = 'Debit',
-  CREDIT = 'Credit',
-}
+export const action = {
+  DEBIT: 'Debit',
+  CREDIT: 'Credit',
+} as const
 
-export enum transaction_status {
-  SUCCESSFUL = 'Successful',
-  PENDING = 'Pending',
-  UNSUCCESSFUL = 'Unsuccessful',
-}
+export const transactionStatus = {
+  SUCCESSFUL: 'Successful',
+  PENDING: 'Pending',
+  UNSUCCESSFUL: 'Unsuccessful',
+} as const
 
-export enum transaction_type {
-  GLOBAL = 'Global',
-  SAVINGS = 'Savings',
-  GROUP_WALLET = 'Group Wallet',
-}
+export const transactionType = {
+  GLOBAL_TRANSACTIONS: 'Global transactions', //Transactions between global wallet and external source/destination
+  SAVINGS_TRANSACTIONS: 'Savings transcations', //Transactions between personal savings wallet and all goals wallets.
+  GROUP_TRANSACTIONS: 'Group Wallet Transactions', //Transactions between personal group wallet and all groups wallets.
+  INTERNAL_TRANSFER: 'Internal funding', // Transactions between global wallet and other personal wallets(savings, group etc.)
+} as const
 
 class Transactions extends Model<
   InferAttributes<Transactions>,
@@ -33,14 +35,14 @@ class Transactions extends Model<
 > {
   static transaction: never
   declare id: string
-  declare wallet_id: string
-  declare owner_id: string
+  declare walletId: string
+  declare ownerId: string
   declare amount: number
   declare status: string
   declare action: string
   declare type: string
-  declare receiver: string
-  declare created_at: Date
+  declare receiverId: CreationOptional<string>
+  declare senderId: CreationOptional<string>
 }
 
 Transactions.init(
@@ -50,14 +52,14 @@ Transactions.init(
       primaryKey: true,
       allowNull: false,
     },
-    wallet_id: {
+    walletId: {
       type: DataTypes.UUID,
       references: {
         model: Wallets,
         key: 'id',
       },
     },
-    owner_id: {
+    ownerId: {
       type: DataTypes.UUID,
       references: {
         model: Users,
@@ -69,7 +71,7 @@ Transactions.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM(...Object.values(transaction_status)),
+      type: DataTypes.ENUM(...Object.values(transactionStatus)),
       allowNull: false,
     },
     action: {
@@ -77,17 +79,16 @@ Transactions.init(
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM(...Object.values(transaction_type)),
+      type: DataTypes.ENUM(...Object.values(transactionType)),
       allowNull: false,
     },
-    receiver: {
+    receiverId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
+    senderId: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {

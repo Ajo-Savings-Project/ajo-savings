@@ -58,7 +58,7 @@ const createPersonalGroupWalletJob = async (data: WalletJobData) => {
 const createSettingsJob = async (data: WalletJobData) => {
   return await Settings.create({
     id: uuidV4(),
-    owner_id: data.userId,
+    ownerId: data.userId,
   })
 }
 

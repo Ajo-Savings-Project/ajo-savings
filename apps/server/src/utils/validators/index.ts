@@ -33,3 +33,9 @@ export const createGroupSchema = z.object({
   numberOfParticipants: z.number(),
   duration: z.string(),
 })
+
+export const fundWalletSchema = z.object({
+  amount: z.number().refine((value) => value > 0, {
+    message: 'amount must be greater than zero',
+  }),
+})

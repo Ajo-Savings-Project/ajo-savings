@@ -113,7 +113,8 @@ const router = Router()
  *                   type: object
  *                   properties:
  *                     id: string
- *                     userId: string
+ *                     ownerId: string
+ *                     ownerType: string
  *                     totalAmount: number
  *                     type: string
  *                     earnings: array
