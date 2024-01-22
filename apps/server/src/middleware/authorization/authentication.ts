@@ -9,11 +9,13 @@ import {
 import Users from '../../models/users'
 import { getCookieValue, Jwt } from '../../utils/helpers'
 
+interface ReqBody extends Record<string, unknown> {
+  _user: Users
+  _userId: string
+}
+
 export interface RequestExt extends Request {
-  body: Request['body'] & {
-    _user?: Users
-    _userId?: string
-  }
+  body: ReqBody
 }
 
 export const authorizationMiddleware = async (
@@ -50,9 +52,9 @@ export const authorizationMiddleware = async (
 
     req.body['_userId'] = data.id
 
-    req.body['_user'] = await Users.findOne({
+    req.body['_user'] = (await Users.findOne({
       where: { id: data.id },
-    })
+    })) as Users
     return next()
   }
   return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({

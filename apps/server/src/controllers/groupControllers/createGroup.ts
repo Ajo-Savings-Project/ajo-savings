@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { RequestExt } from '../../middlware/authorization/authentication'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import { HTTP_STATUS_CODE } from '../../constants'
 import { v4 } from 'uuid'
 import Groups, { Members } from '../../models/groups'

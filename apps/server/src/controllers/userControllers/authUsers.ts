@@ -12,6 +12,7 @@ import {
 } from '../../constants'
 import Users, { authMethod, role } from '../../models/users'
 import UserResetPasswordToken from '../../models/userPasswordToken'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import {
   GenerateOTP,
   Jwt,
@@ -24,6 +25,7 @@ import {
   loginSchema,
   refreshTokenSchema,
   registerSchema,
+  changePasswordSchema,
 } from '../../utils/validators'
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -167,6 +169,7 @@ export const loginUser = async (req: Request, res: Response) => {
             email: confirmUser.email,
             firstName: confirmUser.firstName,
             lastName: confirmUser.lastName,
+            kycComplete: false,
           },
           token: accessToken,
         })
@@ -251,7 +254,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
       if (user) {
         const { otp, expiry: tokenExpiry } = GenerateOTP()
         const longString = generateLongString(80) //generate 80 chars long random string
-        const secret = generateLongString(20) //generate 80 chars long random string
+        const secret = generateLongString(20) //generate 20 chars long random string
         const expiresIn = 300 // seconds
 
         // create unique verify token
@@ -357,6 +360,59 @@ export const resetPassword = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: 'This is our fault, our team is working to resolve this.',
+    })
+  }
+}
+
+/**
+ * Already logged-in user that wishes to change their password
+ * @param {RequestExt} req
+ * @param {e.Response} res
+ */
+export const changePassword = async (req: RequestExt, res: Response) => {
+  const passwordRegex = passwordUtils.regex
+
+  try {
+    const { _user: user, ...rest } = req.body
+
+    const validationResult = changePasswordSchema.safeParse(rest)
+
+    if (!validationResult.success) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: validationResult.error.issues,
+      })
+    }
+
+    const reqObject = validationResult.data
+
+    if (!passwordRegex.test(reqObject.newPassword)) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: passwordUtils.error,
+      })
+    }
+
+    const confirmOldPasswordMatch = await PasswordHarsher.compare(
+      reqObject.oldPassword,
+      user.password
+    )
+
+    if (!confirmOldPasswordMatch) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Old password does not match.',
+      })
+    }
+
+    const hashedPassword = await PasswordHarsher.hash(reqObject.newPassword)
+
+    await user.update({ password: hashedPassword })
+
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: 'Password updated successfully',
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: `Internal Server Error`,
     })
   }
 }

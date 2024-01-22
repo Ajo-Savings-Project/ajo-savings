@@ -8,12 +8,13 @@ import {
   getUpcomingUserActivities,
   getUserPersonalSavingsWallet,
   resetPassword,
+  changePassword,
 } from '../../controllers/userControllers'
 
 import {
   authorizationMiddleware,
   validateRefreshTokenMiddleWare,
-} from '../../middlware/authorization/authentication'
+} from '../../middleware/authorization/authentication'
 
 const router = Router()
 
@@ -435,5 +436,58 @@ router.get(
  *               message: "This is our fault, our team is working to resolve this."
  */
 router.post('/resetPassword', resetPassword)
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: APIs for user authentication
+ * paths:
+ *   /api/v1/users/changePassword:
+ *     patch:
+ *       summary: Change user password
+ *       tags: [Users]
+ *       security:
+ *         - BearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 oldPassword:
+ *                   type: string
+ *                   description: Current password
+ *                 newPassword:
+ *                   type: string
+ *                   description: New password
+ *               example:
+ *                 oldPassword: "oldPassword123"
+ *                 newPassword: "newPassword456"
+ *       responses:
+ *         200:
+ *           description: Password updated successfully
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Password updated successfully"
+ *         400:
+ *           description: Bad request
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Validation error"
+ *                 issues:
+ *                   - "newPassword must meet password requirements"
+ *                   - "Wrong password"
+ *         500:
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Internal Server Error, please try again later"
+ */
+router.patch('/changePassword', authorizationMiddleware, changePassword)
 
 export default router
