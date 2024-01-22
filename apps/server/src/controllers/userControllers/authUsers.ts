@@ -169,6 +169,7 @@ export const loginUser = async (req: Request, res: Response) => {
             email: confirmUser.email,
             firstName: confirmUser.firstName,
             lastName: confirmUser.lastName,
+            kycComplete: false,
           },
           token: accessToken,
         })

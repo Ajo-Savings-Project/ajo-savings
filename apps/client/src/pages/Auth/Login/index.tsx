@@ -13,8 +13,8 @@ import { useForm } from 'react-hook-form'
 import { Link, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 import { routes } from 'router'
-import { HEADER_TITLE } from '../../../appConstants'
-import { jwtDecode } from '../../../utils/jwtDecode.ts'
+import { HEADER_TITLE } from 'appConstants'
+import { jwtDecode } from 'utils/jwtDecode.ts'
 import styles from './login.module.scss'
 import {
   useLoginMutation,
@@ -22,7 +22,7 @@ import {
   LoginResponseSchema,
 } from './requests.ts'
 import GoogleIcon from './GoogleGoogleIcon.svg?react'
-import request from '../../../api/index.ts'
+import request from 'api/index.ts'
 
 type LoginSchemaType = z.infer<typeof LoginSchema>
 
@@ -45,8 +45,8 @@ const LoginPage = () => {
   const apiLogin = useLoginMutation()
 
   const handleLogin = async (values: LoginSchemaType) => {
-    const data = await apiLogin.mutateAsync(values)
-    if (data) handleAuthSession(data.data)
+    const res = await apiLogin.mutateAsync(values)
+    if (res) handleAuthSession(res.data)
   }
 
   const [oauthLoading, setOauthLoading] = useState(false)
@@ -66,7 +66,6 @@ const LoginPage = () => {
       const params = new URLSearchParams(search)
       const type = params.get('type')
       const token = params.get('oauth_token')
-      console.log(type, token)
       window.history.pushState(null, '', pathname)
       if (type === 'success') {
         const res = jwtDecode<z.infer<typeof LoginResponseSchema>>(
