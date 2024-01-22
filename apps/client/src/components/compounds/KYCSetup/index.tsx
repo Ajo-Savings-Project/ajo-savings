@@ -1,10 +1,22 @@
+import Form from './Form'
+import Modal from '../Modal'
+import { useAuth } from 'contexts'
 const KYCSetup = () => {
-  const KYCComplete = true
+  const { kycComplete } = useAuth()
 
-  if (KYCComplete) {
+  if (kycComplete) {
     return null
   }
-  return <div>Show KYCSetup</div>
+  return (
+    <Modal
+      renderOnOpen={({ onOpen }) => (
+        <div>
+          Complete account setup. <button onClick={onOpen}>Click here</button>
+        </div>
+      )}
+      renderModalContent={({ onClose }) => <Form onClose={onClose} />}
+    ></Modal>
+  )
 }
 
 export default KYCSetup
