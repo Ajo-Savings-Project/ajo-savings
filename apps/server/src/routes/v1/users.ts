@@ -444,9 +444,11 @@ router.post('/resetPassword', resetPassword)
  *   description: APIs for user authentication
  * paths:
  *   /api/v1/users/changePassword:
- *     put:
+ *     patch:
  *       summary: Change user password
  *       tags: [Users]
+ *       security:
+ *         - BearerAuth: []
  *       requestBody:
  *         required: true
  *         content:
@@ -454,14 +456,14 @@ router.post('/resetPassword', resetPassword)
  *             schema:
  *               type: object
  *               properties:
- *                 password:
+ *                 oldPassword:
  *                   type: string
  *                   description: Current password
  *                 newPassword:
  *                   type: string
  *                   description: New password
  *               example:
- *                 password: "oldPassword123"
+ *                 oldPassword: "oldPassword123"
  *                 newPassword: "newPassword456"
  *       responses:
  *         200:
@@ -479,12 +481,6 @@ router.post('/resetPassword', resetPassword)
  *                 issues:
  *                   - "newPassword must meet password requirements"
  *                   - "Wrong password"
- *         404:
- *           description: User not found
- *           content:
- *             application/json:
- *               example:
- *                 message: "User not found"
  *         500:
  *           description: Internal Server Error
  *           content:
@@ -492,6 +488,6 @@ router.post('/resetPassword', resetPassword)
  *               example:
  *                 message: "Internal Server Error, please try again later"
  */
-router.put('/changePassword', authorizationMiddleware, changePassword)
+router.patch('/changePassword', authorizationMiddleware, changePassword)
 
 export default router

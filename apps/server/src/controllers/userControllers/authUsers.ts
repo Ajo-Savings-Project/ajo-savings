@@ -363,63 +363,51 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Already logged-in user that wishes to change their password
+ * @param {RequestExt} req
+ * @param {e.Response} res
+ */
 export const changePassword = async (req: RequestExt, res: Response) => {
   const passwordRegex = passwordUtils.regex
 
   try {
-    const { _userId: userId, ...rest } = req.body
+    const { _user: user, ...rest } = req.body
 
-    const requestData = changePasswordSchema.strict().safeParse(rest)
+    const validationResult = changePasswordSchema.safeParse(rest)
 
-    if (!requestData.success) {
+    if (!validationResult.success) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: requestData.error.issues,
+        message: validationResult.error.issues,
       })
     }
 
-    const _data = requestData.data
+    const reqObject = validationResult.data
 
-    if (!passwordRegex.test(_data.newPassword)) {
+    if (!passwordRegex.test(reqObject.newPassword)) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
         message: passwordUtils.error,
       })
     }
 
-    const user = await Users.findOne({
-      where: { id: userId },
-    })
-
-    // Check if the user exists
-    if (!user) {
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        message: 'User not found',
-      })
-    }
-
-    // check if the current password is correct
-    const confirmPassword = await PasswordHarsher.compare(
-      _data.password,
+    const confirmOldPasswordMatch = await PasswordHarsher.compare(
+      reqObject.oldPassword,
       user.password
     )
 
-    if (!confirmPassword)
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: 'Wrong password',
-      })
-
-    const hashedPassword = await PasswordHarsher.hash(_data.newPassword)
-
-    // update the password
-    const updatedPassword = await Users.update(
-      { password: hashedPassword },
-      { where: { id: userId } }
-    )
-
-    if (updatedPassword) {
-      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-        message: 'Password updated successfully',
+    if (!confirmOldPasswordMatch) {
+      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        message: 'Old password does not match.',
       })
     }
+
+    const hashedPassword = await PasswordHarsher.hash(reqObject.newPassword)
+
+    await user.update({ password: hashedPassword })
+
+    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: 'Password updated successfully',
+    })
   } catch (error) {
     console.log(error)
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({

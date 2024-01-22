@@ -25,7 +25,7 @@ export const forgotPasswordSchema = z.object({
 })
 
 export const changePasswordSchema = z.object({
-  password: z.string().min(5, passwordUtils.error),
+  oldPassword: z.string().min(5, passwordUtils.error),
   newPassword: z.string().min(5, passwordUtils.error),
 })
 
