@@ -63,21 +63,33 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (search) {
-      const params = new URLSearchParams(search)
-      const type = params.get('type')
-      const token = params.get('oauth_token')
-      window.history.pushState(null, '', pathname)
-      if (type === 'success') {
-        const res = jwtDecode<z.infer<typeof LoginResponseSchema>>(
-          token as string
-        )
+      try {
+        const params = new URLSearchParams(search)
+        const type = params.get('type')
+        const token = params.get('oauth_token')
+        if (type === 'success') {
+          const res = jwtDecode<z.infer<typeof LoginResponseSchema>>(
+            token as string
+          )
+          setTimeout(() => {
+            handleAuthSession(res.data)
+          }, 1000)
+        } else {
+          /**
+           * TODO: do more research on the cause of this
+           * i suspect due to react double re-rendering, appNotify is cancelled after first render.
+           */
+          setTimeout(
+            () =>
+              appNotify('error', 'Something went wrong', undefined, {
+                id: 'failed-oauth',
+              }),
+            1000
+          )
+        }
+      } finally {
         setOauthLoading(false)
-        setTimeout(() => {
-          handleAuthSession(res.data)
-        }, 1000)
-      } else {
-        appNotify('error', 'Something went wrong')
-        setOauthLoading(false)
+        window.history.pushState(null, '', pathname)
       }
     }
   }, [handleAuthSession, pathname, search])

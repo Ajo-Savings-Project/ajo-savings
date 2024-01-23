@@ -369,7 +369,6 @@ router.get(
   getUserPersonalSavingsWallet
 )
 
-
 /**
  * @swagger
  * /api/v1/users/resetPassword:

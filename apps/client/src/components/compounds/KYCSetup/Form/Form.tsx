@@ -1,9 +1,18 @@
-import styles from './kyc.module.scss'
+import styles from './form.module.scss'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReactHookFormErrorRender, Text, Select, Input } from 'components'
+import {
+  ReactHookFormErrorRender,
+  Text,
+  Select,
+  Input,
+  Button,
+  DropBoxInput,
+} from 'components'
+import Close from '../../Modal/images/Close.svg?react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'contexts'
+
 const Schema = z.object({
   gender: z.string(),
   occupation: z.string(),
@@ -27,9 +36,22 @@ const Form = ({ onClose }: { onClose: () => void }) => {
   const makeApiCallSubmit = () => {
     handleStateUpdate({ kycComplete: true })
   }
-  console.log(onClose)
+  const handleDocsUpload =
+    (types: string) => (resp: { files: FileList | null; preview: string }) => {
+      console.log('Types', types, 'resp', resp)
+    }
+
   return (
     <div className={styles.container}>
+      <div className={styles.containerClose}>
+        <button
+          type="button"
+          className={styles.containerClosebtn}
+          onClick={onClose}
+        >
+          <Close width={40} height={40} />
+        </button>
+      </div>
       <div className={styles.containerHeaderText}>
         <Text
           size="Subheading"
@@ -116,6 +138,32 @@ const Form = ({ onClose }: { onClose: () => void }) => {
           className={styles.Idnumber}
           {...register('idNumber')}
         />
+        <div>
+          <Text
+            size="Default"
+            content={'Upload Identification Document'}
+            style={{ fontWeight: 'bold' }}
+          />
+          <DropBoxInput
+            subText="Drop your files here"
+            summary="Maximum size: 50MB"
+            onGetFile={handleDocsUpload('')}
+          />
+        </div>
+        <div>
+          <Text
+            size="Default"
+            content={'Upload Proof of Address'}
+            style={{ fontWeight: 'bold' }}
+          />
+          <DropBoxInput
+            subText="Drop your files here"
+            summary="Maximum size : 50MB"
+            onGetFile={handleDocsUpload('')}
+          />
+        </div>
+
+        <Button text={'Submit'} className={styles.submitBtn} type="submit" />
       </form>
       <ReactHookFormErrorRender errors={errors} />
     </div>
