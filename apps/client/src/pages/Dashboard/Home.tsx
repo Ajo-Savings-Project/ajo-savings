@@ -4,7 +4,7 @@ import UpcomingActivities from 'components/compounds/UpcomingActivities/Upcoming
 
 import ChartWithUpcoming from './chartAndUpcoming'
 
-import TransactionHistory from 'components/compounds/TransactionHistory/TransactionHistory'
+import TransactionHistory from '../../components/compounds/transactionHistory/TransactionHistory'
 
 const HomePage = () => {
   const { firstName, lastName } = useAuth()

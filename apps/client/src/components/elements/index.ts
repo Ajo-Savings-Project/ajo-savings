@@ -2,6 +2,7 @@
 export { default as Button } from './Button'
 export { default as Text } from './Typography'
 export { default as Card } from './Card'
-export { appNotify } from './appNotify'
+export { appNotify } from './AppNotify'
 export { default as Switcher } from './switcher'
+export { default as DropBoxInput } from './DropBoxInput'
 export * from './TextBox'
