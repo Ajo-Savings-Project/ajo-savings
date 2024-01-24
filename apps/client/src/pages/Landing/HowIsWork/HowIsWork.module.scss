@@ -7,81 +7,18 @@
   grid-template-columns: 1fr;
   gap: 30px;
 
-  .content {
-    padding: 1.25rem;
-
-    .header {
-      font-size: 2.5rem;
-    }
-
-    .card {
-      padding-top: 0.312rem;
-      .cardGrid {
-        display: flex;
-        flex-direction: row;
-        gap: 0.312rem;
-
-        .circleWrapper {
-          position: relative;
-        }
-
-        .cardId {
-          position: absolute;
-          font-weight: 600;
-          font-size: 1.25rem;
-          top: 0%;
-          left: 0%;
-          margin: 10px 0px 0px 13px;
-          z-index: 2;
-        }
-
-        .cardCircle {
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 50%;
-          background-color: cyan;
-        }
-      }
-
-      .cardTitle {
-        font-weight: 600;
-        letter-spacing: 0.25px;
-        line-height: 1.75rem;
-        font-size: 1.25rem;
-        margin: 0.312rem 0rem 0rem 0.75rem;
-      }
-
-      .cardText {
-        padding: 0.75rem 0;
-        font-weight: 400;
-        font-size: 1rem;
-      }
-    }
+  img {
+    width: 100%;
+    height: auto;
   }
-  .image {
-    img {
-      width: 100%;
-      height: auto;
-    }
+
+  .header {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
   }
 
   @media screen and (min-width: 48rem) and (max-width: 63.94px) {
     grid-template-columns: 1fr 1fr;
-
-    .content {
-      padding: 0.625px;
-
-      .cardId {
-        font-size: 1.13rem;
-        margin-top: 0.3px;
-      }
-      .cardTitle {
-        font-size: 1.13rem;
-      }
-      .cardText {
-        font-size: 0.9rem;
-      }
-    }
   }
   @media screen and (min-width: 64rem) {
     grid-template-columns: 1fr auto;
@@ -89,21 +26,37 @@
     @include px-to-rem(padding-top, 30);
     @include px-to-rem(padding-bottom, 30);
 
-    .content {
-      padding: 0.3rem;
-      .cardId {
-        font-size: 1.13rem;
-        margin-top: 0.63rem;
-      }
-      .cardTitle {
-        font-size: 1rem;
-      }
-      .CardText {
-        font-size: 0.75rem;
-      }
-    }
     .image {
-      margin-top: 1.23;
+      margin-top: 1.2rem;
+    }
+  }
+}
+
+.list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &Item {
+    display: flex;
+    gap: 1.25rem;
+
+    > p {
+      white-space: nowrap;
+      background-color: var(--primary-100);
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+    }
+    > div p:first-child {
+      margin-bottom: 0.5rem;
     }
   }
 }
