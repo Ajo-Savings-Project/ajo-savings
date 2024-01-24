@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { authorizationMiddleware } from '../../middleware/authorization/authentication'
 import { fundPersonalSavingsWallet } from '../../controllers/paymentsController'
+import { authorizationMiddleware } from '../../middleware/authorization/authentication'
 
 const router = Router()
 /**
