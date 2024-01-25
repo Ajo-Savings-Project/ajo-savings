@@ -1,0 +1,33 @@
+.modal {
+  max-width: 600px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: var(--white);
+  padding: 2rem 2.5rem;
+  transition: 2s ease-in-out;
+  transform: translateY(100%);
+  &.open {
+    transform: translateY(0%);
+  }
+
+  &Header {
+    text-align: center;
+    position: sticky;
+    padding: 10px;
+    top: 0;
+    width: calc(100% + 80px);
+    background-color: var(--primary-600);
+    transform: translate(-40px, -24px);
+    color: var(--white);
+    z-index: 5;
+    &Btn {
+      background-color: transparent;
+      text-decoration: underline;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+    }
+  }
+}
