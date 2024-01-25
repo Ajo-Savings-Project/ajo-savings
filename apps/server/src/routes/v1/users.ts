@@ -9,6 +9,7 @@ import {
   getUserPersonalSavingsWallet,
   resetPassword,
   changePassword,
+  
   getTransactionHistory,
   updateKycProfile,
   userProfileDetails,
@@ -541,6 +542,7 @@ router.patch('/changePassword', authorizationMiddleware, changePassword)
  *               example:
  *                 message: "Something went wrong, our team has been notified."
  */
+
 
 router.get(
   '/transactionHistory',
