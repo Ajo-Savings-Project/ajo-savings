@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE } from '../../constants'
-import { RequestExt } from '../../middlware/authorization/authentication'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
 import { fundWalletSchema } from '../../utils/validators'
 import {
