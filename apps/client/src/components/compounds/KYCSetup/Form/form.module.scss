@@ -1,0 +1,51 @@
+.container {
+  &Close {
+    text-align: end;
+    &btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  }
+  &HeaderText {
+    text-align: center;
+    margin-bottom: 32px;
+    &Big {
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+  }
+  .form {
+    > Div {
+      margin: 15px 0;
+    }
+  }
+  .submitBtn {
+    width: 100%;
+    margin-top: 24px;
+  }
+  @media (min-width: 37.5rem) {
+    &HeaderText {
+      margin: auto;
+      width: 374px;
+    }
+    .form {
+      .flex,
+      .Dob {
+        width: 230px;
+      }
+      .occupation,
+      .Identity {
+        width: 250px;
+      }
+      .flexDiv {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+        gap: 24px;
+        justify-content: space-between;
+      }
+    }
+  }
+}
