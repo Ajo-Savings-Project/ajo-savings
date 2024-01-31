@@ -9,6 +9,7 @@ import {
   getUserPersonalSavingsWallet,
   resetPassword,
   changePassword,
+  getTransactionHistory,
 } from '../../controllers/userControllers'
 
 import {
@@ -437,6 +438,7 @@ router.get(
  */
 router.post('/resetPassword', resetPassword)
 
+
 /**
  * @swagger
  * tags:
@@ -489,5 +491,55 @@ router.post('/resetPassword', resetPassword)
  *                 message: "Internal Server Error, please try again later"
  */
 router.patch('/changePassword', authorizationMiddleware, changePassword)
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: All user APIs
+ * paths:
+ *   /api/v1/users/transactionHistory:
+ *     get:
+ *       summary: Get user transaction history
+ *       description: Retrieves the transaction history for the authenticated user.
+ *       tags: [Users]
+ *       security:
+ *         - BearerAuth: []
+ *       responses:
+ *         200:
+ *           description: Success. Returns the transaction history for the user.
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Transaction history fetched successfully"
+ *                 transactionHistory:
+ *                   - id: "1"
+ *                     amount: 100.00
+ *                     description: "Purchase at XYZ Store"
+ *                     createdAt: "2023-12-01T12:00:00Z"
+ *                   - id: "2"
+ *                     amount: 50.00
+ *                     description: "Withdrawal from ATM"
+ *                     createdAt: "2023-11-30T15:30:00Z"
+ *                   # ... (more transactions)
+ *         401:
+ *           description: Unauthorized. Token is missing or invalid.
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Unauthorized access"
+ *                 code: JWT_INVALID_STATUS_CODE
+ *         500:
+ *           description: Internal Server Error. Something went wrong on the server.
+ *           content:
+ *             application/json:
+ *               example:
+ *                 message: "Something went wrong, our team has been notified."
+ */
+
+router.get(
+  '/transactionHistory',
+  authorizationMiddleware,
+  getTransactionHistory
+)
 
 export default router
