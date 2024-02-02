@@ -1,9 +1,10 @@
 import SavingsTargetCard from 'components/compounds/SavingsTargetCard'
+import SavingsHeader from 'components/compounds/SavingsHeader'
 
 const SavingsPage = () => {
   return (
     <div>
-      Savings Page
+      <SavingsHeader />
       <div>
         <SavingsTargetCard
           img="https://picsum.photos/200/300"
