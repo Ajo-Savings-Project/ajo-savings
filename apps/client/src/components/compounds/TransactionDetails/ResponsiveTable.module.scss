@@ -5,66 +5,55 @@
   width: 100%;
   overflow-y: scroll;
   max-height: 19rem;
+}
 
-  .tableContainer {
-    .table {
-      table-layout: fixed;
+.newTableContainer {
+  display: grid;
+  grid-template-columns: 3fr 11fr 10fr 6fr 6fr 7fr 3fr;
+  column-gap: 0.5rem;
+  margin: 0.5rem 0;
+  background: white;
+  padding: 10px 13px;
+  border-radius: 8px;
 
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 100px;
-      }
-      tr {
-        border-radius: 8px;
-        background: white;
-        max-width: 1000px;
-        padding: 10px 13px;
-        align-items: center;
-        margin: 1rem 0;
-        display: flex;
-        justify-content: space-between;
-        gap: 1.05rem;
-        white-space: nowrap;
-        height: 60px;
-        flex-shrink: 0;
-      }
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .status-cell {
+    width: 5rem;
+    color: var(--red);
 
-      th,
-      td {
-        padding: 0.5rem;
-        text-align: left;
-      }
-      // div {
-      //   flex-shrink: 0;
-      // }
-      td:nth-child(2) {
-        width: 13rem;
-        white-space: normal;
-      }
-      td:nth-child(3) {
-        width: 13rem;
-        white-space: normal;
-      }
-      td:nth-child(4) {
-        width: 6rem;
-      }
-      td:nth-child(5) {
-        width: 7rem;
-      }
-      td:nth-child(6) {
-        width: 6rem;
-      }
-
-      .status-cell {
-        width: 5rem;
-        color: var(--red);
-
-        /* Conditional styling based on status */
-        &[data-status='Received'] {
-          color: var(--green-1);
-        }
-      }
+    &[data-status='Received'] {
+      color: var(--green-1);
     }
   }
+}
+td {
+  display: flex;
+  align-items: center;
+}
+td:nth-child(1) {
+  min-width: 3rem;
+}
+td:nth-child(2) {
+  min-width: 6rem;
+  max-width: 12rem;
+}
+td:nth-child(3) {
+  min-width: 4rem;
+}
+td:nth-child(4) {
+  min-width: 5rem;
+}
+td:nth-child(5) {
+  min-width: 4rem;
+}
+td:nth-child(6) {
+  min-width: 4rem;
+}
+
+.newTableContainer > * {
+  min-width: 0;
 }
