@@ -358,6 +358,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         'Password reset successful. You can now log in with your new password.',
     })
   } catch (error) {
+    console.log("new error", error)
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: 'This is our fault, our team is working to resolve this.',
     })

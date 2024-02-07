@@ -78,10 +78,10 @@ const ResetPasswordPage = () => {
       )}
       <ReactHookFormErrorRender errors={location.search ? pErrors : errors} />
       <form
-        onSubmit={
-          location.search
+        onSubmit={ location.search
             ? pHandleSubmit(handleChangePassword)
             : handleSubmit(handleResetPassword)
+        
         }
       >
         {location.search ? (
