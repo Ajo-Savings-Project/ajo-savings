@@ -7,10 +7,10 @@ import {
   ReactHookFormErrorRender,
   InfoCard,
   Modal,
+  Select,
 } from 'components'
 import styles from './setTarget.module.scss'
 import CloseIcon from '../Modal/images/Close.svg?react'
-import ArrowDown from './arrow_drop_downdownArrow.svg?react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { SetTargetSchema } from './request'
@@ -21,11 +21,10 @@ interface SetTargetProps {
 const initialFormValues = {
   target: '',
   targetAmount: 0,
-  frequency: '',
+  frequency: 'Pick your frequency',
   startDate: '',
   withdrawalDate: '',
 }
-const frequencyOptions = ['Daily', 'Weekly', 'Monthly']
 type SetTargetSchemaType = z.infer<typeof SetTargetSchema>
 
 const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
@@ -37,17 +36,8 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
   } = useForm<SetTargetSchemaType>({
     resolver: zodResolver(SetTargetSchema),
   })
-  const [visible, setVisible] = useState(false)
-  const [selectedFrequency, setSelectedFrequency] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const toggleVisibility = () => {
-    setVisible((prevVisible) => !prevVisible)
-  }
-  const handleFrequencySelection = (frequency: string) => {
-    setSelectedFrequency(frequency)
-    setVisible(false)
-  }
   const handleSetTargetRegister = async (values: SetTargetSchemaType) => {
     console.log('SetTarget form values:', values)
     if (Object.keys(errors).length === 0) {
@@ -60,6 +50,20 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
   }
   return (
     <div>
+      {isModalOpen && (
+        <Modal
+          initialState={true}
+          renderModalContent={({ onClose }) => (
+            <InfoCard
+              onClick={() => {
+                onClose()
+              }}
+              text="Success!"
+              Subtext="You've updated your Saving Goals List. Good Luck in achieving your target!"
+            />
+          )}
+        />
+      )}
       <Card className={styles.setTargetContainer}>
         <div className={styles.setTargetContainerCloseIcon} onClick={onClose}>
           <CloseIcon />
@@ -89,28 +93,19 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
               defaultValue={'Numbers only'}
             />
             <div className={styles.setTargetContainerInputFrequency}>
-              <ArrowDown
-                className={styles.setTargetContainerInputArrow}
-                onClick={toggleVisibility}
-              />
-              <Input
+              <Select
                 label={'Frequency'}
-                placeholder={'Pick your frequency'}
-                value={selectedFrequency}
-                onClick={toggleVisibility}
+                options={[
+                  {
+                    label: 'Pick your frequency',
+                    value: 'Pick your frequency',
+                  },
+                  { label: 'Daily', value: 'Daily' },
+                  { label: 'Weekly', value: 'Weekly' },
+                  { label: 'Monthly', value: 'Monthly' },
+                ]}
                 {...register('frequency')}
               />
-              {visible && (
-                <div className={styles.setTargetContainerInputHidden}>
-                  {frequencyOptions.map((frequency) => (
-                    <Text
-                      key={frequency}
-                      content={frequency}
-                      onClick={() => handleFrequencySelection(frequency)}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
             <Input
               label={'Start Date'}
@@ -124,21 +119,6 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
               {...register('withdrawalDate')}
             />
             <Button type="submit">Submit</Button>
-
-            {isModalOpen && (
-              <Modal
-                initialState={true}
-                renderModalContent={({ onClose }) => (
-                  <InfoCard
-                    onClick={() => {
-                      onClose()
-                    }}
-                    text="Success!"
-                    Subtext="You've updated your Saving Goals List. Good Luck in achieving your target!"
-                  />
-                )}
-              />
-            )}
           </form>
           <ReactHookFormErrorRender errors={errors} />
         </div>

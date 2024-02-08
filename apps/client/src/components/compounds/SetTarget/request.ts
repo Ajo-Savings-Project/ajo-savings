@@ -16,11 +16,9 @@ export const SetTargetSchema = z.object({
   startDate: z
     .string()
     .refine((date) => date.length > 0, { message: 'Start Date is required' }),
-  withdrawalDate: z
-    .string()
-    .refine((date) => date.length > 0, {
-      message: 'Withdrawal Date is required',
-    }),
+  withdrawalDate: z.string().refine((date) => date.length > 0, {
+    message: 'Withdrawal Date is required',
+  }),
 })
 
 export const SetTargetResponseSchema = z.object({

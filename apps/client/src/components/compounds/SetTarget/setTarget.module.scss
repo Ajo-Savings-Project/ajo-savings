@@ -31,38 +31,15 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    &Frequency {
-      position: relative;
-    }
-    &Arrow {
-      position: absolute;
-      bottom: 10%;
-      right: 5%;
-      z-index: 20;
-    }
-    &Hidden {
-      background: #fff;
-      text-align: start;
-      position: absolute;
-      right: -2%;
-      bottom: -108%;
-      z-index: 40;
-      line-height: 32.4px;
-      padding: 10px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
   }
   @media (max-width: 425px) {
-    & {
+    width: 100%;
+    &Input {
       width: 100%;
-      &Input {
+    }
+    &Text {
+      &Create {
         width: 100%;
-      }
-      &Text {
-        &Create {
-          width: 100%;
-        }
       }
     }
   }
