@@ -9,7 +9,7 @@ type RenderModalOnOpenT = { onOpen: () => void }
 
 interface ModalProps {
   renderModalContent: ({ onClose }: RenderModalContentT) => ReactElement
-  renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => ReactElement
+  renderOnOpen?: ({ onOpen }: RenderModalOnOpenT) => ReactElement
   initialState?: boolean
   disableOutsideClose?: boolean
   modalContentClassName?: string
@@ -32,7 +32,7 @@ export default function Modal({
 
   return (
     <>
-      {renderOnOpen({ onOpen: () => setShowModal(true) })}
+      {renderOnOpen && renderOnOpen({ onOpen: () => setShowModal(true) })}
 
       {showModal &&
         createPortal(

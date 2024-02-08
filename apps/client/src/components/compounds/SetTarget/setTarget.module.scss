@@ -4,8 +4,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 43.437rem;
   width: 28.375rem;
+  padding: 30px;
   border-radius: 20px;
   position: relative;
   &CloseIcon {
@@ -50,6 +50,7 @@
       line-height: 32.4px;
       padding: 10px 10px;
       border-radius: 10px;
+      cursor: pointer;
     }
   }
   @media (max-width: 425px) {
