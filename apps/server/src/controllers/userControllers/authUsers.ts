@@ -71,6 +71,7 @@ export const registerUser = async (req: Request, res: Response) => {
           occupation: '',
           bvn: '',
           address: '',
+          identification_type: '',
           identification_number: '',
           identification_doc: '',
           proof_of_address_doc: '',

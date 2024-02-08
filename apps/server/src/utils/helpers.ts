@@ -136,6 +136,17 @@ export class DateHandler {
 
     return nextFriday
   }
+
+  static isValidDate = (value: string): boolean => {
+    const date = new Date(value)
+    return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
+  }
+
+  static isPastDate = (value: string): boolean => {
+    const date = new Date(value)
+    const currentDate = new Date()
+    return date < currentDate
+  }
 }
 
 export interface TransactionDetails {

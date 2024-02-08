@@ -10,12 +10,13 @@ import {
   resetPassword,
   changePassword,
   getTransactionHistory,
+  updateKycProfile,
 } from '../../controllers/userControllers'
-
 import {
   authorizationMiddleware,
   validateRefreshTokenMiddleWare,
 } from '../../middleware/authorization/authentication'
+import { upload } from '../../middleware/upload'
 
 const router = Router()
 
@@ -370,7 +371,6 @@ router.get(
   getUserPersonalSavingsWallet
 )
 
-
 /**
  * @swagger
  * /api/v1/users/resetPassword:
@@ -437,7 +437,6 @@ router.get(
  *               message: "This is our fault, our team is working to resolve this."
  */
 router.post('/resetPassword', resetPassword)
-
 
 /**
  * @swagger
@@ -540,6 +539,95 @@ router.get(
   '/transactionHistory',
   authorizationMiddleware,
   getTransactionHistory
+)
+
+/**
+ * @swagger
+ * /api/v1/users/updateProfile:
+ *   put:
+ *     summary: Update user profile
+ *     description: Updates the profile of the authenticated user.
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 description: First name of the user
+ *               lastName:
+ *                 type: string
+ *                 description: Last name of the user
+ *               email:
+ *                 type: string
+ *                 description: Email of the user
+ *               phone:
+ *                 type: string
+ *                 description: Phone number of the user
+ *               gender:
+ *                 type: string
+ *                 description: Gender of the user
+ *               occupation:
+ *                 type: string
+ *                 description: Occupation of the user
+ *               date_of_birth:
+ *                 type: string
+ *                 description: Date of birth of the user
+ *               bvn:
+ *                 type: string
+ *                 description: Bank Verification Number of the user
+ *               address:
+ *                 type: string
+ *                 description: Address of the user
+ *               identification_number:
+ *                 type: string
+ *                 description: Identification Number of the user
+ *     responses:
+ *       200:
+ *         description: Success. Returns the updated user profile.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Profile updated successfully"
+ *               user:
+ *                 id: "1"
+ *                 firstName: "John"
+ *                 lastName: "Doe"
+ *       400:
+ *         description: Bad Request. Validation error in the request payload.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Validation error"
+ *               issues: [{ path: "fieldName", message: "Error message" }]
+ *       401:
+ *         description: Unauthorized. Token is missing or invalid.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Unauthorized access"
+ *               code: JWT_INVALID_STATUS_CODE
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Something went wrong, our team has been notified."
+ */
+
+router.put(
+  '/updateProfile',
+  authorizationMiddleware,
+  upload.fields([
+    { name: 'identification_doc', maxCount: 1 },
+    { name: 'proof_of_address_doc', maxCount: 1 },
+  ]),
+  updateKycProfile
 )
 
 export default router
