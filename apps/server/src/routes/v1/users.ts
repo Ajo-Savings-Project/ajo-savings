@@ -270,6 +270,11 @@ router.post('/forgotPassword', forgotPassword)
  *           application/json:
  *             example:
  *               message: "retrieved user upcoming payments successfully"
+ *               pagination:
+ *                 totalItems: 0
+ *                 totalPages: 0
+ *                 currentPage: 0
+ *                 pageSize: 5
  *               contributions:
  *                 - groupName: "Ajo Legends"
  *                   contributionAmount: 5000
@@ -438,7 +443,6 @@ router.get(
  *               message: "This is our fault, our team is working to resolve this."
  */
 router.post('/resetPassword', resetPassword)
-
 
 /**
  * @swagger
