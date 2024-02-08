@@ -1,6 +1,7 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
 import { passwordUtils } from '../helpers'
+import { DateHandler } from '../helpers'
 
 export const loginSchema = z.object({
   email: z.string().email(),
@@ -14,6 +15,46 @@ export const registerSchema = z.object({
   // TODO: improve phone number validation
   phone: z.string().min(11, 'phone number is required'),
   password: z.string().min(5, passwordUtils.error),
+})
+
+export const editProfileSchema = z.object({
+  gender: z.string().min(2, {
+    message: 'Gender is required and must be at least 2 characters long',
+  }),
+  occupation: z.string().min(2, {
+    message: 'Occupation is required and must be at least 2 characters long',
+  }),
+  date_of_birth: z
+    .string()
+    .refine(
+      (value) =>
+        DateHandler.isValidDate(value) && DateHandler.isPastDate(value),
+      {
+        message: 'Date of birth is required, must be a valid past date',
+      }
+    ),
+  bvn: z.string().min(2, {
+    message: 'BVN is required and must be at least 2 characters long',
+  }),
+  address: z.string().min(2, {
+    message: 'Address is required and must be at least 2 characters long',
+  }),
+  identification_type: z.string().min(2, {
+    message:
+      'Identification type is required and must be at least 2 characters long',
+  }),
+  identification_number: z.string().min(2, {
+    message:
+      'Identification number is required and must be at least 2 characters long',
+  }),
+  identification_doc: z.string().min(2, {
+    message:
+      'Identification document is required and must be at least 2 characters long',
+  }),
+  proof_of_address_doc: z.string().min(2, {
+    message:
+      'Proof of address document is required and must be at least 2 characters long',
+  }),
 })
 
 export const refreshTokenSchema = z.object({

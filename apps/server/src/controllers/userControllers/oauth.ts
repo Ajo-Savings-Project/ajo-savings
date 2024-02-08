@@ -46,6 +46,7 @@ const getUserData = async (access_token: unknown, res: Response) => {
         occupation: '',
         bvn: '',
         address: '',
+        identification_type: '',
         identification_number: '',
         identification_doc: '',
         proof_of_address_doc: '',
