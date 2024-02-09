@@ -88,14 +88,12 @@ export const getUpcomingUserActivities = async (
     }
 
     // Paginate the contributions array
-    let page = 1
-    if (req.query.page) {
-      page = parseInt(req.query.page as string)
-      if (Number.isNaN(page)) {
-        return res.status(400).json({
-          message: 'Invalid page number',
-        })
-      }
+    let page = parseInt(req.query.page as string) || 1
+
+    if (Number.isNaN(page) || page <= 0) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid page number',
+      })
     }
     const itemsPerPage = 5
     const startIndex = (page - 1) * itemsPerPage
@@ -107,13 +105,24 @@ export const getUpcomingUserActivities = async (
     }
     const paginatedContributions = contributions.slice(startIndex, endIndex)
 
+    const responseData = {
+      contributions: paginatedContributions,
+      currentPage: page,
+      totalPages: totalPages,
+    }
+
+    const queryStringData = Object.entries(responseData)
+      .map(
+        ([key, value]) => `${key}=${encodeURIComponent(JSON.stringify(value))}`
+      )
+      .join('&')
+
+    const finalUrl = `${req.url}?${queryStringData}`
+
     return res.status(HTTP_STATUS_CODE.SUCCESS).json({
       message: `retrieved user upcoming payments successfully`,
-      data: {
-        contributions: paginatedContributions,
-        currentPage: page,
-        totalPages: totalPages,
-      },
+      contributions: paginatedContributions,
+      finalUrl,
     })
   } catch (err) {
     console.log(err)

@@ -285,6 +285,8 @@ router.post('/forgotPassword', forgotPassword)
  *                   date: "2024-01-12T16:26:39.500Z"
  *                   image: ""
  *                 # ... (more contributions)
+ *               finalUrl:
+ *                 - "/upcomingActivities?contributions=%5B%5D&currentPage=0&totalPages=0"
  *       404:
  *         description: Error. User groups not found.
  *         content:
