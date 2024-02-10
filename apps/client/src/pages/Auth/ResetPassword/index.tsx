@@ -8,6 +8,7 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import {
   useResetPasswordMutation,
   ResetPasswordSchema,
@@ -23,6 +24,24 @@ type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>
 const ResetPasswordPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
+
+  const [countDown, setCountDown] = useState(30);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const onDisabled = () => {
+    setIsDisabled(true);
+    setCountDown(30);
+
+    const countdownInterval = setInterval(() => {
+      setCountDown((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(countdownInterval);
+      setIsDisabled(false);
+    }, 30000);
+  };
+
 
   const {
     register,
@@ -50,12 +69,23 @@ const ResetPasswordPage = () => {
         <p>Kindly follow the instruction in the email.</p>
       </>
     )
+    onDisabled()
   }
   const apiChangePassword = useChangePasswordMutation()
   const handleChangePassword = async (values: ChangePasswordSchemaType) => {
+    const tokenUrl = new URLSearchParams(location.search)
+    await apiChangePassword.mutateAsync({ ...values, token: tokenUrl.get("verify") ?? '' })
     navigate(routes.auth.login.abs_path)
-    await apiChangePassword.mutateAsync(values)
+    appNotify(
+      'success',
+      <>
+        <p>You have reset your password successfully.</p>
+        <br />
+        <p>Kindly login with your new password.</p>
+      </>
+    )
   }
+
 
   return (
     <div className={styles.reset}>
@@ -78,10 +108,10 @@ const ResetPasswordPage = () => {
       )}
       <ReactHookFormErrorRender errors={location.search ? pErrors : errors} />
       <form
-        onSubmit={ location.search
-            ? pHandleSubmit(handleChangePassword)
-            : handleSubmit(handleResetPassword)
-        
+        onSubmit={location.search
+          ? pHandleSubmit(handleChangePassword)
+          : handleSubmit(handleResetPassword)
+
         }
       >
         {location.search ? (
@@ -104,9 +134,10 @@ const ResetPasswordPage = () => {
             {...register('email')}
           />
         )}
-        <Button type="submit">
+        <Button type="submit" disabled={isDisabled}>
           {location.search ? 'Reset Password' : 'Send reset instructions'}
         </Button>
+        {isDisabled && <p>if not yet receive mail , kindly resend in {countDown}</p>}
       </form>
       <Text>
         Go back to&nbsp;{' '}

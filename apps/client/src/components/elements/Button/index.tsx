@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = ({
   text,
   children,
-  kind = 'default',
+  kind = 'default',  
   ...props
 }: PropsWithChildren<ButtonProps>) => {
   return (

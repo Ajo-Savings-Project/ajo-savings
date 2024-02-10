@@ -13,7 +13,7 @@ export const useResetPasswordMutation = () => {
   return useMutation({
     mutationKey: ['reset-password'],
     mutationFn: async (data: z.infer<typeof ResetPasswordSchema>) => {
-      const res = await request.post('/users/resetPassword', data)
+      const res = await request.post('/users/forgotPassword', data)
       const result = ResetPasswordResponseSchema.safeParse(res.data)
       if (result.success) return result.data
     },
@@ -37,10 +37,13 @@ const ChangePasswordResponseSchema = z.object({
 export const useChangePasswordMutation = () => {
   return useMutation({
     mutationKey: ['change-password'],
-    mutationFn: async (data: z.infer<typeof ChangePasswordSchema>) => {
-      const res = await request.post('/reset-password', data)
+    mutationFn: async (data: z.infer<typeof ChangePasswordSchema> & {token:string}) => {
+      const res = await request.post(`/users/resetPassword?verify=${data.token}`, {
+        newPassword:data.newPassword,
+        token: data.token
+      })
       const result = ChangePasswordResponseSchema.safeParse(res.data)
-      if (result.success) return result.data
+      if (result.success) return res
     },
   })
 }

@@ -27,6 +27,9 @@
   &:active {
     background-color: var(--primary-500);
   }
+  &:disabled {
+    background-color: var(--gray-300);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
