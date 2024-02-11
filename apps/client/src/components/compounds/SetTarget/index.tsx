@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
-import {
-  Text,
-  Input,
-  Button,
-  ReactHookFormErrorRender,
-  InfoCard,
-  Modal,
-  Select,
-} from 'components'
-import ModalCard from '../Modal/ModalCard'
-import styles from './setTarget.module.scss'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { SetTargetSchema } from './request'
 import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Button,
+  InfoCard,
+  Input,
+  Modal,
+  ReactHookFormErrorRender,
+  Select,
+  Text,
+} from 'components'
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import ModalCard from '../Modal/ModalCard'
+import { SetTargetSchema } from './request'
+import styles from './setTarget.module.scss'
+
 interface SetTargetProps {
   onClose: () => void
 }
@@ -32,6 +33,7 @@ const SetTarget: React.FC<SetTargetProps> = ({
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<SetTargetSchemaType>({
@@ -47,6 +49,7 @@ const SetTarget: React.FC<SetTargetProps> = ({
       setIsModalOpen(true)
     }
   }
+
   return (
     <>
       <Modal
@@ -85,11 +88,17 @@ const SetTarget: React.FC<SetTargetProps> = ({
               type={'text'}
               {...register('target')}
             />
-            <Input
-              label={'Target Amount'}
-              placeholder={'Numbers only'}
-              type="number"
-              {...register('targetAmount', { valueAsNumber: true })}
+            <Controller
+              render={({ field }) => (
+                <Input
+                  label={'Target Amount'}
+                  placeholder={'Numbers only'}
+                  numberOnly
+                  {...field}
+                />
+              )}
+              control={control}
+              name="targetAmount"
             />
             <div className={styles.setTargetContainerInputFrequency}>
               <Select
