@@ -11,6 +11,7 @@ import {
   changePassword,
   getTransactionHistory,
   updateKycProfile,
+  userProfileDetails,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -630,6 +631,47 @@ router.patch(
     { name: 'proof_of_address_doc', maxCount: 1 },
   ]),
   updateKycProfile
+)
+
+/**
+ * @swagger
+ * /api/v1/users/getUserProfileDetails:
+ *   get:
+ *     summary: Get user profile details
+ *     description: Retrieves the profile details of the authenticated user.
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success. Returns the user profile details.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Fetched user profile details successfully"
+ *               user:
+ *                 firstName: "John"
+ *                 lastName: "Doe"
+ *                 email: "john.doe@example.com"
+ *       401:
+ *         description: Unauthorized. Token is missing or invalid.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Unauthorized access"
+ *               code: JWT_INVALID_STATUS_CODE
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Something went wrong, our team has been notified."
+ */
+
+router.get(
+  '/getUserProfileDetails',
+  authorizationMiddleware,
+  userProfileDetails
 )
 
 export default router
