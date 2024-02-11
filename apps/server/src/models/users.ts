@@ -11,14 +11,13 @@ export const role = {
   ADMIN: 'Admin',
   CONTRIBUTOR: 'Contributor', //NORMAL USER
 } as const
-export type RoleType = keyof typeof role
+export type RoleType = (typeof role)[keyof typeof role]
 
 export const authMethod = {
   BASIC: 'Basic',
   OAUTH: 'OAuth',
 } as const
-
-export type AuthMethodType = keyof typeof authMethod
+export type AuthMethodType = (typeof authMethod)[keyof typeof authMethod]
 
 const TABLE_NAME = 'Users'
 
@@ -33,7 +32,7 @@ class Users extends Model<
   declare email: string
   declare profilePic: string | null
   declare password: string
-  declare role: string
+  declare role: RoleType
   declare phone: string
   declare gender: string | null
   declare occupation: string | null
@@ -45,7 +44,7 @@ class Users extends Model<
   declare proof_of_address_doc: string | null
   declare isVerified: boolean
   declare resetTokenExpiry: CreationOptional<Date>
-  declare authMethod: string
+  declare authMethod: AuthMethodType
 }
 
 Users.init(
