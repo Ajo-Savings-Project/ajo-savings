@@ -4,7 +4,7 @@
   border-radius: 8px;
   border: none;
   @include px-to-rem(padding, 12, 18);
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 500;
   font-family: Inter, sans-serif;
   background-color: var(--primary-600);
@@ -12,6 +12,16 @@
   transition: border-color 0.25s;
   color: white;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    color: inherit;
+  }
 
   &Rounded {
     border-radius: 30px;
@@ -22,5 +32,8 @@
   }
   &:disabled {
     background-color: var(--gray-300);
+  }
+  &IsLoading {
+    pointer-events: none;
   }
 }

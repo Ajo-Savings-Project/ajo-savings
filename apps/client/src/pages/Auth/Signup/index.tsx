@@ -66,7 +66,6 @@ const SignupPage = () => {
       const params = new URLSearchParams(search)
       const type = params.get('type')
       const token = params.get('oauth_token')
-      console.log(type, token)
       window.history.pushState(null, '', pathname)
       if (type === 'success') {
         const res = jwtDecode<z.infer<typeof RegisterResponseSchema>>(
@@ -156,7 +155,7 @@ const SignupPage = () => {
           />
 
           <Button
-            disabled={apiSignUp.isLoading}
+            isLoading={apiSignUp.isLoading}
             text={'sign up'}
             type="submit"
           />

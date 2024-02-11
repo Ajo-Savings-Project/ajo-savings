@@ -104,8 +104,8 @@ const LoginPage = () => {
           className={styles.googleButton}
           onClick={auth}
           disabled={oauthLoading}
+          isLoading={oauthLoading}
         >
-          {oauthLoading && '>>>> '}
           <GoogleIcon />
           Sign in with Google
         </Button>
@@ -130,7 +130,7 @@ const LoginPage = () => {
           <Link to={routes.auth['reset-password'].abs_path}>
             Forgot password
           </Link>
-          <Button disabled={apiLogin.isLoading} text={'login'} type="submit" />
+          <Button isLoading={apiLogin.isLoading} text={'login'} type="submit" />
         </form>
         <ReactHookFormErrorRender errors={errors} />
         <Text
