@@ -66,8 +66,6 @@ export const registerUser = async (req: Request, res: Response) => {
           password: hashedPassword,
           profilePic: '',
           role: role.CONTRIBUTOR,
-          otp,
-          otp_expiry: otpInfo.expiry,
           authMethod: authMethod.BASIC,
           gender: '',
           occupation: '',
@@ -345,9 +343,9 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const hashedPassword = await PasswordHarsher.hash(newPassword)
 
-    await Users.update(
+    const user = await Users.update(
       { password: hashedPassword },
-      { where: { id: decodedToken.id } }
+      { where: { id: decodedToken.id }, returning: true }
     )
 
     // Invalidate the reset token after it's used
@@ -356,8 +354,10 @@ export const resetPassword = async (req: Request, res: Response) => {
     return res.status(HTTP_STATUS_CODE.SUCCESS).json({
       message:
         'Password reset successful. You can now log in with your new password.',
+      email: user[1][0].email,
     })
   } catch (error) {
+    console.log('new error', error)
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: 'This is our fault, our team is working to resolve this.',
     })

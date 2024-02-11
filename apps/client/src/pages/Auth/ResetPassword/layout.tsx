@@ -20,7 +20,11 @@ const ResetPasswordLayout = () => {
 
   return (
     <>
-      <Helmet title={getHeaderTitle('Reset password')} />
+      <Helmet
+        title={getHeaderTitle(
+          !location.search ? 'Forgot Password' : 'Reset password'
+        )}
+      />
       <div className={styles.layout}>
         <Text
           className={classNames(styles.layoutLogo, 'app-logo')}

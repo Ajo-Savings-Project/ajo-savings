@@ -17,19 +17,22 @@
     border-radius: 30px;
   }
 
-  &:hover {
-  }
+  // &:hover {
+  // }
 
-  &:focus,
-  &:focus-visible {
-  }
+  // &:focus,
+  // &:focus-visible {
+  // }
 
   &:active {
     background-color: var(--primary-500);
   }
+  &:disabled {
+    background-color: var(--gray-300);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-  .button {
-  }
+  // .button {
+  // }
 }
