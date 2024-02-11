@@ -19,9 +19,11 @@ export const RegisterSchema = z
 export const RegisterResponseSchema = z.object({
   message: z.string(),
   user: object({
+    id: z.string(),
     firstName: z.string(),
     lastName: z.string(),
     email: z.string(),
+    kycComplete: z.boolean(),
   }),
 })
 

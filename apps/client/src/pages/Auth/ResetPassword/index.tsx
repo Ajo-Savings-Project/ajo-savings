@@ -29,14 +29,14 @@ const ResetPasswordPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ResetPasswordSchemaType>({
     resolver: zodResolver(ResetPasswordSchema),
   })
   const {
     register: pRegister,
     handleSubmit: pHandleSubmit,
-    formState: { errors: pErrors },
+    formState: { errors: pErrors, isSubmitting: pIsSubmitting },
   } = useForm<ChangePasswordSchemaType>({
     resolver: zodResolver(ChangePasswordSchema),
   })
@@ -111,10 +111,10 @@ const ResetPasswordPage = () => {
       )}
       <ReactHookFormErrorRender errors={location.search ? pErrors : errors} />
       <form
-        onSubmit={
-          location.search
+        onSubmit={ location.search
             ? pHandleSubmit(handleChangePassword)
             : handleSubmit(handleResetPassword)
+        
         }
       >
         {location.search ? (
@@ -137,7 +137,11 @@ const ResetPasswordPage = () => {
             {...register('email')}
           />
         )}
-        <Button type="submit" disabled={isDisabled}>
+        <Button
+          isLoading={isSubmitting || pIsSubmitting}
+          type="submit"
+          disabled={isDisabled}
+        >
           {location.search ? 'Reset Password' : 'Send reset instructions'}
         </Button>
         {!location.search && (
