@@ -7,15 +7,18 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 
-export enum role {
-  ADMIN = 'Admin',
-  CONTRIBUTOR = 'Contributor', //NORMAL USER
-}
+export const role = {
+  ADMIN: 'Admin',
+  CONTRIBUTOR: 'Contributor', //NORMAL USER
+} as const
+export type RoleType = keyof typeof role
 
-export enum authMethod {
-  BASIC = 'Basic',
-  OAUTH = 'OAuth',
-}
+export const authMethod = {
+  BASIC: 'Basic',
+  OAUTH: 'OAuth',
+} as const
+
+export type AuthMethodType = keyof typeof authMethod
 
 const TABLE_NAME = 'Users'
 
@@ -40,10 +43,6 @@ class Users extends Model<
   declare identification_number: string
   declare identification_doc: string
   declare proof_of_address_doc: string | null
-  declare otp: CreationOptional<string>
-  declare otp_expiry: CreationOptional<Date>
-  declare resetToken: CreationOptional<string>
-  declare resetTokenExpires: CreationOptional<Date>
   declare isVerified: boolean
   declare resetTokenExpiry: CreationOptional<Date>
   declare authMethod: string
@@ -74,21 +73,6 @@ Users.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    otp: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    otp_expiry: {
-      type: DataTypes.DATE,
-    },
-    resetToken: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    resetTokenExpires: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
     authMethod: {
       type: DataTypes.STRING,

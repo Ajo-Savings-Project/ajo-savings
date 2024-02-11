@@ -33,15 +33,22 @@ export const ChangePasswordSchema = z
 
 const ChangePasswordResponseSchema = z.object({
   message: z.string(),
+  email: z.string(),
 })
+
 export const useChangePasswordMutation = () => {
   return useMutation({
     mutationKey: ['change-password'],
-    mutationFn: async (data: z.infer<typeof ChangePasswordSchema> & {token:string}) => {
-      const res = await request.post(`/users/resetPassword?verify=${data.token}`, {
-        newPassword:data.newPassword,
-        token: data.token
-      })
+    mutationFn: async (
+      data: z.infer<typeof ChangePasswordSchema> & { token: string }
+    ) => {
+      const res = await request.post(
+        `/users/resetPassword?verify=${data.token}`,
+        {
+          newPassword: data.newPassword,
+          token: data.token,
+        }
+      )
       const result = ChangePasswordResponseSchema.safeParse(res.data)
       if (result.success) return res
     },
