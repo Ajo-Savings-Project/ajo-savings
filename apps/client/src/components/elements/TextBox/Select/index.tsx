@@ -3,13 +3,20 @@ import { forwardRef, SelectHTMLAttributes } from 'react'
 import styles from './select.module.scss'
 import arrowDropDownSvg from './svg/arrow_drop_down.svg'
 
+interface OptionI {
+  label: string
+  value: string | number
+  disabled?: boolean
+  selected?: boolean
+}
 interface SelectI extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string
-  options: Array<{ label: string; value: string | number; disabled?: boolean }>
+  options: Array<OptionI>
+  placeholder?: string
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectI>(
-  ({ name, label, disabled, options, ...props }, ref) => {
+  ({ name, label, placeholder, options, ...props }, ref) => {
     return (
       <div className={styles.inputContainer}>
         <label
@@ -30,11 +37,24 @@ const Select = forwardRef<HTMLSelectElement, SelectI>(
               props.className
             )}
           >
-            {options.map(({ label, value }) => (
-              <option key={label + value} value={value} disabled={disabled}>
-                {label}
-              </option>
-            ))}
+            {[
+              placeholder && { label: placeholder, value: '', selected: true },
+              ...options,
+            ]
+              .filter(Boolean)
+              .map((values) => {
+                const { label, value, disabled, selected } = values as OptionI
+                return (
+                  <option
+                    selected={selected}
+                    key={label + value}
+                    value={value}
+                    disabled={disabled}
+                  >
+                    {label}
+                  </option>
+                )
+              })}
           </select>
           <img
             src={arrowDropDownSvg}

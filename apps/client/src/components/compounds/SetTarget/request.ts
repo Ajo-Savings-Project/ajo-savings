@@ -1,18 +1,9 @@
 import { z, object } from 'zod'
-const FrequencyEnum = {
-  Daily: 'Daily',
-  Weekly: 'Weekly',
-  Monthly: 'Monthly',
-}
 
 export const SetTargetSchema = z.object({
   target: z.string().min(1, 'Target is required'),
-  targetAmount: z.number().positive().min(1),
-  frequency: z
-    .string()
-    .refine((value) => Object.values(FrequencyEnum).includes(value), {
-      message: 'Frequency is required and must be a valid enum value',
-    }),
+  targetAmount: z.string().min(1, 'Total amount is required'),
+  frequency: z.string().min(1, 'Frequency is required'),
   startDate: z
     .string()
     .refine((date) => date.length > 0, { message: 'Start Date is required' }),

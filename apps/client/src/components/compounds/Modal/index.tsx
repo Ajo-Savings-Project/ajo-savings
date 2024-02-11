@@ -28,7 +28,11 @@ export default function Modal({
   useEffect(() => {
     // prevents scrolling when open
     document.body.style.overflow = showModal ? 'hidden' : 'unset'
-  }, [showModal])
+  }, [showModal, initialState])
+
+  useEffect(() => {
+    setShowModal(Boolean(initialState))
+  }, [initialState])
 
   return (
     <>

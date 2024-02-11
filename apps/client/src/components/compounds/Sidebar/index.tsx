@@ -28,7 +28,7 @@ const listItems: Array<ListItemsI> = [
       },
       {
         icon: <SavingsIcon />,
-        name: 'savings',
+        name: 'goals',
         link: routes.dashboard.savings.path,
       },
       {

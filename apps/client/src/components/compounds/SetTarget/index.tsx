@@ -3,38 +3,40 @@ import {
   Text,
   Input,
   Button,
-  Card,
   ReactHookFormErrorRender,
   InfoCard,
   Modal,
   Select,
 } from 'components'
+import ModalCard from '../Modal/ModalCard'
 import styles from './setTarget.module.scss'
-import CloseIcon from '../Modal/images/Close.svg?react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { SetTargetSchema } from './request'
 import { zodResolver } from '@hookform/resolvers/zod'
 interface SetTargetProps {
-  onClose?: () => void
+  onClose: () => void
 }
+
 const initialFormValues = {
   target: '',
-  targetAmount: 0,
-  frequency: 'Pick your frequency',
+  targetAmount: '',
+  frequency: '',
   startDate: '',
   withdrawalDate: '',
 }
 type SetTargetSchemaType = z.infer<typeof SetTargetSchema>
 
-const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
+const SetTarget: React.FC<SetTargetProps> = ({
+  onClose: parentModalOnClose,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<SetTargetSchemaType>({
     resolver: zodResolver(SetTargetSchema),
+    defaultValues: initialFormValues,
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -43,31 +45,29 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
     if (Object.keys(errors).length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       setIsModalOpen(true)
-      setTimeout(() => {
-        reset(initialFormValues)
-      }, 100)
     }
   }
   return (
-    <div>
-      {isModalOpen && (
-        <Modal
-          initialState={true}
-          renderModalContent={({ onClose }) => (
-            <InfoCard
-              onClick={() => {
-                onClose()
-              }}
-              text="Success!"
-              Subtext="You've updated your Saving Goals List. Good Luck in achieving your target!"
-            />
-          )}
-        />
-      )}
-      <Card className={styles.setTargetContainer}>
-        <div className={styles.setTargetContainerCloseIcon} onClick={onClose}>
-          <CloseIcon />
-        </div>
+    <>
+      <Modal
+        initialState={isModalOpen}
+        renderModalContent={({ onClose }) => (
+          <InfoCard
+            onClick={() => {
+              onClose()
+              if (parentModalOnClose) {
+                parentModalOnClose()
+              }
+            }}
+            text="Success!"
+            Subtext="You've updated your Saving Goals List. Good Luck in achieving your target!"
+          />
+        )}
+      />
+      <ModalCard
+        className={styles.setTargetContainer}
+        onClick={parentModalOnClose}
+      >
         <div className={styles.setTargetContainerText}>
           <Text content={'Set a Target'} size={'Subtext'} />
           <Text
@@ -90,16 +90,12 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
               placeholder={'Numbers only'}
               type="number"
               {...register('targetAmount', { valueAsNumber: true })}
-              defaultValue={'Numbers only'}
             />
             <div className={styles.setTargetContainerInputFrequency}>
               <Select
                 label={'Frequency'}
+                placeholder={'Pick your frequency'}
                 options={[
-                  {
-                    label: 'Pick your frequency',
-                    value: 'Pick your frequency',
-                  },
                   { label: 'Daily', value: 'Daily' },
                   { label: 'Weekly', value: 'Weekly' },
                   { label: 'Monthly', value: 'Monthly' },
@@ -122,8 +118,8 @@ const SetTarget: React.FC<SetTargetProps> = ({ onClose }) => {
           </form>
           <ReactHookFormErrorRender errors={errors} />
         </div>
-      </Card>
-    </div>
+      </ModalCard>
+    </>
   )
 }
 export default SetTarget
