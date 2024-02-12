@@ -111,10 +111,10 @@ const ResetPasswordPage = () => {
       )}
       <ReactHookFormErrorRender errors={location.search ? pErrors : errors} />
       <form
-        onSubmit={ location.search
+        onSubmit={
+          location.search
             ? pHandleSubmit(handleChangePassword)
             : handleSubmit(handleResetPassword)
-        
         }
       >
         {location.search ? (
@@ -168,7 +168,7 @@ interface CountDownI {
 
 function CountDown({ timer, text, isDisabled, setIsDisabled }: CountDownI) {
   const COUNTDOWN_KEY = 'ajo-reset-count:countDown'
-  const TIMER = 60 // seconds
+  const TIMER = 5 // seconds
 
   const [countDown, setCountDown] = useState(timer || TIMER)
 
@@ -186,21 +186,23 @@ function CountDown({ timer, text, isDisabled, setIsDisabled }: CountDownI) {
         setCountDown((prevTime) => {
           return prevTime - 1
         })
-        if (countDown <= 1) {
-          clearInterval(intervalId)
-          localStorage.removeItem(COUNTDOWN_KEY)
-          setCountDown(TIMER)
-          setIsDisabled(false)
-        } else {
-          localStorage.setItem(COUNTDOWN_KEY, String(countDown))
-        }
       }, 1000)
 
       return () => {
         clearInterval(intervalId)
       }
     }
-  }, [countDown, isDisabled, setIsDisabled])
+  }, [isDisabled])
+
+  useEffect(() => {
+    if (countDown <= 0) {
+      localStorage.removeItem(COUNTDOWN_KEY)
+      setCountDown(TIMER)
+      setIsDisabled(false)
+    } else {
+      localStorage.setItem(COUNTDOWN_KEY, String(countDown))
+    }
+  }, [countDown, setIsDisabled])
 
   if (!isDisabled) return null
 
