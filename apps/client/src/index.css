@@ -105,10 +105,19 @@ svg {
   vertical-align: middle;
 }
 
-a {
+a,
+.link {
   font-size: 0.875rem;
   color: var(--primary-600);
   font-weight: 600;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

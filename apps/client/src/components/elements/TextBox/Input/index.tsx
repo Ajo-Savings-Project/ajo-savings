@@ -6,14 +6,31 @@ import CrossedEye from './eye-crossed.svg?react'
 
 interface InputI extends InputHTMLAttributes<HTMLInputElement> {
   label: string
+  numberOnly?: boolean
 }
 
 const Input = forwardRef<HTMLInputElement, InputI>(
-  ({ name, label, type, ...props }, ref) => {
+  ({ name, label, type, onChange, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false)
 
     const toggleShowPass = () => {
       setShowPassword(!showPassword)
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) {
+        if (props.numberOnly) {
+          // TODO: look this up for best practices
+          const syntheticEvent = {
+            ...e,
+            target: {
+              ...e.target,
+              value: e.target.value.replace(/\D+/g, ''),
+            },
+          }
+          onChange(syntheticEvent)
+        } else onChange(e)
+      }
     }
 
     return (
@@ -35,6 +52,7 @@ const Input = forwardRef<HTMLInputElement, InputI>(
             props.className
           )}
           type={showPassword ? 'text' : type}
+          onChange={handleChange}
         />
         {type === 'password' ? (
           <button

@@ -9,7 +9,7 @@ type RenderModalOnOpenT = { onOpen: () => void }
 
 interface ModalProps {
   renderModalContent: ({ onClose }: RenderModalContentT) => ReactElement
-  renderOnOpen: ({ onOpen }: RenderModalOnOpenT) => ReactElement
+  renderOnOpen?: ({ onOpen }: RenderModalOnOpenT) => ReactElement
   initialState?: boolean
   disableOutsideClose?: boolean
   modalContentClassName?: string
@@ -28,11 +28,15 @@ export default function Modal({
   useEffect(() => {
     // prevents scrolling when open
     document.body.style.overflow = showModal ? 'hidden' : 'unset'
-  }, [showModal])
+  }, [showModal, initialState])
+
+  useEffect(() => {
+    setShowModal(Boolean(initialState))
+  }, [initialState])
 
   return (
     <>
-      {renderOnOpen({ onOpen: () => setShowModal(true) })}
+      {renderOnOpen && renderOnOpen({ onOpen: () => setShowModal(true) })}
 
       {showModal &&
         createPortal(

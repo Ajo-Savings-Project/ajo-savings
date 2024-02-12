@@ -1,0 +1,14 @@
+.goalsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  > a {
+    text-decoration: none;
+    color: var(--dashboard-blue1);
+  }
+}
+
+.modalContent {
+  max-width: 454px;
+  width: 100%;
+}

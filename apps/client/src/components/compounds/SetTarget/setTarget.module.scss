@@ -1,0 +1,28 @@
+.setTargetContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &Text {
+    text-align: center;
+    padding-top: 0.2rem;
+    &Create {
+      margin-top: 0.5rem;
+      width: 20rem;
+    }
+  }
+
+  &Input {
+    width: 100%;
+    margin-top: 1rem;
+
+    label {
+      margin-top: 1.5rem;
+    }
+    Button {
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+  }
+}
