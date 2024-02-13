@@ -1,8 +1,5 @@
 import { Text } from 'components'
-import {
-  TodayResponsiveTable,
-  YesterdayResponsiveTable,
-} from 'components/compounds/TransactionDetails/ResponsiveTable'
+import { TransactionsTable } from 'components/compounds/TransactionDetails/ResponsiveTable'
 
 const TransactionsPage = () => {
   return (
@@ -19,8 +16,7 @@ const TransactionsPage = () => {
           <Text content="Clear all" color="none" size="Small" />
         </div>
       </div>
-      <TodayResponsiveTable />
-      <YesterdayResponsiveTable />
+      <TransactionsTable />
     </div>
   )
 }
