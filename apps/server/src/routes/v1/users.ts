@@ -620,7 +620,7 @@ router.get(
  *               message: "Something went wrong, our team has been notified."
  */
 
-router.put(
+router.patch(
   '/updateProfile',
   authorizationMiddleware,
   upload.fields([
