@@ -544,7 +544,7 @@ router.get(
 /**
  * @swagger
  * /api/v1/users/updateProfile:
- *   put:
+ *   patch:
  *     summary: Update user profile
  *     description: Updates the profile of the authenticated user.
  *     tags: [Users]
@@ -620,7 +620,7 @@ router.get(
  *               message: "Something went wrong, our team has been notified."
  */
 
-router.put(
+router.patch(
   '/updateProfile',
   authorizationMiddleware,
   upload.fields([
