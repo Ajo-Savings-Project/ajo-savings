@@ -12,11 +12,8 @@ import { HEADER_TITLE } from 'appConstants'
 import classNames from 'classnames'
 import GoogleIcon from '../Login/GoogleGoogleIcon.svg?react'
 import styles from '../Login/login.module.scss'
-import {
-  RegisterSchema,
-  RegisterResponseSchema,
-  useRegisterMutation,
-} from './request'
+import { LoginResponseSchema } from '../Login/requests.ts'
+import { RegisterSchema, useRegisterMutation } from './request'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -43,10 +40,8 @@ const SignupPage = () => {
   const apiSignUp = useRegisterMutation()
 
   const handleRegister = async (values: RegisterSchemaType) => {
-    const _newValue: Partial<RegisterSchemaType> = { ...values }
-    delete _newValue['confirmPassword']
-    const res = await apiSignUp.mutateAsync(_newValue as RegisterSchemaType)
-    navigate(routes.auth.login.abs_path, { state: res!.user })
+    const res = await apiSignUp.mutateAsync(values)
+    navigate(routes.auth.login.abs_path, { state: res?.data.user })
   }
 
   const [oauthLoading, setOauthLoading] = useState(false)
@@ -68,7 +63,7 @@ const SignupPage = () => {
       const token = params.get('oauth_token')
       window.history.pushState(null, '', pathname)
       if (type === 'success') {
-        const res = jwtDecode<z.infer<typeof RegisterResponseSchema>>(
+        const res = jwtDecode<z.infer<typeof LoginResponseSchema>>(
           token as string
         )
         setOauthLoading(false)
@@ -97,9 +92,8 @@ const SignupPage = () => {
         <Button
           className={styles.googleButton}
           onClick={auth}
-          disabled={oauthLoading}
+          isLoading={oauthLoading}
         >
-          {oauthLoading && '>>>> '}
           <GoogleIcon />
           Sign up with Google
         </Button>

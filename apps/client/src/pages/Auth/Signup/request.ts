@@ -1,7 +1,6 @@
 import { useMutation } from 'react-query'
 import request from 'api'
-import { object, z } from 'zod'
-import { appNotify } from '../../../components'
+import { z } from 'zod'
 
 export const RegisterSchema = z
   .object({
@@ -18,26 +17,20 @@ export const RegisterSchema = z
   })
 export const RegisterResponseSchema = z.object({
   message: z.string(),
-  user: object({
-    id: z.string(),
+  user: z.object({
     firstName: z.string(),
     lastName: z.string(),
     email: z.string(),
-    kycComplete: z.boolean(),
   }),
 })
 
 export const useRegisterMutation = () => {
   return useMutation({
-    mutationKey: ['signup-user'],
     mutationFn: async (data: z.infer<typeof RegisterSchema>) => {
-      const res = await request.post('/users/register', data)
+      const { confirmPassword: _, ...rest } = data
+      const res = await request.post('/users/register', rest)
       const result = RegisterResponseSchema.safeParse(res.data)
-      if (result.success) return result.data
-      appNotify(
-        'error',
-        'This is our fault, our team have been notified. kindly navigate to login.'
-      )
+      if (result.success) return result
     },
   })
 }
