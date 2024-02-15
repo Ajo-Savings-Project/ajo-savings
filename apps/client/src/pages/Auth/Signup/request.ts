@@ -24,6 +24,12 @@ export const RegisterResponseSchema = z.object({
   }),
 })
 
+export const VerifyResponseSchema = z.object({
+  message: z.string(),
+  status: z.string(),
+  user: RegisterSchema,
+})
+
 export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: async (data: z.infer<typeof RegisterSchema>) => {

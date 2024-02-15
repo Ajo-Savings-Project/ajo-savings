@@ -37,20 +37,11 @@ const getUserData = async (access_token: unknown, res: Response) => {
         firstName: given_name,
         lastName: family_name,
         email: email,
-        phone: '',
-        password: '',
-        profilePic: '',
         role: role.CONTRIBUTOR,
         authMethod: authMethod.OAUTH,
-        gender: '',
-        occupation: '',
-        bvn: '',
-        address: '',
-        identification_type: '',
-        identification_number: '',
-        identification_doc: '',
-        proof_of_address_doc: '',
         isVerified: false,
+        password: '',
+        phone: '',
       })
 
       const payload = {

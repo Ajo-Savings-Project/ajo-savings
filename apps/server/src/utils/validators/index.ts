@@ -24,7 +24,7 @@ export const editProfileSchema = z.object({
   occupation: z.string().min(2, {
     message: 'Occupation is required and must be at least 2 characters long',
   }),
-  date_of_birth: z
+  dateOfBirth: z
     .string()
     .refine(
       (value) =>
@@ -39,19 +39,19 @@ export const editProfileSchema = z.object({
   address: z.string().min(2, {
     message: 'Address is required and must be at least 2 characters long',
   }),
-  identification_type: z.string().min(2, {
+  identificationType: z.string().min(2, {
     message:
       'Identification type is required and must be at least 2 characters long',
   }),
-  identification_number: z.string().min(2, {
+  identificationNumber: z.string().min(2, {
     message:
       'Identification number is required and must be at least 2 characters long',
   }),
-  identification_doc: z.string().min(2, {
+  identificationDoc: z.string().min(2, {
     message:
       'Identification document is required and must be at least 2 characters long',
   }),
-  proof_of_address_doc: z.string().min(2, {
+  proofOfAddressDoc: z.string().min(2, {
     message:
       'Proof of address document is required and must be at least 2 characters long',
   }),
@@ -72,13 +72,12 @@ export const changePasswordSchema = z.object({
 
 export const createGroupSchema = z.object({
   groupName: z.string(),
-  contributionAmount: z.number(),
   purposeAndGoals: z.string(),
+  contributionAmount: z.number(),
   frequency: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
-  numberOfParticipants: z.number(),
   duration: z.string(),
+  numberOfParticipants: z.number(),
+  groupImage: z.string().optional(),
 })
 
 export const fundWalletSchema = z.object({

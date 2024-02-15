@@ -22,12 +22,6 @@ export const getUpcomingUserActivities = async (
           { adminId: userId },
           { members: { [Op.contains]: [userId] } },
         ],
-        startDate: {
-          [Op.lte]: currentDate,
-        },
-        endDate: {
-          [Op.gte]: lastDayOfMonth,
-        },
       },
     })
 

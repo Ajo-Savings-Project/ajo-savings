@@ -1,9 +1,10 @@
-import { Text } from 'components'
+import { appNotify, Text } from 'components'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useLocation, useNavigate } from 'react-router-dom'
 import request from 'api'
 import { routes } from '../../../router'
+import { VerifyResponseSchema } from './request.ts'
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate()
@@ -12,18 +13,33 @@ const VerifyEmailPage = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return request.post('/verify-email', {
-        token: urlParams.get('token'),
-      })
+      const res = await request.post<typeof VerifyResponseSchema>(
+        '/users/verify-email',
+        {
+          token: urlParams.get('user'),
+        }
+      )
+      return VerifyResponseSchema.safeParse(res.data)
     },
     mutationKey: 'verify-email',
-    onSuccess: () => {
-      navigate(routes.auth.login.abs_path, {
-        state: { email: urlParams.get('email') },
-      })
-    },
-    onError: (err) => {
-      console.log(err)
+    onSuccess: (res) => {
+      if (res.success) {
+        if (res.data.status === 'success') {
+          navigate(routes.auth.login.abs_path, {
+            state: res.data.user,
+          })
+        } else {
+          appNotify(
+            'error',
+            'It seems like that link has expired, please try again'
+          )
+          navigate(routes.auth.signup.abs_path, {
+            state: res.data.user,
+          })
+        }
+      } else {
+        appNotify('error', "We couldn't verify your email, please try again")
+      }
     },
   })
 
@@ -31,16 +47,14 @@ const VerifyEmailPage = () => {
     if (mutation.isIdle) {
       mutation.mutate()
     }
-  })
-
-  console.log(mutation.error)
+  }, [mutation])
 
   return (
     <div>
       <Text>
         {mutation.isLoading
           ? 'Verifying...'
-          : 'done loading, if success redierect to login else expired token'}
+          : 'Done loading, this page will be redirected to login'}
       </Text>
     </div>
   )

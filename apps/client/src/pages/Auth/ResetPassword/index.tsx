@@ -4,12 +4,12 @@ import {
   Button,
   ReactHookFormErrorRender,
   appNotify,
+  CountDown,
 } from 'components'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import Typography from '../../../components/elements/Typography'
+import { useState } from 'react'
 import {
   useResetPasswordMutation,
   ResetPasswordSchema,
@@ -156,61 +156,6 @@ const ResetPasswordPage = () => {
         <Link to={routes.auth.login.abs_path}>Sign in here</Link>
       </Text>
     </div>
-  )
-}
-
-interface CountDownI {
-  timer?: number
-  text?: string
-  isDisabled: boolean
-  setIsDisabled: (state: boolean) => void
-}
-
-function CountDown({ timer, text, isDisabled, setIsDisabled }: CountDownI) {
-  const COUNTDOWN_KEY = 'ajo-reset-count:countDown'
-  const TIMER = 5 // seconds
-
-  const [countDown, setCountDown] = useState(timer || TIMER)
-
-  useEffect(() => {
-    const storedCountDown = localStorage.getItem(COUNTDOWN_KEY)
-    if (storedCountDown && parseInt(storedCountDown) > 0) {
-      setCountDown(parseInt(storedCountDown))
-      setIsDisabled(true)
-    }
-  }, [isDisabled, setIsDisabled])
-
-  useEffect(() => {
-    if (isDisabled) {
-      const intervalId = setInterval(() => {
-        setCountDown((prevTime) => {
-          return prevTime - 1
-        })
-      }, 1000)
-
-      return () => {
-        clearInterval(intervalId)
-      }
-    }
-  }, [isDisabled])
-
-  useEffect(() => {
-    if (countDown <= 0) {
-      localStorage.removeItem(COUNTDOWN_KEY)
-      setCountDown(TIMER)
-      setIsDisabled(false)
-    } else {
-      localStorage.setItem(COUNTDOWN_KEY, String(countDown))
-    }
-  }, [countDown, setIsDisabled])
-
-  if (!isDisabled) return null
-
-  return (
-    <Typography size={'Small'} style={{ textAlign: 'center' }}>
-      {text ? `${text} ${countDown}` : `Retry in ${countDown}`}
-      {countDown > 9 ? ' secs' : ' sec'}
-    </Typography>
   )
 }
 

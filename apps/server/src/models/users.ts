@@ -19,6 +19,15 @@ export const authMethod = {
 } as const
 export type AuthMethodType = (typeof authMethod)[keyof typeof authMethod]
 
+export const identificationTypes = {
+  NIN: 'NIN',
+  INTERNATIONAL_PASSPORT: 'International Passport',
+  DRIVERS_LICENCE: 'Drivers Licence',
+  VOTERS_CARD: 'Voters Card',
+} as const
+export type IdentificationType =
+  (typeof identificationTypes)[keyof typeof identificationTypes]
+
 const TABLE_NAME = 'Users'
 
 // https://sequelize.org/docs/v6/other-topics/typescript/
@@ -30,20 +39,21 @@ class Users extends Model<
   declare firstName: string
   declare lastName: string
   declare email: string
-  declare profilePic: string | null
+  declare profilePic: CreationOptional<string>
   declare password: string
   declare role: RoleType
   declare phone: string
-  declare gender: string | null
-  declare occupation: string | null
-  declare date_of_birth: CreationOptional<Date>
-  declare bvn: string | null
-  declare address: string | null
-  declare identification_type: string
-  declare identification_number: string
-  declare identification_doc: string
-  declare proof_of_address_doc: string | null
+  declare gender: CreationOptional<string>
+  declare occupation: CreationOptional<string>
+  declare dateOfBirth: CreationOptional<Date>
+  declare bvn: CreationOptional<string>
+  declare address: CreationOptional<string>
+  declare identificationType: CreationOptional<IdentificationType>
+  declare identificationNumber: CreationOptional<string>
+  declare identificationDoc: CreationOptional<string>
+  declare proofOfAddressDoc: CreationOptional<string>
   declare isVerified: boolean
+  declare kycComplete: CreationOptional<boolean>
   declare authMethod: AuthMethodType
 }
 
@@ -82,53 +92,47 @@ Users.init(
       allowNull: true,
       defaultValue: false,
     },
+    kycComplete: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),
       allowNull: false,
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     gender: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     occupation: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    date_of_birth: {
+    dateOfBirth: {
       type: DataTypes.DATE,
     },
     bvn: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    identification_type: {
+    identificationType: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    identification_number: {
+    identificationNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    identification_doc: {
+    identificationDoc: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    proof_of_address_doc: {
+    proofOfAddressDoc: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
   },
   {
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
     timestamps: true,
   }

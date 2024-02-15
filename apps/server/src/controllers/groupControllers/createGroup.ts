@@ -1,16 +1,20 @@
 import { Response } from 'express'
+import _ from 'lodash'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { v4 } from 'uuid'
-import Groups, { Members } from '../../models/groups'
+import Groups from '../../models/groups'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
 import { createGroupSchema } from '../../utils/validators'
 import { v2 as cloudinary } from 'cloudinary'
+import { createNewMember } from './helpers'
 
 export const createGroup = async (req: RequestExt, res: Response) => {
-  const { _user: user, _userId: userId, ...rest } = req.body
+  const { _userId: userId, ...rest } = req.body
 
-  const requestData = createGroupSchema.strict().safeParse(rest)
+  const requestData = createGroupSchema
+    .strict()
+    .safeParse(_.omit(rest, ['_user']))
 
   if (!requestData.success) {
     return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
@@ -19,10 +23,17 @@ export const createGroup = async (req: RequestExt, res: Response) => {
   }
 
   const _data = requestData.data
+
   const groupId = v4()
 
   try {
-    // Check if an image file is uploaded
+    const adminMember = await createNewMember(userId, { isAdmin: true })
+
+    if (!adminMember) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {})
+    }
+
+    // Move this to background task
     let groupImage = ''
     if (req.file) {
       // Upload image to Cloudinary
@@ -32,35 +43,21 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       groupImage = result.secure_url
     }
 
-    const member: Members = {
-      name: `${user!.firstName} ${user!.lastName}`,
-      memberPicture: user!.profilePic || null,
-      memberId: userId,
-      amountContributed: 0,
-      amountWithdrawn: 0,
-      dateOfLastContribution: new Date(),
-      profilePicture: user!.profilePic || null,
-    }
-
     const newGroup = {
       id: groupId,
       title: _data.groupName,
       description: _data.purposeAndGoals,
       adminId: userId,
       contributionAmount: _data.contributionAmount,
-      // TODO: image upload logic
       groupImage: groupImage,
-      amountContributed: 0,
+      amountContributedWithinFrequency: 0,
       groupTransactions: [],
-      amountWithdrawn: 0,
-      members: [member],
-      slots: [],
-      availableSlots: [],
+      totalAmountWithdrawn: 0,
+      members: [adminMember],
+      availableNumberOfParticipants: 1,
       numberOfParticipants: _data.numberOfParticipants,
       frequency: _data.frequency,
       duration: _data.duration,
-      startDate: new Date(_data.startDate),
-      endDate: new Date(_data.endDate),
     }
 
     const createdGroup = await Groups.create(newGroup)

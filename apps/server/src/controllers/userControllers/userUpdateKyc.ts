@@ -19,9 +19,9 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
 
     const _newData = { ...user, ...validationResult.data }
 
-    if (validationResult.data.date_of_birth) {
-      _newData.date_of_birth = new Date(
-        validationResult.data.date_of_birth
+    if (validationResult.data.dateOfBirth) {
+      _newData.dateOfBirth = new Date(
+        validationResult.data.dateOfBirth
       ).toISOString()
     }
 
@@ -29,21 +29,21 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[]
     }
-    const identificationDocPath = files?.['identification_doc']?.[0]?.path
-    const proofOfAddressDocPath = files?.['proof_of_address_doc']?.[0]?.path
+    const identificationDocPath = files?.['identificationDoc']?.[0]?.path
+    const proofOfAddressDocPath = files?.['proofOfAddressDoc']?.[0]?.path
 
     if (identificationDocPath) {
       const identificationDocResult = await cloudinary.uploader.upload(
-        files['identification_doc'][0].buffer.toString('base64')
+        files['identificationDoc'][0].buffer.toString('base64')
       )
-      _newData.identification_doc = identificationDocResult.secure_url
+      _newData.identificationDoc = identificationDocResult.secure_url
     }
 
     if (proofOfAddressDocPath) {
       const proofOfAddressDocResult = await cloudinary.uploader.upload(
-        files['proof_of_address_doc'][0].buffer.toString('base64')
+        files['proofOfAddressDoc'][0].buffer.toString('base64')
       )
-      _newData.proof_of_address_doc = proofOfAddressDocResult.secure_url
+      _newData.proofOfAddressDoc = proofOfAddressDocResult.secure_url
     }
 
     await user.save()
