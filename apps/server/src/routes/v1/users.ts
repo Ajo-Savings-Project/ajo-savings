@@ -269,7 +269,7 @@ router.post('/forgotPassword', forgotPassword)
  *         content:
  *           application/json:
  *             example:
- *               message: "retrieved user upcoming payments successfully"
+ *               message: "Retrieved user upcoming payments successfully"
  *               pagination:
  *                 totalItems: 0
  *                 totalPages: 0
@@ -285,8 +285,6 @@ router.post('/forgotPassword', forgotPassword)
  *                   date: "2024-01-12T16:26:39.500Z"
  *                   image: ""
  *                 # ... (more contributions)
- *               finalUrl:
- *                 - "/upcomingActivities?contributions=%5B%5D&currentPage=0&totalPages=0"
  *       404:
  *         description: Error. User groups not found.
  *         content:
