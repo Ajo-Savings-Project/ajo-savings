@@ -87,46 +87,39 @@ export const getUpcomingUserActivities = async (
       }
     }
 
-    try {
-      // Paginate the contributions array
-      let page = parseInt(req.query.page as string) || 1
+    // Paginate the contributions array
+    let page = parseInt(req.query.page as string) || 1
 
-      if (Number.isNaN(page) || page <= 0) {
-        return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-          message: 'Invalid page number',
-        })
-      }
-      const limit = 5
-      const offset = (page - 1) * limit
-
-      const results = await Groups.findAndCountAll({
-        offset,
-        limit,
-        order: [['createdAt', 'DESC']],
-      })
-
-      const pagination = {
-        totalItems: results.count,
-        totalPages: Math.ceil(results.count / limit),
-        currentPage: page,
-        pageSize: limit,
-      }
-
-      if (page > pagination.totalPages) {
-        page = pagination.totalPages
-      }
-      pagination.currentPage = page
-
-      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-        message: `Retrieved user upcoming payments successfully`,
-        pagination,
-        contributions: results.rows,
-      })
-    } catch (error) {
+    if (Number.isNaN(page) || page <= 0) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: "Unable to retrieve user's upcoming payments",
+        message: 'Invalid page number',
       })
     }
+    const limit = 5
+    const offset = (page - 1) * limit
+
+    const results = await Groups.findAndCountAll({
+      offset,
+      limit,
+      order: [['createdAt', 'DESC']],
+    })
+
+    const pagination = {
+      totalItems: results.count,
+      totalPages: Math.ceil(results.count / limit),
+      currentPage: page,
+      pageSize: limit,
+    }
+
+    if (page > pagination.totalPages) {
+      page = pagination.totalPages
+    }
+    pagination.currentPage = page
+
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      pagination,
+      contributions: results.rows,
+    })
   } catch (err) {
     HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, err)
   }
