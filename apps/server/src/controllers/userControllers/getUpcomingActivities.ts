@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Groups, { frequency } from '../../models/groups'
 import { DateHandler } from '../../utils/helpers'
@@ -128,9 +128,6 @@ export const getUpcomingUserActivities = async (
       })
     }
   } catch (err) {
-    console.log(err)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'Something went wrong, our team has been notified.',
-    })
+    HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, err)
   }
 }
