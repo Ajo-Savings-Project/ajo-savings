@@ -39,6 +39,7 @@ class Users extends Model<
   declare date_of_birth: CreationOptional<Date>
   declare bvn: string | null
   declare address: string | null
+  declare identification_type: string
   declare identification_number: string
   declare identification_doc: string
   declare proof_of_address_doc: string | null
@@ -110,6 +111,10 @@ Users.init(
       allowNull: false,
     },
     address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    identification_type: {
       type: DataTypes.STRING,
       allowNull: false,
     },
