@@ -87,9 +87,33 @@ export const getUpcomingUserActivities = async (
       }
     }
 
+    // Paginate the contributions array
+    let page = 1
+    if (req.query.page) {
+      page = parseInt(req.query.page as string)
+      if (Number.isNaN(page)) {
+        return res.status(400).json({
+          message: 'Invalid page number',
+        })
+      }
+    }
+    const itemsPerPage = 5
+    const startIndex = (page - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const totalPages = Math.ceil(contributions.length / itemsPerPage)
+
+    if (page > totalPages) {
+      page = totalPages
+    }
+    const paginatedContributions = contributions.slice(startIndex, endIndex)
+
     return res.status(HTTP_STATUS_CODE.SUCCESS).json({
       message: `retrieved user upcoming payments successfully`,
-      data: contributions,
+      data: {
+        contributions: paginatedContributions,
+        currentPage: page,
+        totalPages: totalPages,
+      },
     })
   } catch (err) {
     console.log(err)
