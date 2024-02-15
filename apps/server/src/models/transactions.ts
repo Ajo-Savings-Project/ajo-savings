@@ -36,6 +36,7 @@ class Transactions extends Model<
   static transaction: never
   declare id: string
   declare walletId: string
+  declare name: CreationOptional<string>
   declare ownerId: string
   declare amount: number
   declare status: string
@@ -43,6 +44,8 @@ class Transactions extends Model<
   declare type: string
   declare receiverId: CreationOptional<string>
   declare senderId: CreationOptional<string>
+  declare createdAt: CreationOptional<string>
+  declare updatedAt?: CreationOptional<string>
 }
 
 Transactions.init(
@@ -58,6 +61,10 @@ Transactions.init(
         model: Wallets,
         key: 'id',
       },
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     ownerId: {
       type: DataTypes.UUID,
@@ -90,8 +97,15 @@ Transactions.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
+
   {
+    timestamps: true,
     sequelize: db,
     tableName: TABLE_NAME,
     modelName: TABLE_NAME,

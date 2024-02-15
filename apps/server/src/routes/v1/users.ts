@@ -438,6 +438,7 @@ router.get(
  */
 router.post('/resetPassword', resetPassword)
 
+
 /**
  * @swagger
  * tags:
@@ -490,6 +491,7 @@ router.post('/resetPassword', resetPassword)
  *                 message: "Internal Server Error, please try again later"
  */
 router.patch('/changePassword', authorizationMiddleware, changePassword)
+
 /**
  * @swagger
  * tags:
