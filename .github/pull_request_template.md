@@ -31,5 +31,5 @@ _add relevant screenshots here_
 
 ---
 
-**Test Coverage**  
-_add relevant screenshots here_
+**How to test**  
+_a brief message on how to test your changes, overwrite this or write "in ticket"_
