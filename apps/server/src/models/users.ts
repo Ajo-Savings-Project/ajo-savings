@@ -44,7 +44,6 @@ class Users extends Model<
   declare identification_doc: string
   declare proof_of_address_doc: string | null
   declare isVerified: boolean
-  declare resetTokenExpiry: CreationOptional<Date>
   declare authMethod: AuthMethodType
 }
 
@@ -82,10 +81,6 @@ Users.init(
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: false,
-    },
-    resetTokenExpiry: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),
