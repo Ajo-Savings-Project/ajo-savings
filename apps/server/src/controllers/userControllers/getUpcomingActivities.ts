@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Groups, { frequency } from '../../models/groups'
 import { DateHandler } from '../../utils/helpers'
@@ -88,37 +88,39 @@ export const getUpcomingUserActivities = async (
     }
 
     // Paginate the contributions array
-    let page = 1
-    if (req.query.page) {
-      page = parseInt(req.query.page as string)
-      if (Number.isNaN(page)) {
-        return res.status(400).json({
-          message: 'Invalid page number',
-        })
-      }
-    }
-    const itemsPerPage = 5
-    const startIndex = (page - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    const totalPages = Math.ceil(contributions.length / itemsPerPage)
+    let page = parseInt(req.query.page as string) || 1
 
-    if (page > totalPages) {
-      page = totalPages
+    if (Number.isNaN(page) || page <= 0) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: 'Invalid page number',
+      })
     }
-    const paginatedContributions = contributions.slice(startIndex, endIndex)
+    const limit = 5
+    const offset = (page - 1) * limit
 
-    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-      message: `retrieved user upcoming payments successfully`,
-      data: {
-        contributions: paginatedContributions,
-        currentPage: page,
-        totalPages: totalPages,
-      },
+    const results = await Groups.findAndCountAll({
+      offset,
+      limit,
+      order: [['createdAt', 'DESC']],
+    })
+
+    const pagination = {
+      totalItems: results.count,
+      totalPages: Math.ceil(results.count / limit),
+      currentPage: page,
+      pageSize: limit,
+    }
+
+    if (page > pagination.totalPages) {
+      page = pagination.totalPages
+    }
+    pagination.currentPage = page
+
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      pagination,
+      contributions: results.rows,
     })
   } catch (err) {
-    console.log(err)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'Something went wrong, our team has been notified.',
-    })
+    HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, err)
   }
 }
