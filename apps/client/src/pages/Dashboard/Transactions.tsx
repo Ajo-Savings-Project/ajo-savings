@@ -1,9 +1,9 @@
 import { Text } from 'components'
-import { TransactionsTable } from 'components/compounds/TransactionDetails/ResponsiveTable'
+import { TransactionsTable } from '../../components/compounds/TransactionDetails/ResponsiveTable'
 
 const TransactionsPage = () => {
   return (
-    <div style={{ maxWidth: '1000px' }}>
+    <div style={{ maxWidth: '100%' }}>
       <div
         style={{
           display: 'flex',
