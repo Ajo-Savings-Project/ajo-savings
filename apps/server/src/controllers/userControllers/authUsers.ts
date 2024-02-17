@@ -1,10 +1,12 @@
 import { Request, Response } from 'express'
+import _ from 'lodash'
 import { Op } from 'sequelize'
 import { v4 as uuidV4 } from 'uuid'
 import * as bgJobs from '../../backgroundJobs'
 import Env from '../../config/env'
 import {
   HTTP_STATUS_CODE,
+  HTTP_STATUS_HELPER,
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
   JWT_INVALID_STATUS_CODE,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
@@ -34,87 +36,73 @@ export const registerUser = async (req: Request, res: Response) => {
   try {
     const userValidate = registerSchema.strict().safeParse(req.body)
 
-    if (userValidate.success) {
-      const { firstName, lastName, email, phone, password } = userValidate.data
-
-      const newEmail = email.trim().toLowerCase()
-
-      if (!passwordRegex.test(password)) {
-        return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-          message: passwordUtils.error,
-        })
-      }
-
-      const userExist = await Users.findOne({
-        where: {
-          [Op.or]: [{ email: newEmail }, { phone: phone }],
-        },
+    if (!userValidate.success) {
+      // TODO: send to error logger - userValidate.error.issues
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        message: userValidate.error.issues,
       })
-
-      if (!userExist) {
-        const hashedPassword = await PasswordHarsher.hash(password)
-        const otpInfo = GenerateOTP()
-        const otp = otpInfo.otp.toString()
-        const id = uuidV4()
-
-        const user = await Users.create({
-          id,
-          firstName,
-          lastName,
-          email: newEmail,
-          phone,
-          password: hashedPassword,
-          profilePic: '',
-          role: role.CONTRIBUTOR,
-          authMethod: authMethod.BASIC,
-          gender: '',
-          occupation: '',
-          bvn: '',
-          address: '',
-          identification_type: '',
-          identification_number: '',
-          identification_doc: '',
-          proof_of_address_doc: '',
-          isVerified: false,
-        })
-
-        bgJobs.signUpSendVerificationEmail({
-          email,
-          otp,
-          firstName: user.firstName,
-        })
-        bgJobs.setupGlobalWallet({ userId: user.id })
-        bgJobs.setupPersonalGroupWallet({ userId: user.id })
-        bgJobs.setupPersonalSavingsWallet({ userId: user.id })
-        bgJobs.setupSettings({ userId: user.id })
-
-        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-          message: `Registration Successful`,
-          user: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-          },
-        })
-      } else {
-        return res.status(HTTP_STATUS_CODE.CONFLICT).send({
-          message: 'This account already exist',
-        })
-      }
     }
 
-    // TODO: send to error logger - userValidate.error.issues
-    return res.status(HTTP_STATUS_CODE.BAD_REQUEST).send({
-      message: userValidate.error.issues,
+    const { firstName, lastName, email, phone, password } = userValidate.data
+
+    const newEmail = email.trim().toLowerCase()
+
+    if (!passwordRegex.test(password)) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: passwordUtils.error,
+      })
+    }
+
+    //TODO: Validate 9ja phone number
+    const userExist = await Users.findOne({
+      where: {
+        [Op.or]: [{ email: newEmail }, { phone: phone }],
+      },
     })
+
+    if (!userExist) {
+      const hashedPassword = await PasswordHarsher.hash(password)
+      const otpInfo = GenerateOTP()
+      const otp = otpInfo.otp.toString()
+      const id = uuidV4()
+
+      const user = await Users.create({
+        id,
+        firstName: firstName.toLowerCase().trim(),
+        lastName: lastName.toLowerCase().trim(),
+        email: newEmail,
+        phone: phone.trim(),
+        password: hashedPassword,
+        role: role.CONTRIBUTOR,
+        authMethod: authMethod.BASIC,
+        emailIsVerified: false,
+        kycComplete: false,
+      })
+
+      bgJobs.signUpSendVerificationEmail({
+        email,
+        otp,
+        firstName: user.firstName,
+      })
+      bgJobs.setupGlobalWallet({ userId: user.id })
+      bgJobs.setupPersonalGroupWallet({ userId: user.id })
+      bgJobs.setupPersonalSavingsWallet({ userId: user.id })
+      bgJobs.setupSettings({ userId: user.id })
+
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
+      })
+    } else {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
+        message: 'This account already exist',
+      })
+    }
   } catch (error) {
-    console.log(error)
-    // TODO: send to error logger - error
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: [
-        { message: `This is our fault, our team are working to resolve this.` },
-      ],
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
 
@@ -141,6 +129,17 @@ export const loginUser = async (req: Request, res: Response) => {
       )
 
       if (confirmPassword) {
+        // TODO: once verify email is implemented, we can check if the user is verified
+
+        // const isVerified = confirmUser.isVerified
+        //
+        // if (!isVerified) {
+        //   return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.UNAUTHORIZED](
+        //     res,
+        //     'Account not verified, please check your email for the verification link'
+        //   )
+        // }
+
         const payload = {
           id: confirmUser.id,
         }
@@ -160,16 +159,15 @@ export const loginUser = async (req: Request, res: Response) => {
           secure: Env.IS_PROD,
         })
 
-        // Return basic user data to client-side
-        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
           message: [`Login Successful`],
-          user: {
-            id: confirmUser.id,
-            email: confirmUser.email,
-            firstName: confirmUser.firstName,
-            lastName: confirmUser.lastName,
-            kycComplete: false,
-          },
+          user: _.pick(confirmUser.dataValues, [
+            'id',
+            'email',
+            'firstName',
+            'lastName',
+            'kycComplete',
+          ]),
           token: accessToken,
         })
       }
@@ -417,3 +415,14 @@ export const changePassword = async (req: RequestExt, res: Response) => {
     })
   }
 }
+
+// TODO: verify email
+
+/**
+ *   /users/verify-email
+ *
+ *   Interface:
+ *   message: z.string(),
+ *   status: 'success' | 'expired' | 'error',
+ *   user: RegisterSchema - send back form fields except confirmPassword and password
+ */

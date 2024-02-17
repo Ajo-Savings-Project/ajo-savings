@@ -4,8 +4,6 @@ import Env from '../../../config/env'
 import { Jwt, PasswordHarsher } from '../../../utils/helpers'
 import { readTemplate } from '../templates/readTemplate'
 
-const baseUrl = `http://localhost:3000`
-
 const transporter = nodemailer.createTransport({
   // email service configuration
   service: 'Gmail',
@@ -40,7 +38,7 @@ export const mailOTP = async (values: {
     // Replace placeholders in the template with actual data
     const html = compiledTemplate({
       ...values,
-      link: `${baseUrl}/verify-email?user=${token}`,
+      link: `${Env.FE_BASE_URL}/verify-email?user=${token}`,
     })
 
     const mailOptions = {

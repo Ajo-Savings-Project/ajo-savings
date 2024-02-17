@@ -36,7 +36,7 @@ class Transactions extends Model<
   static transaction: never
   declare id: string
   declare walletId: string
-  declare name: CreationOptional<string>
+  declare name: string
   declare ownerId: string
   declare amount: number
   declare status: string
@@ -107,7 +107,6 @@ Transactions.init(
   {
     timestamps: true,
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
   }
 )

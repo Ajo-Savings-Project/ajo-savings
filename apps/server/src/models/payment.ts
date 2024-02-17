@@ -2,6 +2,8 @@ import { Model, DataTypes } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
 
+const TABLE_NAME = 'Payments'
+
 export class Payment extends Model {
   public id!: string
   public owner_id!: string
@@ -43,7 +45,7 @@ Payment.init(
   },
   {
     sequelize: db,
-    tableName: 'payments',
+    modelName: TABLE_NAME,
   }
 )
 

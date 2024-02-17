@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { RequestExt } from 'middleware/authorization/authentication'
 import { editProfileSchema } from '../../utils/validators'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { v2 as cloudinary } from 'cloudinary'
 
 export const updateKycProfile = async (req: RequestExt, res: Response) => {
@@ -19,31 +19,32 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
 
     const _newData = { ...user, ...validationResult.data }
 
-    if (validationResult.data.date_of_birth) {
-      _newData.date_of_birth = new Date(
-        validationResult.data.date_of_birth
+    if (validationResult.data.dateOfBirth) {
+      _newData.dateOfBirth = new Date(
+        validationResult.data.dateOfBirth
       ).toISOString()
     }
 
+    /** Move the upload operation to backround task */
     // upload files to Cloudinary if available.
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[]
     }
-    const identificationDocPath = files?.['identification_doc']?.[0]?.path
-    const proofOfAddressDocPath = files?.['proof_of_address_doc']?.[0]?.path
+    const identificationDocPath = files?.['identificationDoc']?.[0]?.path
+    const proofOfAddressDocPath = files?.['proofOfAddressDoc']?.[0]?.path
 
     if (identificationDocPath) {
       const identificationDocResult = await cloudinary.uploader.upload(
-        files['identification_doc'][0].buffer.toString('base64')
+        files['identificationDoc'][0].buffer.toString('base64')
       )
-      _newData.identification_doc = identificationDocResult.secure_url
+      _newData.identificationDoc = identificationDocResult.secure_url
     }
 
     if (proofOfAddressDocPath) {
       const proofOfAddressDocResult = await cloudinary.uploader.upload(
-        files['proof_of_address_doc'][0].buffer.toString('base64')
+        files['proofOfAddressDoc'][0].buffer.toString('base64')
       )
-      _newData.proof_of_address_doc = proofOfAddressDocResult.secure_url
+      _newData.proofOfAddressDoc = proofOfAddressDocResult.secure_url
     }
 
     await user.save()
@@ -56,7 +57,7 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
       {}
     )
 
-    res.status(HTTP_STATUS_CODE.SUCCESS).json({
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
       message: 'Profile updated successfully',
       user: modifiedUserData,
     })

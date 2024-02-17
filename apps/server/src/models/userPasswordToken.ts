@@ -40,7 +40,6 @@ UserResetPasswordToken.init(
   },
   {
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
     timestamps: true,
   }

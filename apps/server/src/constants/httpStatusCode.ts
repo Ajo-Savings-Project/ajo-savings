@@ -15,12 +15,14 @@ export const HTTP_STATUS_CODE = {
 export const HTTP_STATUS_HELPER = {
   [HTTP_STATUS_CODE.INTERNAL_SERVER]: function (
     res: Response,
-    err: Error | unknown
+    err?: Error | unknown
   ) {
+    const defaultError = `Something went wrong, our team has been notified`
+
     res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
       message: Env.IS_PROD
         ? `Something went wrong, our team has been notified`
-        : err,
+        : err ?? defaultError,
     })
   },
   [HTTP_STATUS_CODE.BAD_REQUEST]: function (
@@ -35,20 +37,28 @@ export const HTTP_STATUS_HELPER = {
   [HTTP_STATUS_CODE.UNAUTHORIZED]: function (res: Response, message: string) {
     res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({ message })
   },
-  [HTTP_STATUS_CODE.FORBIDDEN]: function (res: Response, message: string) {
-    res.status(HTTP_STATUS_CODE.FORBIDDEN).json({ message })
+  [HTTP_STATUS_CODE.FORBIDDEN]: function (
+    res: Response,
+    obj: Record<string, unknown>
+  ) {
+    res
+      .status(HTTP_STATUS_CODE.FORBIDDEN)
+      .json({ ...obj, message: 'You are not allowed to make this request' })
   },
   [HTTP_STATUS_CODE.NOT_FOUND]: function (
     res: Response,
     obj: Record<string, unknown>
   ) {
-    res.status(HTTP_STATUS_CODE.SUCCESS).json({
+    res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
       ...obj,
       message: obj.message ?? 'Not Found',
     })
   },
-  [HTTP_STATUS_CODE.CONFLICT]: function (res: Response, message: string) {
-    res.status(HTTP_STATUS_CODE.CONFLICT).json({ message })
+  [HTTP_STATUS_CODE.CONFLICT]: function (
+    res: Response,
+    obj: Record<string, unknown>
+  ) {
+    res.status(HTTP_STATUS_CODE.CONFLICT).json({ ...obj })
   },
   [HTTP_STATUS_CODE.SUCCESS]: function (
     res: Response,

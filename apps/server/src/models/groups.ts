@@ -12,27 +12,40 @@ const TABLE_NAME = 'Groups'
 // https://sequelize.org/docs/v6/other
 
 interface GroupTransactions {
-  transaction_id: string
-  date_initiated: Date
-  contributors_id: string
+  transactionID: string
+  dateInitiated: Date
+  contributorsID: string
   amount: number
-  transaction_type: string
+  transactionType: string
 }
 
-export enum frequency {
-  DAILY = 'Daily',
-  WEEKLY = 'Weekly',
-  MONTHLY = 'Monthly',
+// contribution rate
+export const frequency = {
+  DAILY: 'Daily',
+  WEEKLY: 'Weekly',
+  MONTHLY: 'Monthly',
 }
+
+export const cashOutDuration = {
+  DAILY: 'Daily',
+  WEEKLY: 'Weekly',
+  MONTHLY: 'Monthly',
+}
+
+/**
+export const duration = {
+  DAILY: 'Daily',
+  WEEKLY: 'Weekly',
+  MONTHLY: 'Monthly',
+}
+ */
 
 export interface Members {
-  memberPicture: string | null
-  memberId: string
-  name: string
+  user: Pick<Users, 'id' | 'firstName' | 'lastName' | 'profilePic'>
   amountContributed: number
   amountWithdrawn: number
-  dateOfLastContribution: Date
-  profilePicture?: string | null
+  dateOfLastContribution: Date | null
+  isAdmin: boolean
 }
 
 class Groups extends Model<
@@ -43,19 +56,16 @@ class Groups extends Model<
   declare title: string
   declare description: string
   declare adminId: string
-  declare groupImage?: string
-  declare amountContributed?: number
   declare contributionAmount: number
+  declare groupImage?: string
+  declare amountContributedWithinFrequency: number
   declare groupTransactions: GroupTransactions[]
-  declare amountWithdrawn: number
-  declare members: Members[]
-  declare slots: number[]
-  declare availableSlots: number[]
+  declare totalAmountWithdrawn: number
+  declare members: (Members | string)[]
+  declare availableNumberOfParticipants: number
   declare numberOfParticipants: number
   declare frequency: string
   declare duration: string
-  declare startDate: Date
-  declare endDate: Date
 }
 
 Groups.init(
@@ -93,15 +103,7 @@ Groups.init(
       type: DataTypes.JSONB,
       allowNull: true,
     },
-    slots: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-    },
-    availableSlots: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-    },
-    amountContributed: {
+    amountContributedWithinFrequency: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
@@ -109,11 +111,15 @@ Groups.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    amountWithdrawn: {
+    totalAmountWithdrawn: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     numberOfParticipants: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    availableNumberOfParticipants: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -125,25 +131,9 @@ Groups.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    startDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    endDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.DATE,
-    },
-    // createdAt: {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW,
-    // },
   },
   {
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
     timestamps: true,
   }

@@ -152,6 +152,7 @@ export class DateHandler {
 export interface TransactionDetails {
   walletId: string
   ownerId: string
+  name: string
   amount: number
   status: string
   action: string
@@ -165,6 +166,7 @@ export const createTransaction = async (details: TransactionDetails) => {
     id: v4(),
     walletId: details.walletId,
     ownerId: details.ownerId,
+    name: details.name,
     amount: details.amount,
     status: details.status,
     action: details.action,
