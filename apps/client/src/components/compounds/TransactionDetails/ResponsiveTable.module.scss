@@ -1,59 +1,64 @@
-.allContainer {
-  margin-top: 1rem;
-}
-.container {
-  width: 100%;
-  overflow-y: scroll;
-  max-height: 19rem;
-}
+.Container {
+  overflow: auto;
+  margin: 20px 0;
 
-.newTableContainer {
-  display: grid;
-  grid-template-columns: 3fr 11fr 10fr 6fr 6fr 7fr 3fr;
-  column-gap: 0.5rem;
-  margin: 0.5rem 0;
-  background: white;
-  padding: 10px 13px;
-  border-radius: 8px;
-
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-  .status-cell {
-    width: 5rem;
-    color: var(--red);
-
-    &[data-status='Received'] {
-      color: var(--green-1);
+  .row {
+    margin: 10px 0;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 20px;
+    border: none;
+    .wrapper {
+      display: block;
+      margin-bottom: 20px;
+      &Names {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+    .Others {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-left: 30px;
+      &Flex1,
+      &Flex2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
-}
-td {
-  display: flex;
-  align-items: center;
-}
-td:nth-child(1) {
-  min-width: 3rem;
-}
-td:nth-child(2) {
-  min-width: 6rem;
-  max-width: 12rem;
-}
-td:nth-child(3) {
-  min-width: 4rem;
-}
-td:nth-child(4) {
-  min-width: 5rem;
-}
-td:nth-child(5) {
-  min-width: 4rem;
-}
-td:nth-child(6) {
-  min-width: 4rem;
-}
-
-.newTableContainer > * {
-  min-width: 0;
+  @media (min-width: 769px) {
+    .row {
+      display: grid;
+      background-color: var(--white);
+      grid-template-columns: 1fr 1fr;
+      .wrapper {
+        width: 200px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 10px 0px 10px;
+        margin-bottom: 20px;
+      }
+      .Others {
+        padding: 0 20px;
+        &Flex1 {
+          width: 380px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+        }
+        &Flex2 {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+      }
+    }
+  }
 }

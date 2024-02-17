@@ -1,11 +1,10 @@
 import { AccountSummarySection, KYCSetup, Text } from 'components'
 import { useAuth } from '../../contexts'
-import UpcomingActivities from 'components/compounds/UpcomingActivities/UpcomingActivities'
+import UpcomingActivities from '../../components/compounds/UpcomingActivities/UpcomingActivities'
 
 import ChartWithUpcoming from './chartAndUpcoming'
 
-import TransactionHistory from 'components/compounds/TransactionHistory/TransactionHistory'
-
+import TransactionHistory from "../../components/compounds/UpcomingActivities/UpcomingActivities"
 const HomePage = () => {
   const { firstName, lastName } = useAuth()
 
