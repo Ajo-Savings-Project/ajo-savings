@@ -73,11 +73,6 @@ Savings.init(
       type: DataTypes.ENUM(...Object.values(category)),
       allowNull: false,
     },
-    startDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
     target_amount: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -85,6 +80,11 @@ Savings.init(
     amount_saved: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     endDate: {
       type: DataTypes.DATE,

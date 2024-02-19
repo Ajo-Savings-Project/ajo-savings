@@ -3,21 +3,13 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
-import Users from './users'
 
 const TABLE_NAME = 'Groups'
 
 // https://sequelize.org/docs/v6/other
-
-interface GroupTransactions {
-  transactionID: string
-  dateInitiated: Date
-  contributorsID: string
-  amount: number
-  transactionType: string
-}
 
 // contribution rate
 export const frequency = {
@@ -32,22 +24,6 @@ export const cashOutDuration = {
   MONTHLY: 'Monthly',
 }
 
-/**
-export const duration = {
-  DAILY: 'Daily',
-  WEEKLY: 'Weekly',
-  MONTHLY: 'Monthly',
-}
- */
-
-export interface Members {
-  user: Pick<Users, 'id' | 'firstName' | 'lastName' | 'profilePic'>
-  amountContributed: number
-  amountWithdrawn: number
-  dateOfLastContribution: Date | null
-  isAdmin: boolean
-}
-
 class Groups extends Model<
   InferAttributes<Groups>,
   InferCreationAttributes<Groups>
@@ -56,14 +32,12 @@ class Groups extends Model<
   declare title: string
   declare description: string
   declare adminId: string
-  declare contributionAmount: number
-  declare groupImage?: string
+  declare recurringAmount: number
+  declare groupImage: CreationOptional<string>
   declare amountContributedWithinFrequency: number
-  declare groupTransactions: GroupTransactions[]
   declare totalAmountWithdrawn: number
-  declare members: (Members | string)[]
   declare availableNumberOfParticipants: number
-  declare numberOfParticipants: number
+  declare maxNumberOfParticipants: number
   declare frequency: string
   declare duration: string
 }
@@ -77,7 +51,6 @@ Groups.init(
     },
     groupImage: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -90,24 +63,17 @@ Groups.init(
     },
     adminId: {
       type: DataTypes.UUID,
+      allowNull: false,
       references: {
-        model: Users,
+        model: 'Users',
         key: 'id',
       },
     },
-    groupTransactions: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    members: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-    },
     amountContributedWithinFrequency: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
-    contributionAmount: {
+    recurringAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -115,7 +81,7 @@ Groups.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    numberOfParticipants: {
+    maxNumberOfParticipants: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

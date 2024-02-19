@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Groups, { frequency } from '../../models/groups'
+import GroupMembers from '../../models/groupMembers'
 import { DateHandler } from '../../utils/helpers'
 
 export const getUpcomingUserActivities = async (
@@ -17,18 +18,25 @@ export const getUpcomingUserActivities = async (
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0)
 
     const userGroups = await Groups.findAll({
+      include: [
+        {
+          model: GroupMembers,
+          as: 'members',
+          attributes: [],
+          where: {
+            userId: userId,
+          },
+        },
+      ],
       where: {
-        [Op.or]: [
-          { adminId: userId },
-          { members: { [Op.contains]: [userId] } },
-        ],
+        [Op.or]: [{ adminId: userId }, { '$members.userId$': userId }],
       },
     })
 
     const contributions = []
 
     for (const group of userGroups) {
-      const contributionAmount = group.contributionAmount
+      const recurringAmount = group.recurringAmount
       const groupName = group.title
       const image = group.groupImage
 
@@ -42,7 +50,7 @@ export const getUpcomingUserActivities = async (
 
           const contributionDetails = {
             groupName,
-            contributionAmount,
+            recurringAmount,
             date: contributionDate,
             image,
           }
@@ -56,7 +64,7 @@ export const getUpcomingUserActivities = async (
         while (currentWeekEnd <= lastDayOfMonth) {
           const contributionDetails = {
             groupName,
-            contributionAmount,
+            recurringAmount,
             date: currentWeekEnd,
             image,
           }
@@ -71,7 +79,7 @@ export const getUpcomingUserActivities = async (
       } else if (group.frequency === frequency.MONTHLY) {
         const contributionDetails = {
           groupName,
-          contributionAmount,
+          recurringAmount,
           date: lastDayOfMonth,
           image,
         }

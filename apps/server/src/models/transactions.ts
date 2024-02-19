@@ -112,11 +112,11 @@ Transactions.init(
 )
 
 Transactions.belongsTo(Wallets, {
-  foreignKey: 'wallet_id',
+  foreignKey: 'walletId',
 })
 
 Transactions.belongsTo(Users, {
-  foreignKey: 'owner_id',
+  foreignKey: 'ownerId',
 })
 
 export default Transactions

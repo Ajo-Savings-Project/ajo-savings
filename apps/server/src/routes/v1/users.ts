@@ -197,7 +197,7 @@ router.post('/login', loginUser)
  *               example:
  *                 message: "Internal Server Error"
  */
-router.post('/token-refresh', validateRefreshTokenMiddleWare, refreshToken)
+router.post('/tokenRefresh', validateRefreshTokenMiddleWare, refreshToken)
 /**
  * @swagger
  * tags:
@@ -372,7 +372,7 @@ router.get(
  *               message: "Something went wrong, our team has been notified."
  */
 router.get(
-  '/personal-wallets',
+  '/personalWallets',
   authorizationMiddleware,
   getUserPersonalSavingsWallet
 )

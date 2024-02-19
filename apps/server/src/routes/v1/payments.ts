@@ -69,7 +69,7 @@ const router = Router()
  *                 message: "Something went wrong, our team has been notified."
  */
 router.post(
-  '/fundpersonalwallet',
+  '/fundPersonalWallet',
   authorizationMiddleware,
   fundPersonalSavingsWallet
 )

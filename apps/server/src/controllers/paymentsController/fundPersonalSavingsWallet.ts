@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Earnings from '../../models/walletEarnings'
 import { fundWalletSchema } from '../../utils/validators'
 import {
   transactionStatus,
@@ -58,18 +59,18 @@ export const fundPersonalSavingsWallet = async (
       const newSavingsBalance = savingsWallet.totalAmount + amount
       const newSavingsIncome = savingsWallet.totalIncome + amount
       const newIncome = {
-        date: new Date(),
+        walletId: savingsWallet.id,
         amount,
+        date: new Date().toISOString(),
       }
 
-      const newEarnings = [...savingsWallet.earnings, newIncome]
+      const newEarningsRecord = await Earnings.create(newIncome)
 
       globalWallet.totalAmount = newGlobalBalance
       const newGlobalWallet = await globalWallet.save()
 
       savingsWallet.totalAmount = newSavingsBalance
       savingsWallet.totalIncome = newSavingsIncome
-      savingsWallet.earnings = newEarnings
       const newSavingsWallet = await savingsWallet.save()
 
       if (newSavingsWallet && newGlobalWallet) {
@@ -77,7 +78,7 @@ export const fundPersonalSavingsWallet = async (
         const globalTransactionDetails = {
           walletId: newGlobalWallet.id,
           ownerId: userId,
-          name: `${user.firstName + user.lastName}`,
+          name: `${user.firstName} ${user.lastName}`,
           amount: amount,
           status: transactionStatus.SUCCESSFUL,
           action: action.DEBIT,
@@ -109,12 +110,13 @@ export const fundPersonalSavingsWallet = async (
             newGlobalWallet,
             globalDebitTransaction,
             savingsCreditTransaction,
+            newEarningsRecord,
           },
         })
       }
     }
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res, {
-      message: 'Your wallets are not found',
+      message: 'Your global wallet and savings wallet are not found',
     })
   } catch (error) {
     console.log(error)

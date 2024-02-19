@@ -13,8 +13,8 @@ const TABLE_NAME = 'Wallets'
 // https://sequelize.org/docs/v6/other
 
 export const WalletType = {
-  GLOBAL: 'Global',
-  SAVINGS: 'Savings',
+  GLOBAL: 'Global Wallet',
+  SAVINGS: 'Savings Wallet',
   GROUP_WALLET: 'Group Wallet',
 } as const
 
@@ -23,11 +23,6 @@ export const OwnerType = {
   GROUP: 'group',
   SAVINGS_GOAL: 'savings-goal',
 } as const
-
-export interface Income {
-  date: Date
-  amount: number
-}
 
 class Wallets extends Model<
   InferAttributes<Wallets>,
@@ -38,7 +33,6 @@ class Wallets extends Model<
   declare ownerType: 'user' | 'group'
   declare totalAmount: number
   declare type: string
-  declare earnings: Income[]
   declare totalIncome: number
 }
 
@@ -63,10 +57,6 @@ Wallets.init(
     },
     totalIncome: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    earnings: {
-      type: DataTypes.JSON,
       allowNull: true,
     },
     type: {

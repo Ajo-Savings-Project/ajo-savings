@@ -4,7 +4,11 @@ import { RequestExt } from '../../middleware/authorization/authentication'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { v4 } from 'uuid'
 import Groups from '../../models/groups'
+import GroupMembers from '../../models/groupMembers'
+import GroupTransactions from '../../models/groupTransactions'
+import GroupContributors from '../../models/contributorsInGroup'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import { transactionType } from '../../models/transactions'
 import { createGroupSchema } from '../../utils/validators'
 import { v2 as cloudinary } from 'cloudinary'
 import { createNewMember } from './helpers'
@@ -27,11 +31,15 @@ export const createGroup = async (req: RequestExt, res: Response) => {
   const groupId = v4()
 
   try {
-    const adminMember = await createNewMember(userId, { isAdmin: true })
+    const adminMember = await createNewMember(userId, userId, {
+      isAdmin: true,
+    })
 
     if (!adminMember) {
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {})
     }
+
+    await GroupMembers.create(adminMember)
 
     // Move the upload operation to background task
     let groupImage = ''
@@ -48,21 +56,34 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       title: _data.groupName,
       description: _data.purposeAndGoals,
       adminId: userId,
-      contributionAmount: _data.contributionAmount,
+      recurringAmount: _data.recurringAmount,
       groupImage: groupImage,
       amountContributedWithinFrequency: 0,
-      groupTransactions: [],
       totalAmountWithdrawn: 0,
-      members: [adminMember],
       availableNumberOfParticipants: 1,
-      numberOfParticipants: _data.numberOfParticipants,
+      maxNumberOfParticipants: _data.maxNumberOfParticipants,
       frequency: _data.frequency,
       duration: _data.duration,
     }
 
     const createdGroup = await Groups.create(newGroup)
 
-    console.log({ createdGroup })
+    const groupTransaction = {
+      transactionId: v4(),
+      groupId: createdGroup.id,
+      amount: 0,
+      transactionType: transactionType.GROUP_TRANSACTIONS,
+      dateInitiated: new Date().toISOString(),
+    }
+
+    await GroupTransactions.create(groupTransaction)
+
+    const groupContributor = {
+      contributorsId: v4(),
+      groupId: createdGroup.id,
+    }
+
+    await GroupContributors.create(groupContributor)
 
     const groupWallet = await Wallets.create({
       id: v4(),
@@ -70,7 +91,6 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       ownerType: OwnerType.GROUP,
       totalAmount: 0,
       type: WalletType.GROUP_WALLET,
-      earnings: [],
       totalIncome: 0,
     })
 
@@ -83,6 +103,9 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     console.log(error)
     await Wallets.destroy({ where: { ownerId: groupId } })
     await Groups.destroy({ where: { id: groupId } })
+    await GroupMembers.destroy({ where: { adminId: userId } })
+    await GroupTransactions.destroy({ where: { groupId: groupId } })
+    await GroupContributors.destroy({ where: { groupId: groupId } })
     HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }

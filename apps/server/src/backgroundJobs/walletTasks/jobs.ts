@@ -1,6 +1,7 @@
 import { v4 as uuidV4 } from 'uuid'
 import Settings from '../../models/settings'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Earnings from '../../models/walletEarnings'
 
 export interface WalletJobData {
   userId: string
@@ -15,7 +16,12 @@ const createGlobalWalletJob = async (data: WalletJobData) => {
     totalAmount: 500000,
     type: WalletType.GLOBAL,
     totalIncome: 0,
-    earnings: [],
+  })
+
+  await Earnings.create({
+    walletId: newGlobalWallet.id,
+    amount: 0,
+    date: new Date().toISOString(),
   })
 
   return await Wallets.findOne({
@@ -32,8 +38,14 @@ const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
     totalAmount: 0,
     type: WalletType.SAVINGS,
     totalIncome: 0,
-    earnings: [],
   })
+
+  await Earnings.create({
+    walletId: newSavingsWallet.id,
+    amount: 0,
+    date: new Date().toISOString(),
+  })
+
   return await Wallets.findOne({
     where: { id: newSavingsWallet.id },
   })
@@ -48,8 +60,14 @@ const createPersonalGroupWalletJob = async (data: WalletJobData) => {
     totalAmount: 0,
     type: WalletType.GROUP_WALLET,
     totalIncome: 0,
-    earnings: [],
   })
+
+  await Earnings.create({
+    walletId: personalGroupWallet.id,
+    amount: 0,
+    date: new Date().toISOString(),
+  })
+
   return await Wallets.findOne({
     where: { id: personalGroupWallet.id },
   })

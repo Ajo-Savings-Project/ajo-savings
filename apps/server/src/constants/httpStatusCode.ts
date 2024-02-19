@@ -29,7 +29,7 @@ export const HTTP_STATUS_HELPER = {
     res: Response,
     obj: Record<string, unknown>
   ) {
-    res.status(HTTP_STATUS_CODE.SUCCESS).json({
+    res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
       ...obj,
       message: obj.message ?? 'Bad Request',
     })

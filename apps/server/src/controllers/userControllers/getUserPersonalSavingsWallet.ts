@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Wallets, { WalletType, OwnerType } from '../../models/wallets'
 
@@ -27,14 +27,12 @@ export const getUserPersonalSavingsWallet = async (
       },
     })
 
-    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
       message: 'user wallets fetched successfully',
       data: personalWallets,
     })
   } catch (error) {
     console.log(error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'Something went wrong, our team has been notified.',
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }

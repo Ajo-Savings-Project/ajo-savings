@@ -73,10 +73,10 @@ export const changePasswordSchema = z.object({
 export const createGroupSchema = z.object({
   groupName: z.string(),
   purposeAndGoals: z.string(),
-  contributionAmount: z.number(),
+  recurringAmount: z.number(),
   frequency: z.string(),
   duration: z.string(),
-  numberOfParticipants: z.number(),
+  maxNumberOfParticipants: z.number(),
   groupImage: z.string().optional(),
 })
 

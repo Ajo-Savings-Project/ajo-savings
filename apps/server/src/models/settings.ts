@@ -29,7 +29,7 @@ class Settings extends Model<
 Settings.init(
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
     },
