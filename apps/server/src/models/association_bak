@@ -52,3 +52,7 @@ Wallets.belongsTo(Groups, { foreignKey: 'ownerId' })
 Wallets.belongsTo(Savings, { foreignKey: 'ownerId' })
 // Wallets.hasMany(Earnings, { foreignKey: 'walletId' });
 // Earnings.belongsTo(Wallets, { foreignKey: 'walletId' });
+
+Wallets.belongsTo(Savings, {
+  foreignKey: 'savingsId',
+})

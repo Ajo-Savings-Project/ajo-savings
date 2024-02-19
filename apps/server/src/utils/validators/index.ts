@@ -108,3 +108,13 @@ export const fundWalletSchema = z.object({
     z.literal(transactionActionType.DEBIT),
   ]),
 })
+
+export const createSavingsSchema = z.object({
+  name: z.string(),
+  target: z.string(),
+  target_amount: z.number(),
+  frequency: z.string(),
+  category: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+})
