@@ -2952,10 +2952,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^10.0.0":
-  version: 10.0.1
-  resolution: "commander@npm:10.0.1"
-  checksum: b2a03d799104eac407ca031b94126c98198594fcff41554eb253cef748de57fb1a4cdd591baa075de589f2fddf1f968d1ecd1b79e8b47570ee441ab4f3363776
+"commander@npm:^9.4.1":
+  version: 9.5.0
+  resolution: "commander@npm:9.5.0"
+  checksum: 1d09146ccb60400550629bcded4b72eeb100728207ecb2538dd827b19571dc16d3b0ee5da762d9bdbbe680ed5cca6658cac5bfce262b1b73eabe5ef8c15cdd9d
   languageName: node
   linkType: hard
 
@@ -3284,7 +3284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"define-data-property@npm:^1.0.1, define-data-property@npm:^1.1.2":
+"define-data-property@npm:^1.0.1, define-data-property@npm:^1.1.2, define-data-property@npm:^1.1.4":
   version: 1.1.4
   resolution: "define-data-property@npm:1.1.4"
   dependencies:
@@ -3431,9 +3431,9 @@ __metadata:
   linkType: hard
 
 "dotenv@npm:^16.3.1":
-  version: 16.4.4
-  resolution: "dotenv@npm:16.4.4"
-  checksum: 7101a49790e0edcbb67cdae0c7696f5af5e1857deea709daa75443e7ece2df6561a753156cd7c057f1460dd9023b8159fbc93ce182cbbe409630d0ff410dbbb3
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: b2d080a99c30e20d632a087b3b236c1e2735f56d0bd90d08c4956ac3a2b54e06e5c69fc4ba6a6d115838c2abe6d9fc4d49354598f84844aa2ea9bdbbd4a0981b
   languageName: node
   linkType: hard
 
@@ -3479,9 +3479,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.675
-  resolution: "electron-to-chromium@npm:1.4.675"
-  checksum: ad7720416608f866256ebfb315c1c1a9591894d0a527e51bf0b78aea7e64985b492c14792334a4f0b51f9cc624b842d3c32f48aff15c416111ec138187e73c6e
+  version: 1.4.676
+  resolution: "electron-to-chromium@npm:1.4.676"
+  checksum: 3067a83cad80c7da1d15a48ce3fad7e3c1658173347b45332a3d44278b50e468663446cbaaa8408c5c98a59e17a182854d80af9f9503d7e5dc76687cff9bddc9
   languageName: node
   linkType: hard
 
@@ -4203,9 +4203,9 @@ __metadata:
   linkType: hard
 
 "flatted@npm:^3.2.9":
-  version: 3.2.9
-  resolution: "flatted@npm:3.2.9"
-  checksum: 4633b20417398370c7dd3916335b90ff5f3b70e696ed2fe5fa4e2eb091bb3f6c1303258bcbda769721f13bd66cf3c9b491cf6f1dd11e77e607d5aec4c7d82bc8
+  version: 3.2.10
+  resolution: "flatted@npm:3.2.10"
+  checksum: 81d681872f8077f166c9f0bb5ac457a919a624e003693ad3a58e60f27031499d190e350b3baa5d4dd09769264aef690e8d5de389579c5abfe64140198a2ec8ce
   languageName: node
   linkType: hard
 
@@ -7736,13 +7736,14 @@ __metadata:
   linkType: hard
 
 "set-function-name@npm:^2.0.0, set-function-name@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "set-function-name@npm:2.0.1"
+  version: 2.0.2
+  resolution: "set-function-name@npm:2.0.2"
   dependencies:
-    define-data-property: "npm:^1.0.1"
+    define-data-property: "npm:^1.1.4"
+    es-errors: "npm:^1.3.0"
     functions-have-names: "npm:^1.2.3"
-    has-property-descriptors: "npm:^1.0.0"
-  checksum: 1f86f1332bbc0c6739a559a4f5a7e0d2c06726883cd3088512ec956784b78553b286c1382f6c0230155bbc1e8973219f025a9d1c1c5768e87f6c5b46b32221e6
+    has-property-descriptors: "npm:^1.0.2"
+  checksum: 7176f0fef751b8a7de42f314dbeb70b2b989b4b945b08aa1f2d567b0eb1493be7ed4f988184d7453b294998a5fe54f22a0d03516b94c0a0f8522c6da4ac0c058
   languageName: node
   linkType: hard
 
@@ -8487,13 +8488,13 @@ __metadata:
   linkType: hard
 
 "typed-array-buffer@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "typed-array-buffer@npm:1.0.1"
+  version: 1.0.2
+  resolution: "typed-array-buffer@npm:1.0.2"
   dependencies:
-    call-bind: "npm:^1.0.6"
+    call-bind: "npm:^1.0.7"
     es-errors: "npm:^1.3.0"
     is-typed-array: "npm:^1.1.13"
-  checksum: c66070468a6576d7fb1a52a3d0ea18155d248c8e204d6b8542b3f2a8a6bced6aafd5e3106670e3c87ef84e2c9891ac00b679398865e0013f8ab8e9bea059c4c8
+  checksum: 91af61bd3fb3fe793838e19c2236b8d5988ff11463dda71443bc0594c8084e53c7f211259410957a7bdb7aabcf6ce7158333327e0bebeb1bcfa943f69bf4654f
   languageName: node
   linkType: hard
 
@@ -9131,10 +9132,10 @@ __metadata:
   linkType: hard
 
 "z-schema@npm:^5.0.1":
-  version: 5.0.6
-  resolution: "z-schema@npm:5.0.6"
+  version: 5.0.5
+  resolution: "z-schema@npm:5.0.5"
   dependencies:
-    commander: "npm:^10.0.0"
+    commander: "npm:^9.4.1"
     lodash.get: "npm:^4.4.2"
     lodash.isequal: "npm:^4.5.0"
     validator: "npm:^13.7.0"
@@ -9143,7 +9144,7 @@ __metadata:
       optional: true
   bin:
     z-schema: bin/z-schema
-  checksum: edddb9097fbfe76473ea13dcac9c9492e18ccbf98939c2a3c6e27e94a43e54ba98ab7c3e73658ff998733ebfd62cae7a97db81f725f09a8219203207d82245ef
+  checksum: ff93b2f786cdda305d393c33d73ec2a39b5447da757cc99c7c1853906cdffb05e4cd5744a83d509b18787195dff2a43a01b9505e5f01907d8efdb5171453d8de
   languageName: node
   linkType: hard
 
