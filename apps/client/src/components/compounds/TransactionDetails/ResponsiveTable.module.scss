@@ -1,0 +1,85 @@
+.Container {
+  margin: 20px 0;
+  .row {
+    .divider {
+      margin: 10px 0;
+      width: 100%;
+      height: 1px;
+      border: 1px solid var(--gray-300);
+    }
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 2fr;
+    grid-template-areas:
+      'image' 'fullName',
+      'type',
+      'date',
+      'amount',
+      'status';
+
+    .wrapper {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      &Names {
+        display: flex;
+        gap: 10px;
+      }
+    }
+
+    .type {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+      .hide {
+        font-weight: bolder;
+      }
+    }
+  }
+  @media (min-width: 768px) {
+    .row {
+      background-color: var(--white);
+      place-items: center;
+      padding-left:  30px;
+     
+      p{
+        font-weight: 400;
+      }
+      .divider {
+        display: none;
+      }
+      margin-bottom: 10px;
+
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+     
+      grid-template-areas: 'image fullName type date time  amount status';
+
+      .wrapper {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        width: 250px;
+        padding: 10px 0;
+
+        &Names {
+          display: flex;
+          gap: 10px;
+        }
+      }
+
+      .type {
+        display: unset;
+        justify-content: unset;
+        margin: unset;
+        .hide {
+          display: none;
+        }
+      }
+    }
+  }
+}
