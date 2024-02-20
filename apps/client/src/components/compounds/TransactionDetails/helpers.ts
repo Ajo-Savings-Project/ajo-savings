@@ -89,12 +89,8 @@ const labelTransactions = (
   )
 }
 
-export const formatTimeFromISOString = (str: string) =>
-   pipe(str, isoStringToTime, formatTime)
-
-
-
-
+export const formatTimeFromISOString = (str: string): string =>
+  pipe(str, isoStringToTime, formatTime)
 
 export const mockTransactions = (data: TransactionResponseI[]) =>
   pipe(

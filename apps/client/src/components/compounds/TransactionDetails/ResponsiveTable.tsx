@@ -19,8 +19,8 @@ export const TransactionsTable = () => {
                     <img
                       style={{
                         borderRadius: '50%',
-                        width: '70px',
-                        height: '70px',
+                        width: '60px',
+                        height: '60px',
                       }}
                       src={row.receiver.avatar.replace(
                         'idx',
@@ -30,51 +30,56 @@ export const TransactionsTable = () => {
                     />
                   </div>
                   <div className={styles.wrapperNames}>
-                    <Text content={row.receiver.firstName} size="Default" />
-                    <Text content={row.receiver.lastName} size="Default" />
+                    <Text content={row.receiver.firstName} size="Small" />
+                    <Text content={row.receiver.lastName} size="Small" />
                   </div>
                 </div>
-                <div className={styles.Others}>
-                  <div className={styles.OthersFlex1}>
-                    <Text
-                      style={{ width: '150px' }}
-                      content={row.type}
-                      size="Default"
-                    />
-                    <Text
-                      style={{ width: '200px' }}
-                      content={row.date}
-                      size="Small"
-                    />
+                <div className={styles.divider}></div>
 
-                    <Text
-                      style={{ width: '120px' }}
-                      content={formatTimeFromISOString(row.date)}
-                      size="Default"
-                    />
-                  </div>
-                  <div className={styles.OthersFlex2}>
-                    <Text
-                      style={{ width: '100px' }}
-                      content={row.amount as string}
-                      size="Default"
-                    />
-                    <Text
-                      style={{
-                        width: '100px',
-                        // ...statusColor({ status: row.status }),
-                        color:
-                          row.status === 'completed'
-                            ? 'green'
-                            : row.status === 'pending'
-                              ? 'orange'
-                              : 'red',
-                      }}
-                      content={row.status}
-                      size="Default"
-                    />
-                  </div>
+                <div className={styles.type}>
+                  <Text content="City:"  className = {styles.hide} />
+                  <Text content={row.type} size="Small" />
                 </div>
+
+                <div className={styles.divider}></div>
+                <div className={styles.type}>
+                  <Text content="Date:" size="Small" className = {styles.hide} />
+                  <Text content={row.date} size="Small" />
+                </div>
+
+                <div className={styles.divider}></div>
+                <div className={styles.type}>
+                  <Text content="Time:" size="Small"  className = {styles.hide}  />
+                  <Text
+                    content={formatTimeFromISOString(row.date)}
+                    size="Small"
+                  />
+                </div>
+
+                <div className={styles.divider}></div>
+                <div className={styles.type}>
+                  <Text content="Amount:" size="Small"  className = {styles.hide}  />
+                  <Text content={row.amount as string} />
+                </div>
+
+                <div className={styles.divider}></div>
+                <div className={styles.type}>
+                  <Text content="Status:" size="Small"  className = {styles.hide}  />
+                  <Text
+                    style={{
+                      color:
+                        row.status === 'completed'
+                          ? 'green'
+                          : row.status === 'pending'
+                            ? 'orange'
+                            : 'red',
+                    }}
+                    content={row.status}
+                    size="Small"
+                  />
+                </div>
+
+                <div className={styles.divider}></div>
               </div>
             ))}
           </div>
