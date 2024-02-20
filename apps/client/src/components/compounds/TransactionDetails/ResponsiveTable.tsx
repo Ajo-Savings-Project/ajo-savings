@@ -38,26 +38,22 @@ export const TransactionsTable = () => {
                     <Text content={row.receiver.lastName} size="Small" />
                   </div>
                 </div>
-                <div className={styles.divider}></div>
 
                 <div className={styles.type}>
                   <Text content="City:" className={styles.hide} />
                   <Text content={row.type} size="Small" />
                 </div>
 
-                <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text content="Date:" size="Small" className={styles.hide} />
                   <Text content={getFormattedDate(row.date)} size="Small" />
                 </div>
 
-                <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text content="Time:" size="Small" className={styles.hide} />
                   <Text content={getFormattedTime(row.date)} size="Small" />
                 </div>
 
-                <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text
                     content="Amount:"
@@ -67,7 +63,6 @@ export const TransactionsTable = () => {
                   <Text content={row.amount as string} />
                 </div>
 
-                <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text
                     content="Status:"
@@ -87,8 +82,6 @@ export const TransactionsTable = () => {
                     size="Small"
                   />
                 </div>
-
-                <div className={styles.divider}></div>
               </div>
             ))}
           </div>

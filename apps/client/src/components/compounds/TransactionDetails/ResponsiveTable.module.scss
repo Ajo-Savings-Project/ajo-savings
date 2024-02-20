@@ -1,25 +1,27 @@
 .Container {
   margin: 20px 0;
+
+  > p:first-child {
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
   .row {
-    .divider {
-      margin: 10px 0;
-      width: 100%;
-      height: 1px;
-      border: 1px solid var(--gray-300);
-    }
+    margin-bottom: 8px;
     width: 100%;
     display: grid;
+    gap: 10px;
     grid-template-columns: 100%;
     grid-template-rows: 2fr;
     grid-template-areas:
-      'image' 'fullName',
-      'type',
-      'date',
-      'amount',
+      'image' 'fullName'
+      'type'
+      'date'
+      'amount'
       'status';
 
     .wrapper {
-      margin-top: 10px;
+      //margin-top: 10px;
       display: flex;
       gap: 20px;
       align-items: center;
@@ -38,14 +40,26 @@
         font-weight: bolder;
       }
     }
+
+    > div {
+      border-bottom: 2px solid var(--gray-300);
+      padding: 10px 0;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 950px) {
     .row {
       background-color: var(--white);
       place-items: center;
-      padding-left:  30px;
-     
-      p{
+      padding-left: 30px;
+
+      p {
         font-weight: 400;
       }
       .divider {
@@ -56,7 +70,7 @@
       width: 100%;
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-     
+
       grid-template-areas: 'image fullName type date time  amount status';
 
       .wrapper {
@@ -79,6 +93,11 @@
         .hide {
           display: none;
         }
+      }
+
+      > div {
+        border-bottom: none;
+        padding: 0;
       }
     }
   }
