@@ -1,6 +1,6 @@
-import { pipe } from 'fp-ts/lib/function'
+import { pipe } from 'rambda'
 import { formatCurrency } from '../../../utils/currencyFormatter.ts'
-import {format} from "date-fns"
+import { format } from 'date-fns'
 export interface TransactionResponseI {
   receiver: {
     id: string
@@ -28,22 +28,6 @@ const getDateLabel = (date: string) => {
   if (isToday) return 'Today'
   else if (isYesterday) return 'Yesterday'
   return date
-}
-
-const formatTime = (time: { hours: number; minutes: number, seconds:number }) => {
-  const formattedHours = time.hours.toString().padStart(2, '0')
-  const formattedMinutes = time.minutes.toString().padStart(2, '0')
-  const formattedSeconds = time.seconds.toString().padStart(2, '0')
-  return `${formattedHours}:${formattedMinutes}: ${formattedSeconds}`
-}
-
-const isoStringToTime = (isoString: string) => {
-  const date = new Date(isoString)
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  const seconds = date.getSeconds()
-
-  return { hours, minutes, seconds }
 }
 
 const updateValues = (transactions: TransactionResponseI[]) => {
@@ -92,26 +76,17 @@ const labelTransactions = (
 }
 // Formating time and date with date-fn library
 
-
-export  const getFormatedDate =(data:string) =>{
-  return format( data,' dd/MM/yyyy' )
+export const getFormattedDate = (data: string) => {
+  return format(data, ' dd/MM/yyyy')
 }
-export  const getFormatedTime =(data:string) =>{
-  return format(data,' hh:mm:ss a' )
+export const getFormattedTime = (data: string) => {
+  return format(data, ' hh:mm:ss a')
 }
-
-
-
-
-
-export const formatTimeFromISOString = (str: string): string =>
-  pipe(str, isoStringToTime, formatTime)
 
 export const mockTransactions = (data: TransactionResponseI[]) =>
   pipe(
-    data,
     updateValues,
     sortTransactions,
     groupTransactions,
     labelTransactions
-  )
+  )(data)

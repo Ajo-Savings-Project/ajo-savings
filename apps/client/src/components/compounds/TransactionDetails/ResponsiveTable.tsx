@@ -1,4 +1,8 @@
-import { mockTransactions , getFormatedDate, getFormatedTime} from './helpers.ts'
+import {
+  mockTransactions,
+  getFormattedDate,
+  getFormattedTime,
+} from './helpers.ts'
 import { transData } from './mockData.ts'
 import styles from './ResponsiveTable.module.scss'
 import { Text } from 'components'
@@ -44,27 +48,32 @@ export const TransactionsTable = () => {
                 <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text content="Date:" size="Small" className={styles.hide} />
-                  <Text content={getFormatedDate(row.date)} size="Small" />
+                  <Text content={getFormattedDate(row.date)} size="Small" />
                 </div>
 
                 <div className={styles.divider}></div>
                 <div className={styles.type}>
                   <Text content="Time:" size="Small" className={styles.hide} />
-                  <Text
-                    content={getFormatedTime(row.date )}
-                    size="Small"
-                  />
+                  <Text content={getFormattedTime(row.date)} size="Small" />
                 </div>
 
                 <div className={styles.divider}></div>
                 <div className={styles.type}>
-                  <Text content="Amount:" size="Small" className={styles.hide} />
+                  <Text
+                    content="Amount:"
+                    size="Small"
+                    className={styles.hide}
+                  />
                   <Text content={row.amount as string} />
                 </div>
 
                 <div className={styles.divider}></div>
                 <div className={styles.type}>
-                  <Text content="Status:" size="Small" className={styles.hide} />
+                  <Text
+                    content="Status:"
+                    size="Small"
+                    className={styles.hide}
+                  />
                   <Text
                     style={{
                       color:
