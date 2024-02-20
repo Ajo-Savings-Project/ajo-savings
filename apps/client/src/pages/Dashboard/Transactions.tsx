@@ -13,7 +13,6 @@ const TransactionsPage = () => {
       >
         <Text content="Transactions" size="Subtext" />
         <div style={{ color: '#2F80ED' }}>
-          <Text content="Clear all" color="none" size="Small" />
         </div>
       </div>
       <TransactionsTable />
