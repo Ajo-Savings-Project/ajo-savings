@@ -36,7 +36,7 @@ class Transactions extends Model<
   static transaction: never
   declare id: string
   declare walletId: string
-  declare name: CreationOptional<string>
+  declare name: string
   declare ownerId: string
   declare amount: number
   declare status: string
@@ -107,17 +107,16 @@ Transactions.init(
   {
     timestamps: true,
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
   }
 )
 
 Transactions.belongsTo(Wallets, {
-  foreignKey: 'wallet_id',
+  foreignKey: 'walletId',
 })
 
 Transactions.belongsTo(Users, {
-  foreignKey: 'owner_id',
+  foreignKey: 'ownerId',
 })
 
 export default Transactions

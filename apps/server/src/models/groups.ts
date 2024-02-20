@@ -3,37 +3,21 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
-import Users from './users'
 
 const TABLE_NAME = 'Groups'
 
 // https://sequelize.org/docs/v6/other
 
-interface GroupTransactions {
-  transaction_id: string
-  date_initiated: Date
-  contributors_id: string
-  amount: number
-  transaction_type: string
+// contribution rate
+export const frequency = {
+  DAILY: 'daily',
+  WEEKLY: 'weekly',
+  MONTHLY: 'monthly',
 }
-
-export enum frequency {
-  DAILY = 'Daily',
-  WEEKLY = 'Weekly',
-  MONTHLY = 'Monthly',
-}
-
-export interface Members {
-  memberPicture: string | null
-  memberId: string
-  name: string
-  amountContributed: number
-  amountWithdrawn: number
-  dateOfLastContribution: Date
-  profilePicture?: string | null
-}
+export type FrequencyType = (typeof frequency)[keyof typeof frequency]
 
 class Groups extends Model<
   InferAttributes<Groups>,
@@ -43,19 +27,14 @@ class Groups extends Model<
   declare title: string
   declare description: string
   declare adminId: string
-  declare groupImage?: string
-  declare amountContributed?: number
-  declare contributionAmount: number
-  declare groupTransactions: GroupTransactions[]
-  declare amountWithdrawn: number
-  declare members: Members[]
-  declare slots: number[]
-  declare availableSlots: number[]
-  declare numberOfParticipants: number
-  declare frequency: string
+  declare recurringAmount: number
+  declare groupImage: CreationOptional<string>
+  declare amountContributedWithinFrequency: number
+  declare totalAmountWithdrawn: number
+  declare availableNumberOfParticipants: number
+  declare maxNumberOfParticipants: number
+  declare frequency: FrequencyType
   declare duration: string
-  declare startDate: Date
-  declare endDate: Date
 }
 
 Groups.init(
@@ -67,7 +46,6 @@ Groups.init(
     },
     groupImage: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -80,40 +58,29 @@ Groups.init(
     },
     adminId: {
       type: DataTypes.UUID,
+      allowNull: false,
       references: {
-        model: Users,
+        model: 'Users',
         key: 'id',
       },
     },
-    groupTransactions: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    members: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-    },
-    slots: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-    },
-    availableSlots: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-    },
-    amountContributed: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    contributionAmount: {
+    amountContributedWithinFrequency: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    amountWithdrawn: {
+    recurringAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    numberOfParticipants: {
+    totalAmountWithdrawn: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    maxNumberOfParticipants: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    availableNumberOfParticipants: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -125,25 +92,9 @@ Groups.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    startDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    endDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.DATE,
-    },
-    // createdAt: {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW,
-    // },
   },
   {
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
     timestamps: true,
   }

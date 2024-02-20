@@ -1,8 +1,9 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Wallets, { walletType, ownerType } from '../../models/wallets'
+import Earnings from '../../models/walletEarnings'
 import { fundWalletSchema } from '../../utils/validators'
 import {
   transactionStatus,
@@ -16,12 +17,12 @@ export const fundPersonalSavingsWallet = async (
   res: Response
 ) => {
   try {
-    const { _userId: userId, ...rest } = req.body
+    const { _user: user, _userId: userId, ...rest } = req.body
     const verifyAmount = { amount: rest.amount }
     const reqData = fundWalletSchema.strict().safeParse(verifyAmount)
 
     if (!reqData.success) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
         message: reqData.error.issues,
       })
     }
@@ -32,8 +33,8 @@ export const fundPersonalSavingsWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.SAVINGS },
+          { ownerType: ownerType.USER },
+          { type: walletType.SAVINGS },
         ],
       },
     })
@@ -41,35 +42,35 @@ export const fundPersonalSavingsWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.GLOBAL },
+          { ownerType: ownerType.USER },
+          { type: walletType.GLOBAL },
         ],
       },
     })
 
     if (globalWallet && savingsWallet) {
-      if (globalWallet.totalAmount < amount) {
-        return res.status(HTTP_STATUS_CODE.FORBIDDEN).json({
+      if (globalWallet.balance < amount) {
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
           message: 'Insufficient funds in your global wallet',
         })
       }
 
-      const newGlobalBalance = globalWallet.totalAmount - amount
-      const newSavingsBalance = savingsWallet.totalAmount + amount
-      const newSavingsIncome = savingsWallet.totalIncome + amount
+      const newGlobalBalance = globalWallet.balance - amount
+      const newSavingsBalance = savingsWallet.balance + amount
+      // const newSavingsIncome = savingsWallet.totalIncome + amount
       const newIncome = {
-        date: new Date(),
+        walletId: savingsWallet.id,
         amount,
+        date: new Date().toISOString(),
       }
 
-      const newEarnings = [...savingsWallet.earnings, newIncome]
+      const newEarningsRecord = await Earnings.create(newIncome)
 
-      globalWallet.totalAmount = newGlobalBalance
+      globalWallet.balance = newGlobalBalance
       const newGlobalWallet = await globalWallet.save()
 
-      savingsWallet.totalAmount = newSavingsBalance
-      savingsWallet.totalIncome = newSavingsIncome
-      savingsWallet.earnings = newEarnings
+      savingsWallet.balance = newSavingsBalance
+      // savingsWallet.totalIncome = newSavingsIncome
       const newSavingsWallet = await savingsWallet.save()
 
       if (newSavingsWallet && newGlobalWallet) {
@@ -77,6 +78,7 @@ export const fundPersonalSavingsWallet = async (
         const globalTransactionDetails = {
           walletId: newGlobalWallet.id,
           ownerId: userId,
+          name: `${user.firstName} ${user.lastName}`,
           amount: amount,
           status: transactionStatus.SUCCESSFUL,
           action: action.DEBIT,
@@ -91,6 +93,7 @@ export const fundPersonalSavingsWallet = async (
         const savingsTransDetails = {
           walletId: newSavingsWallet.id,
           ownerId: userId,
+          name: `${user.firstName + user.lastName}`,
           amount: amount,
           status: transactionStatus.SUCCESSFUL,
           action: action.CREDIT,
@@ -100,21 +103,23 @@ export const fundPersonalSavingsWallet = async (
         const savingsCreditTransaction =
           await createTransaction(savingsTransDetails)
 
-        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
           message: `Transaction successful`,
           data: {
             newSavingsWallet,
             newGlobalWallet,
             globalDebitTransaction,
             savingsCreditTransaction,
+            newEarningsRecord,
           },
         })
       }
     }
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res, {
+      message: 'Your global wallet and savings wallet are not found',
+    })
   } catch (error) {
     console.log(error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'Something went wrong, our team has been notified.',
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

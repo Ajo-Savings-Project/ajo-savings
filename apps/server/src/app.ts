@@ -29,7 +29,7 @@ const corsOptions: cors.CorsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((_req: Request, res: Response, next: NextFunction) => {
   res.header('Referrer-Policy', 'no-referrer-when-downgrade') // this header is needed when using http and not https
   next()
 })

@@ -29,7 +29,7 @@ class Settings extends Model<
 Settings.init(
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
     },
@@ -91,7 +91,6 @@ Settings.init(
 
   {
     sequelize: db,
-    tableName: TABLE_NAME,
     modelName: TABLE_NAME,
   }
 )

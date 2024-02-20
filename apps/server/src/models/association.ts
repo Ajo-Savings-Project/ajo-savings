@@ -5,6 +5,9 @@ import Savings from './savings'
 import Groups from './groups'
 import Payments from './payment'
 import Settings from './settings'
+import GroupMembers from './groupMembers'
+import GroupTransactions from './groupTransactions'
+import GroupContributors from './contributorsInGroup'
 
 // Define your associations here
 Wallets.hasMany(Transactions, { foreignKey: 'walletId' })
@@ -22,6 +25,21 @@ Savings.belongsTo(Users, { foreignKey: 'userId' })
 Savings.hasMany(Transactions, { foreignKey: 'ownerId' })
 
 Groups.hasMany(Transactions, { foreignKey: 'ownerId' })
+
+Groups.hasMany(GroupMembers, { foreignKey: 'adminId', as: 'members' })
+
+Groups.hasMany(GroupTransactions, { foreignKey: 'groupId', as: 'members' })
+
+GroupTransactions.hasMany(GroupContributors, {
+  foreignKey: 'groupId',
+  as: 'members',
+})
+
+GroupMembers.belongsTo(Groups, { foreignKey: 'adminId' })
+
+GroupTransactions.belongsTo(Groups, { foreignKey: 'groupId' })
+
+GroupContributors.belongsTo(GroupTransactions, { foreignKey: 'groupId' })
 
 Users.hasMany(Payments, { foreignKey: 'ownerId' })
 
