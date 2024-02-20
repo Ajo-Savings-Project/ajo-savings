@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Wallets, { walletType, ownerType } from '../../models/wallets'
 import Earnings from '../../models/walletEarnings'
 import { fundWalletSchema } from '../../utils/validators'
 import {
@@ -33,8 +33,8 @@ export const fundPersonalSavingsWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.SAVINGS },
+          { ownerType: ownerType.USER },
+          { type: walletType.SAVINGS },
         ],
       },
     })
@@ -42,22 +42,22 @@ export const fundPersonalSavingsWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.GLOBAL },
+          { ownerType: ownerType.USER },
+          { type: walletType.GLOBAL },
         ],
       },
     })
 
     if (globalWallet && savingsWallet) {
-      if (globalWallet.totalAmount < amount) {
+      if (globalWallet.balance < amount) {
         return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
           message: 'Insufficient funds in your global wallet',
         })
       }
 
-      const newGlobalBalance = globalWallet.totalAmount - amount
-      const newSavingsBalance = savingsWallet.totalAmount + amount
-      const newSavingsIncome = savingsWallet.totalIncome + amount
+      const newGlobalBalance = globalWallet.balance - amount
+      const newSavingsBalance = savingsWallet.balance + amount
+      // const newSavingsIncome = savingsWallet.totalIncome + amount
       const newIncome = {
         walletId: savingsWallet.id,
         amount,
@@ -66,11 +66,11 @@ export const fundPersonalSavingsWallet = async (
 
       const newEarningsRecord = await Earnings.create(newIncome)
 
-      globalWallet.totalAmount = newGlobalBalance
+      globalWallet.balance = newGlobalBalance
       const newGlobalWallet = await globalWallet.save()
 
-      savingsWallet.totalAmount = newSavingsBalance
-      savingsWallet.totalIncome = newSavingsIncome
+      savingsWallet.balance = newSavingsBalance
+      // savingsWallet.totalIncome = newSavingsIncome
       const newSavingsWallet = await savingsWallet.save()
 
       if (newSavingsWallet && newGlobalWallet) {

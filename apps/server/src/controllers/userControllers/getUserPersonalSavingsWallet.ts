@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Wallets, { walletType, ownerType } from '../../models/wallets'
 
 export const getUserPersonalSavingsWallet = async (
   req: RequestExt,
@@ -15,12 +15,12 @@ export const getUserPersonalSavingsWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
+          { ownerType: ownerType.USER },
           {
             [Op.or]: [
-              { type: WalletType.SAVINGS },
-              { type: WalletType.GROUP_WALLET },
-              { type: WalletType.GLOBAL },
+              { type: walletType.SAVINGS },
+              { type: walletType.GROUP_WALLET },
+              { type: walletType.GLOBAL },
             ],
           },
         ],

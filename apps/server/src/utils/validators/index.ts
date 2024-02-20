@@ -74,7 +74,12 @@ export const createGroupSchema = z.object({
   groupName: z.string(),
   purposeAndGoals: z.string(),
   recurringAmount: z.number(),
-  frequency: z.string(),
+  // frequency: z.union([...Object.values(frequency).map((v)=> z.literal(v))]),
+  frequency: z.union([
+    z.literal('daily'),
+    z.literal('weekly'),
+    z.literal('monthly'),
+  ]),
   duration: z.string(),
   maxNumberOfParticipants: z.number(),
   groupImage: z.string().optional(),

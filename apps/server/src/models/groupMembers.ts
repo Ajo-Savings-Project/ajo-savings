@@ -15,6 +15,7 @@ class GroupMembers extends Model<
   InferAttributes<GroupMembers>,
   InferCreationAttributes<GroupMembers>
 > {
+  declare id: string
   declare adminId: string
   declare userId: string
   declare firstName: string
@@ -28,9 +29,13 @@ class GroupMembers extends Model<
 
 GroupMembers.init(
   {
-    adminId: {
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
+      allowNull: false,
+    },
+    adminId: {
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: Users,

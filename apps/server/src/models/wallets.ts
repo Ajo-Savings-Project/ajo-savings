@@ -12,17 +12,18 @@ const TABLE_NAME = 'Wallets'
 
 // https://sequelize.org/docs/v6/other
 
-export const WalletType = {
-  GLOBAL: 'Global Wallet',
-  SAVINGS: 'Savings Wallet',
-  GROUP_WALLET: 'Group Wallet',
+export const walletType = {
+  GLOBAL: 'global',
+  SAVINGS: 'savings',
+  GROUP_WALLET: 'group',
 } as const
+export type WalletType = (typeof walletType)[keyof typeof walletType]
 
-export const OwnerType = {
+export const ownerType = {
   USER: 'user',
   GROUP: 'group',
-  SAVINGS_GOAL: 'savings-goal',
 } as const
+export type OwnerType = (typeof ownerType)[keyof typeof ownerType]
 
 class Wallets extends Model<
   InferAttributes<Wallets>,
@@ -30,10 +31,9 @@ class Wallets extends Model<
 > {
   declare id: string
   declare ownerId: string
-  declare ownerType: 'user' | 'group'
-  declare totalAmount: number
-  declare type: string
-  declare totalIncome: number
+  declare ownerType: OwnerType
+  declare balance: number
+  declare type: WalletType
 }
 
 Wallets.init(
@@ -48,19 +48,15 @@ Wallets.init(
       allowNull: false,
     },
     ownerType: {
-      type: DataTypes.ENUM(...Object.values(OwnerType)),
+      type: DataTypes.ENUM(...Object.values(ownerType)),
       allowNull: false,
     },
-    totalAmount: {
+    balance: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    totalIncome: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
     },
     type: {
-      type: DataTypes.ENUM(...Object.values(WalletType)),
+      type: DataTypes.ENUM(...Object.values(walletType)),
       allowNull: false,
     },
   },

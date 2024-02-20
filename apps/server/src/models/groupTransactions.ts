@@ -15,7 +15,7 @@ class GroupTransactions extends Model<
   InferAttributes<GroupTransactions>,
   InferCreationAttributes<GroupTransactions>
 > {
-  declare transactionId: string
+  declare id: string
   declare groupId: string
   declare amount: number
   declare transactionType: string
@@ -24,7 +24,7 @@ class GroupTransactions extends Model<
 
 GroupTransactions.init(
   {
-    transactionId: {
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
     },

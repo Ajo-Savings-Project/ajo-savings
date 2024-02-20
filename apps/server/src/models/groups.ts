@@ -13,16 +13,11 @@ const TABLE_NAME = 'Groups'
 
 // contribution rate
 export const frequency = {
-  DAILY: 'Daily',
-  WEEKLY: 'Weekly',
-  MONTHLY: 'Monthly',
+  DAILY: 'daily',
+  WEEKLY: 'weekly',
+  MONTHLY: 'monthly',
 }
-
-export const cashOutDuration = {
-  DAILY: 'Daily',
-  WEEKLY: 'Weekly',
-  MONTHLY: 'Monthly',
-}
+export type FrequencyType = (typeof frequency)[keyof typeof frequency]
 
 class Groups extends Model<
   InferAttributes<Groups>,
@@ -38,7 +33,7 @@ class Groups extends Model<
   declare totalAmountWithdrawn: number
   declare availableNumberOfParticipants: number
   declare maxNumberOfParticipants: number
-  declare frequency: string
+  declare frequency: FrequencyType
   declare duration: string
 }
 

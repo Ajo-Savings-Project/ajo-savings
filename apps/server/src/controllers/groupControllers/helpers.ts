@@ -1,4 +1,5 @@
 import Users from '../../models/users'
+import { v4 } from 'uuid'
 
 export const getUserWithId = async (userId: string) => {
   return await Users.findOne({
@@ -7,25 +8,26 @@ export const getUserWithId = async (userId: string) => {
 }
 
 interface Props {
-  isAdmin: boolean
+  userId: string
+  adminId: string
+  options?: Partial<{
+    isAdmin: boolean
+  }>
 }
-export const createNewMember = async (
-  userId: string,
-  adminId: string,
-  props?: Props
-) => {
-  const user = await getUserWithId(userId)
+export const createNewMember = async (props: Props) => {
+  const user = await getUserWithId(props.userId)
   if (user) {
     return {
-      adminId,
-      userId,
+      id: v4(),
+      adminId: props.adminId,
+      userId: props.userId,
       firstName: user.firstName,
       lastName: user.lastName,
       profilePic: user.profilePic,
       amountContributed: 0,
       totalAmountWithdrawnByUser: 0,
       dateOfLastContribution: null,
-      isAdmin: props?.isAdmin || false,
+      isAdmin: props?.options?.isAdmin || false,
     }
   }
   return null
