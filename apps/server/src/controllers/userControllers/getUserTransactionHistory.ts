@@ -5,11 +5,19 @@ import Transactions from '../../models/transactions'
 import { HTTP_STATUS_CODE } from '../../constants'
 import Wallets from '../../models/wallets'
 import Users from '../../models/users'
+import { transactionHistorySchema } from '../../utils/validators/index'
 
 export const getTransactionHistory = async (req: RequestExt, res: Response) => {
   try {
-    const { _userId: userId } = req.body
-
+    const { _userId: userId, ...rest } = req.body
+    const paginate = { page: rest.page, pageSize: rest.pageSize }
+    const validatePage = transactionHistorySchema.strict().safeParse(paginate)
+    if (!validatePage.success) {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        message: validatePage.error.issues,
+      })
+    }
+    const { page = 1, pageSize = 5 } = validatePage.data
     const startDate = new Date()
     startDate.setHours(0, 0, 0, 0) // Set hours to beginning of the day
     startDate.setDate(startDate.getDate() - startDate.getDay()) // Set date to Sunday
@@ -18,7 +26,9 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
     const endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + 6) // Add 6 days to get to Saturday
 
-    const userTransactions = await Transactions.findAll({
+    const offset = (page - 1) * pageSize // Calculate offset for pagination
+
+    const userTransactions = await Transactions.findAndCountAll({
       where: {
         ownerId: userId,
         // Query the database to get data within the current week
@@ -26,10 +36,15 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
       },
       order: [['createdAt', 'DESC']],
       include: [{ model: Wallets }, { model: Users }],
+      offset,
+      limit: pageSize,
     })
 
+    const totalTransactions = userTransactions.count
+    const totalPages = Math.ceil(totalTransactions / pageSize)
+
     // Extract relevant information for the response
-    const transactionHistory = userTransactions.map((transaction) => ({
+    const transactionHistory = userTransactions.rows.map((transaction) => ({
       id: transaction.id,
       walletId: transaction.walletId,
       ownerId: transaction.ownerId,
@@ -44,6 +59,8 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
     return res.status(HTTP_STATUS_CODE.SUCCESS).json({
       message: `Transaction history fetched successfully`,
       transactionHistory,
+      totalPages,
+      currentPage: page,
     })
   } catch (error) {
     console.log(error)

@@ -97,3 +97,8 @@ export const fundGroupWalletSchema = z.object({
   }),
   email: z.string().email({ message: 'email is invalid' }),
 })
+
+export const transactionHistorySchema = z.object({
+  page: z.number().optional(),
+  pageSize: z.number().optional(),
+})
