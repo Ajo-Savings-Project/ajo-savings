@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { Popover } from 'react-tiny-popover'
 import classNames from 'classnames'
 import styles from './dashboardheader.module.scss'
-import ProfilePicture from './DefaultAjo-dp.svg?react'
-import SearchIcon from './search-altsearchIcon.svg?react'
-import { Input, Text } from 'components'
+import { Text } from 'components'
+import SearchBar from '../SearchBar'
 
 const DashboardHeader = ({
   onClick,
@@ -19,15 +18,7 @@ const DashboardHeader = ({
     <header className={classNames('container', styles.header, className)}>
       <button onClick={onClick}>T</button>
       <div>
-        <div className={styles.headerSearchInput}>
-          <SearchIcon className={styles.headerSearchIcon} />
-          <Input
-            className={styles.headerSearchPlaceholder}
-            type="text"
-            label={''}
-            placeholder={'Search'}
-          />
-        </div>
+        <SearchBar />
         <Popover
           isOpen={isPopoverOpen}
           positions={['bottom']}
@@ -49,14 +40,20 @@ const DashboardHeader = ({
             </div>
           }
         >
-          <div className={styles.headerImage}>
-            <ProfilePicture onClick={() => setIsPopoverOpen(!isPopoverOpen)} />
+          <div
+            className={styles.headerImage}
+            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+          >
+            <img
+              src="https://picsum.photos/30/30"
+              alt=""
+              className={styles.headerImg}
+            />
             <Text
               content={'Deborah'}
               size={'Small'}
               color={'Gray'}
               className={styles.headerText}
-              onClick={() => setIsPopoverOpen(!isPopoverOpen)}
             />
           </div>
         </Popover>

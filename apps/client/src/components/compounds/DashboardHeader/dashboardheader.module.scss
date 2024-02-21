@@ -14,25 +14,14 @@
     width: 100%;
     margin-left: 82px;
   }
-  &SearchInput {
-    position: relative;
-    // width: 30%;
-  }
-  &SearchIcon {
-    position: absolute;
-    left: 15px;
-    top: 35%;
-    z-index: 10;
-  }
-  &SearchPlaceholder {
-    padding-left: 50px;
-    border-radius: 24px;
-  }
   &Image {
     display: flex;
     margin-right: 100px;
     align-items: center;
     cursor: pointer;
+  }
+  &Img {
+    border-radius: 50%;
   }
   &Text {
     margin-left: 8px;
@@ -51,34 +40,23 @@
       display: block;
     }
   }
-  @media (max-width: 600px) {
+
+  @media (max-width: 800px) {
+    & > div {
+      margin-left: 20px;
+      gap: 40px;
+    }
+  }
+  @media (max-width: 500px) {
+    & > div {
+      margin-left: 2px;
+      gap: 0;
+    }
+    &Image {
+      transform: translateX(-20px);
+    }
     &Text {
       display: none;
-    }
-    &SearchInput {
-      width: 70%;
-    }
-    & > div {
-      margin-left: 4px;
-      gap: 100px;
-    }
-  }
-  @media (max-width: 800px) {
-    &SearchInput {
-      width: 40%;
-    }
-    & > div {
-      margin-left: 40px;
-      gap: 100px;
-    }
-  }
-  @media (max-width: 400px) {
-    &SearchInput {
-      width: 50%;
-    }
-    & > div {
-      margin-left: 4px;
-      gap: 50px;
     }
   }
 }
