@@ -5,6 +5,7 @@ import UpcomingActivities from 'components/compounds/UpcomingActivities/Upcoming
 
 import ChartWithUpcoming from './chartAndUpcoming'
 
+
 const HomePage = () => {
   const { firstName, lastName } = useAuth()
 
