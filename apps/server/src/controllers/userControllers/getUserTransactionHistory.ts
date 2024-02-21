@@ -33,7 +33,6 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
       id: transaction.id,
       walletId: transaction.walletId,
       ownerId: transaction.ownerId,
-      ownerName: transaction.name,
       action: transaction.action,
       type: transaction.type,
       receiverId: transaction.receiverId,

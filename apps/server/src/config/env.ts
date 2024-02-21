@@ -35,6 +35,7 @@ const {
   CLOUDINARY_NAME,
   API_KEY_4_CLOUDINARY,
   API_SECRET_4_CLOUDINARY,
+  PAYSTACK_KEY,
 } = process.env
 
 const ENV = {
@@ -58,6 +59,7 @@ const ENV = {
   CLOUDINARY_NAME,
   API_KEY_4_CLOUDINARY,
   API_SECRET_4_CLOUDINARY,
+  PAYSTACK_KEY,
 }
 
 export default ENV

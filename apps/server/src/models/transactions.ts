@@ -36,7 +36,6 @@ class Transactions extends Model<
   static transaction: never
   declare id: string
   declare walletId: string
-  declare name: string
   declare ownerId: string
   declare amount: number
   declare status: string
@@ -47,7 +46,6 @@ class Transactions extends Model<
   declare createdAt: CreationOptional<string>
   declare updatedAt?: CreationOptional<string>
 }
-
 Transactions.init(
   {
     id: {
@@ -62,10 +60,7 @@ Transactions.init(
         key: 'id',
       },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+
     ownerId: {
       type: DataTypes.UUID,
       references: {
@@ -100,7 +95,10 @@ Transactions.init(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
   },
 
@@ -110,7 +108,6 @@ Transactions.init(
     modelName: TABLE_NAME,
   }
 )
-
 Transactions.belongsTo(Wallets, {
   foreignKey: 'walletId',
 })
