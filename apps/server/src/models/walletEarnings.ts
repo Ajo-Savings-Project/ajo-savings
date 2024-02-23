@@ -5,6 +5,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
+import Wallets from './wallets'
 
 const TABLE_NAME = 'Earnings'
 
@@ -14,6 +15,7 @@ class Earnings extends Model<
   InferAttributes<Earnings>,
   InferCreationAttributes<Earnings>
 > {
+  declare id: string
   declare walletId: string
   declare amount: number
   declare date: string
@@ -21,10 +23,18 @@ class Earnings extends Model<
 
 Earnings.init(
   {
-    walletId: {
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+    },
+    walletId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Wallets',
+        key: 'id',
+      },
     },
     amount: {
       type: DataTypes.INTEGER,
@@ -40,5 +50,11 @@ Earnings.init(
     timestamps: true,
   }
 )
+
+Earnings.belongsTo(Wallets, {
+  foreignKey: 'walletId',
+  constraints: false,
+  as: 'earnings',
+})
 
 export default Earnings

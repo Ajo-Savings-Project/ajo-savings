@@ -25,6 +25,7 @@ class GroupMembers extends Model<
   declare dateOfLastContribution: string | null
   declare isAdmin: boolean
   declare totalAmountWithdrawnByUser: number
+  declare sequence: number
 }
 
 GroupMembers.init(
@@ -70,6 +71,10 @@ GroupMembers.init(
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    sequence: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },

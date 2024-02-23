@@ -11,6 +11,7 @@ import {
   action,
 } from '../../models/transactions'
 import { createTransaction } from '../../utils/helpers'
+import { v4 } from 'uuid'
 
 export const fundPersonalSavingsWallet = async (
   req: RequestExt,
@@ -59,6 +60,7 @@ export const fundPersonalSavingsWallet = async (
       const newSavingsBalance = savingsWallet.balance + amount
       // const newSavingsIncome = savingsWallet.totalIncome + amount
       const newIncome = {
+        id: v4(),
         walletId: savingsWallet.id,
         amount,
         date: new Date().toISOString(),

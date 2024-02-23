@@ -34,7 +34,7 @@ class Groups extends Model<
   declare availableNumberOfParticipants: number
   declare maxNumberOfParticipants: number
   declare frequency: FrequencyType
-  declare duration: string
+  declare automaticRestartCycle: boolean
 }
 
 Groups.init(
@@ -88,8 +88,8 @@ Groups.init(
       type: DataTypes.ENUM(...Object.values(frequency)),
       allowNull: false,
     },
-    duration: {
-      type: DataTypes.STRING,
+    automaticRestartCycle: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },

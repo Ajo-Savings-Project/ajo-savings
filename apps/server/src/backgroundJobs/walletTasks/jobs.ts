@@ -9,6 +9,7 @@ export interface WalletJobData {
 
 const createGlobalWalletJob = async (data: WalletJobData) => {
   const globalWalletId = uuidV4()
+  const id = uuidV4()
   const newGlobalWallet = await Wallets.create({
     id: globalWalletId,
     ownerId: data.userId,
@@ -18,6 +19,7 @@ const createGlobalWalletJob = async (data: WalletJobData) => {
   })
 
   await Earnings.create({
+    id,
     walletId: newGlobalWallet.id,
     amount: 0,
     date: new Date().toISOString(),
@@ -30,6 +32,7 @@ const createGlobalWalletJob = async (data: WalletJobData) => {
 
 const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
   const savingsWalletId = uuidV4()
+  const id = uuidV4()
   const newSavingsWallet = await Wallets.create({
     id: savingsWalletId,
     ownerId: data.userId,
@@ -39,6 +42,7 @@ const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
   })
 
   await Earnings.create({
+    id,
     walletId: newSavingsWallet.id,
     amount: 0,
     date: new Date().toISOString(),
@@ -51,6 +55,7 @@ const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
 
 const createPersonalGroupWalletJob = async (data: WalletJobData) => {
   const personalGroupWalletId = uuidV4()
+  const id = uuidV4()
   const personalGroupWallet = await Wallets.create({
     id: personalGroupWalletId,
     ownerId: data.userId,
@@ -60,6 +65,7 @@ const createPersonalGroupWalletJob = async (data: WalletJobData) => {
   })
 
   await Earnings.create({
+    id,
     walletId: personalGroupWallet.id,
     amount: 0,
     date: new Date().toISOString(),

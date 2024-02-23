@@ -71,18 +71,34 @@ export const changePasswordSchema = z.object({
 })
 
 export const createGroupSchema = z.object({
-  groupName: z.string(),
-  purposeAndGoals: z.string(),
-  recurringAmount: z.number(),
+  groupName: z.string().min(2, {
+    message:
+      'The name of the group is required and must be at least 2 characters long',
+  }),
+  purposeAndGoals: z.string().min(2, {
+    message:
+      'Purpose and goals of the group is required and must be at least 2 characters long',
+  }),
+  recurringAmount: z.number().refine((value) => value > 0, {
+    message: 'amount must be greater than zero',
+  }),
   // frequency: z.union([...Object.values(frequency).map((v)=> z.literal(v))]),
   frequency: z.union([
     z.literal('daily'),
     z.literal('weekly'),
     z.literal('monthly'),
   ]),
-  duration: z.string(),
-  maxNumberOfParticipants: z.number(),
-  groupImage: z.string().optional(),
+  maxNumberOfParticipants: z.number().refine((value) => value > 0, {
+    message: 'amount must be greater than zero',
+  }),
+  groupImage: z
+    .string()
+    .min(2, {
+      message:
+        'The group image url path is required and must be at least 2 characters long',
+    })
+    .optional(),
+  automaticRestartCycle: z.boolean(),
 })
 
 export const fundWalletSchema = z.object({
