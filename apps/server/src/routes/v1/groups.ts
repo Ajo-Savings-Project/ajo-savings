@@ -15,51 +15,46 @@ const router = Router()
  *       required:
  *          - group_name
  *          - purpose_and_goals
+ *          - recurringAmount
  *          - frequency
- *          - startDate
- *          - endDate
- *          - number_of_participants
- *          - duration
+ *          - maxNumberOfParticipants
+ *          - automaticRestartCycle
  *   schemas:
  *     Group:
  *       type: object
  *       required:
- *         - group_name
- *         - purpose_and_goals
+ *         - groupName
+ *         - purposeAndGoals
+ *         - recurringAmount
  *         - frequency
- *         - startDate
- *         - endDate
- *         - number_of_participants
- *         - duration
+ *         - maxNumberOfParticipants
+ *         - automaticRestartCycle
  *       properties:
- *         group_name:
+ *         groupName:
  *           type: string
  *           description: The name of the group
+ *         purposeAndGoals:
+ *           type: string
+ *           description: The purpose and goals for creating the group
+ *         recurringAmount:
+ *           type: number
+ *           description: The recurring amount contributed by the members of the group
  *         frequency:
  *           type: string
  *           description: The rate of payments by the user
- *         startDate:
- *           type: string
- *           format: date
- *           description: The starting date of payments by the user
- *         endDate:
- *           type: string
- *           format: date
- *           description: The ending date of payments by the user
- *         number_of_participants:
+ *         maxNumberOfParticipants:
  *           type: number
  *           description: The number of participants in the group
- *         duration:
- *           type: string
- *           description: How long the group should be valid
+ *         automaticRestartCycle:
+ *           type: boolean
+ *           description: Will the contribution be automatically restarted when a cycle ends?
  *       example:
  *         groupName: "Awesome Group"
  *         purposeAndGoals: "Saving for a common goal"
- *         frequency: "Weekly"
- *         startDate: "2023-01-01T00:00:00Z"
- *         endDate: "2023-12-31T23:59:59Z"
- *         numberOfParticipants: 10
- *         duration: "3 months"
+ *         recurringAmount: 10000
+ *         frequency: "monthly"
+ *         maxNumberOfParticipants: 30
+ *         automaticRestartCycle: true
  */
 
 /**
@@ -94,19 +89,14 @@ const router = Router()
  *                     title: string
  *                     description: string
  *                     adminId: string
- *                     contribution_amount: string
+ *                     recurringAmount: number
  *                     groupImage: string
- *                     amountContributed: string
- *                     groupTransactions: array
- *                     amountWithdrawn: number
- *                     members: array
- *                     slots: array
- *                     availableSlots: array
- *                     numberOfParticipants: number
+ *                     amountContributedWithinFrequency: number
+ *                     totalAmountWithdrawn: number
+ *                     availableNumberOfParticipants: number
+ *                     maxNumberOfParticipants: number
  *                     frequency: string
- *                     duration: string
- *                     startDate: string
- *                     endDate: string
+ *                     automaticRestartCycle: boolean
  *                     updatedAt: string
  *                     createdAt: string
  *                 wallet:
@@ -115,12 +105,12 @@ const router = Router()
  *                     id: string
  *                     ownerId: string
  *                     ownerType: string
- *                     totalAmount: number
+ *                     balance: array
  *                     type: string
- *                     earnings: array
- *                     totalIncome: number
  *                     updatedAt: string
  *                     createdAt: string
+ *                 duration:
+ *                   type: string
  *         400:
  *           description: Bad request
  *           content:
