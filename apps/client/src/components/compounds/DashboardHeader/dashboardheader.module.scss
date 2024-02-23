@@ -2,17 +2,83 @@
   display: flex;
   align-items: center;
 
+  max-width: unset !important;
+
   > button {
     background: none;
     border: none;
     margin-right: 20px;
   }
-
   & > div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+  }
+  &Image {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  &Img {
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    width: 32px;
+    height: 32px;
+  }
+  &Text {
+    margin-left: 8px;
+  }
+  &Profile {
+    display: none;
+    position: absolute;
+    top: 8%;
+    line-height: 2;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 20;
+    border-radius: 4px;
+    cursor: pointer;
+    &.visible {
+      display: block;
+    }
+  }
+
+  @media (max-width: 800px) {
+    & > div {
+      margin-left: 20px;
+      gap: 40px;
+    }
+  }
+  @media (max-width: 500px) {
+    & > div {
+      margin-left: 2px;
+      gap: 0;
+    }
+    &Image {
+      transform: translateX(-20px);
+    }
+    &Text {
+      display: none;
+    }
+  }
+}
+
+.snippetDrop {
+  background-color: white;
+  margin: 5px;
+  text-align: start;
+  color: black;
+  padding: 20px;
+  list-style: none;
+  border-radius: 8px;
+  box-shadow: -1px 2px 12px 1px #00000033;
+
+  > li {
+    cursor: pointer;
+  }
+  > li a {
+    text-decoration: none;
   }
 }

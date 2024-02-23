@@ -1,5 +1,8 @@
 import classNames from 'classnames'
+import AccountSnippet from './AccountSnippet.tsx'
 import styles from './dashboardheader.module.scss'
+import SearchBar from '../SearchBar'
+import MoreIcon from './bar.svg?react'
 
 const DashboardHeader = ({
   onClick,
@@ -10,10 +13,12 @@ const DashboardHeader = ({
 }) => {
   return (
     <header className={classNames('container', styles.header, className)}>
-      <button onClick={onClick}>T</button>
+      <button onClick={onClick}>
+        <MoreIcon />
+      </button>
       <div>
-        <input type="text" />
-        <div>A</div>
+        <SearchBar />
+        <AccountSnippet />
       </div>
     </header>
   )

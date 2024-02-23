@@ -41,7 +41,7 @@
   }
 
   &Main {
-    padding: 24px 40px;
+    padding: 16px;
     overflow-x: hidden;
     overflow-y: scroll;
     height: calc($full-height - $header-height);
@@ -59,6 +59,10 @@
 @media screen and (min-width: 65rem) {
   .layout {
     grid-template-columns: minmax(0, 271px) 1fr;
+
+    &Main {
+      padding: 24px 40px;
+    }
   }
 
   .layoutSidebar {

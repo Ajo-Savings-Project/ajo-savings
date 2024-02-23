@@ -1,0 +1,28 @@
+.header {
+  &SearchInput {
+    position: relative;
+    width: 100%;
+  }
+  &SearchIcon {
+    position: absolute;
+    left: 15px;
+    top: 35%;
+    z-index: 10;
+  }
+  &SearchPlaceholder {
+    padding-left: 50px;
+    border-radius: 24px;
+  }
+
+  @media (max-width: 800px) {
+    &SearchInput {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    &SearchInput {
+      width: 70%;
+    }
+  }
+}

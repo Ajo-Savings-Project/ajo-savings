@@ -97,9 +97,9 @@ const SettingsPage = () => {
 
   return (
     <div className={classNames('container', styles.setting)}>
-      <Text size={'Subheading'} content={'Settings'} />
-
-      <div className={styles.settingWrapper}>
+      <Text level={1} size={'Subheading'} content={'Settings'} />
+      <section>Profile changes</section>
+      <section id={'profile-settings'} className={styles.settingWrapper}>
         {settings.map((setting, index) => (
           <div key={index} className={styles.settingWrapperText}>
             <Text size={'Subtext'} content={setting.section} />
@@ -123,7 +123,10 @@ const SettingsPage = () => {
             ))}
           </div>
         ))}
-      </div>
+      </section>
+      <section id={'change-password'}>
+        Account Related settings like deletion
+      </section>
     </div>
   )
 }
