@@ -2,22 +2,24 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { WalletType, OwnerType } from '../../models/wallets'
+import Wallets, { walletType, ownerType } from '../../models/wallets'
 import { fundGroupWalletSchema } from '../../utils/validators'
+import { v4 as uuidV4 } from 'uuid'
 import {
   transactionStatus,
   transactionType,
   action,
 } from '../../models/transactions'
 import { createTransaction } from '../../utils/helpers'
+import Earnings from '../../models/walletEarnings'
 
 export const fundPersonalGroupWallet = async (
   req: RequestExt,
   res: Response
 ) => {
   try {
-    const { _userId: userId, ...rest } = req.body
-    const verifyAmount = { amount: rest.amount, email: rest.email }
+    const { _user: user, _userId: userId, ...rest } = req.body
+    const verifyAmount = { amount: rest.amount }
     const reqData = fundGroupWalletSchema.strict().safeParse(verifyAmount)
 
     if (!reqData.success) {
@@ -32,8 +34,8 @@ export const fundPersonalGroupWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.GROUP_WALLET },
+          { ownerType: ownerType.USER },
+          { type: walletType.GROUP_WALLET },
         ],
       },
     })
@@ -41,33 +43,33 @@ export const fundPersonalGroupWallet = async (
       where: {
         [Op.and]: [
           { ownerId: userId },
-          { ownerType: OwnerType.USER },
-          { type: WalletType.GLOBAL },
+          { ownerType: ownerType.USER },
+          { type: walletType.GLOBAL },
         ],
       },
     })
 
     if (globalWallet && groupSavingsWallet) {
-      if (globalWallet.totalAmount < amount) {
+      if (globalWallet.balance < amount) {
         return res.status(HTTP_STATUS_CODE.FORBIDDEN).json({
           message: 'Insufficient funds in your global wallet',
         })
       }
-      const newGlobalBalance = globalWallet.totalAmount - amount
-      const newGroupSavingsBalance = groupSavingsWallet.totalAmount + amount
-      const newGoupSavingsIncome = groupSavingsWallet.totalIncome + amount
-      const newIncome = {
-        amount,
-        date: new Date(),
-      }
-      const newEarnings = [...groupSavingsWallet.earnings, newIncome]
+      const newGlobalBalance = globalWallet.balance - amount
+      const newGroupSavingsBalance = groupSavingsWallet.balance + amount
+      const id = uuidV4()
 
-      globalWallet.totalAmount = newGlobalBalance
+      const newIncome = {
+        id,
+        walletId: globalWallet.id,
+        amount,
+        date: new Date().toISOString(),
+      }
+      const newEarnings = await Earnings.create(newIncome)
+      globalWallet.balance = newGlobalBalance
       const newGlobalWallet = await globalWallet.save()
 
-      groupSavingsWallet.totalAmount = newGroupSavingsBalance
-      groupSavingsWallet.totalIncome = newGoupSavingsIncome
-      groupSavingsWallet.earnings = newEarnings
+      groupSavingsWallet.balance = newGroupSavingsBalance
       const newGroupSavingsWallet = await groupSavingsWallet.save()
 
       if (newGroupSavingsWallet && newGlobalWallet) {
@@ -76,12 +78,11 @@ export const fundPersonalGroupWallet = async (
           walletId: newGlobalWallet.id,
           ownerId: userId,
           amount: amount,
+          name: `${user.firstName} ${user.lastName}`,
           status: transactionStatus.SUCCESSFUL,
           action: action.DEBIT,
           type: transactionType.INTERNAL_TRANSFER,
           receiverId: newGroupSavingsWallet.id,
-          createdAt: newGroupSavingsWallet.createdAt,
-          updatedAt: newGroupSavingsWallet.updatedAt,
         }
         const groupGlobalDebit = await createTransaction(
           globalGroupTransactionDetails
@@ -91,12 +92,11 @@ export const fundPersonalGroupWallet = async (
           walletId: newGroupSavingsWallet.id,
           ownerId: userId,
           amount: amount,
+          name: `${user.firstName}${user.lastName}`,
           status: transactionStatus.SUCCESSFUL,
           action: action.CREDIT,
           type: transactionType.INTERNAL_TRANSFER,
           senderId: newGlobalWallet.id,
-          createdAt: newGlobalWallet.createdAt,
-          updatedAt: newGlobalWallet.updatedAt,
         }
         const groupSavingsTrans = await createTransaction(
           savingsGroupTransDetails
@@ -109,6 +109,7 @@ export const fundPersonalGroupWallet = async (
             newGlobalWallet,
             groupSavingsTrans,
             groupGlobalDebit,
+            newEarnings,
           },
         })
       }

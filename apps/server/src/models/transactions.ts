@@ -38,6 +38,7 @@ class Transactions extends Model<
   declare walletId: string
   declare ownerId: string
   declare amount: number
+  declare name: string
   declare status: string
   declare action: string
   declare type: string
@@ -82,6 +83,10 @@ Transactions.init(
     },
     type: {
       type: DataTypes.ENUM(...Object.values(transactionType)),
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     receiverId: {

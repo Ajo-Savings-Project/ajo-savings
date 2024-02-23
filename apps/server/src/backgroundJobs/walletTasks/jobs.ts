@@ -17,12 +17,6 @@ const createGlobalWalletJob = async (data: WalletJobData) => {
     type: walletType.GLOBAL,
   })
 
-  await Earnings.create({
-    walletId: newGlobalWallet.id,
-    amount: 0,
-    date: new Date().toISOString(),
-  })
-
   return await Wallets.findOne({
     where: { id: newGlobalWallet.id },
   })
@@ -39,6 +33,7 @@ const createPersonalSavingsWalletJob = async (data: WalletJobData) => {
   })
 
   await Earnings.create({
+    id: uuidV4(),
     walletId: newSavingsWallet.id,
     amount: 0,
     date: new Date().toISOString(),
@@ -57,12 +52,6 @@ const createPersonalGroupWalletJob = async (data: WalletJobData) => {
     ownerType: ownerType.USER,
     balance: 0,
     type: walletType.GROUP_WALLET,
-  })
-
-  await Earnings.create({
-    walletId: personalGroupWallet.id,
-    amount: 0,
-    date: new Date().toISOString(),
   })
 
   return await Wallets.findOne({

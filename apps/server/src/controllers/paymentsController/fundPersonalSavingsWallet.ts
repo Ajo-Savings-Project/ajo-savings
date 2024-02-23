@@ -5,6 +5,8 @@ import { RequestExt } from '../../middleware/authorization/authentication'
 import Wallets, { walletType, ownerType } from '../../models/wallets'
 import Earnings from '../../models/walletEarnings'
 import { fundWalletSchema } from '../../utils/validators'
+import { v4 as uuidV4 } from 'uuid'
+
 import {
   transactionStatus,
   transactionType,
@@ -57,8 +59,10 @@ export const fundPersonalSavingsWallet = async (
 
       const newGlobalBalance = globalWallet.balance - amount
       const newSavingsBalance = savingsWallet.balance + amount
-      // const newSavingsIncome = savingsWallet.totalIncome + amount
+      const id = uuidV4()
+
       const newIncome = {
+        id,
         walletId: savingsWallet.id,
         amount,
         date: new Date().toISOString(),
@@ -70,7 +74,6 @@ export const fundPersonalSavingsWallet = async (
       const newGlobalWallet = await globalWallet.save()
 
       savingsWallet.balance = newSavingsBalance
-      // savingsWallet.totalIncome = newSavingsIncome
       const newSavingsWallet = await savingsWallet.save()
 
       if (newSavingsWallet && newGlobalWallet) {

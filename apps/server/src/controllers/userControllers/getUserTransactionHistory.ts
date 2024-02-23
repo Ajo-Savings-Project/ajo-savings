@@ -9,7 +9,7 @@ import { transactionHistorySchema } from '../../utils/validators/index'
 
 export const getTransactionHistory = async (req: RequestExt, res: Response) => {
   try {
-    const { _userId: userId, ...rest } = req.body
+    const { _user: user, _userId: userId, ...rest } = req.body
     const paginate = { page: rest.page, pageSize: rest.pageSize }
     const validatePage = transactionHistorySchema.strict().safeParse(paginate)
     if (!validatePage.success) {
@@ -54,6 +54,7 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
       senderId: transaction.senderId,
       date: transaction.createdAt,
       amount: transaction.amount,
+      name: `${user.firstName} ${user.lastName}`,
     }))
 
     return res.status(HTTP_STATUS_CODE.SUCCESS).json({

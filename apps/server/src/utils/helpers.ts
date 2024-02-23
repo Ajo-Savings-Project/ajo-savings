@@ -174,6 +174,7 @@ export const createTransaction = async (details: TransactionDetails) => {
     type: details.type,
     receiverId: details.receiverId,
     senderId: details.senderId,
+    name: details.name,
   })
   return transaction
 }
