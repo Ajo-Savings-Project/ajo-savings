@@ -14,8 +14,10 @@ export const userProfileDetails = async (req: RequestExt, res: Response) => {
       'updatedAt',
     ])
 
-    HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, { user: _userProfile })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      user: _userProfile,
+    })
   } catch (error) {
-    HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }

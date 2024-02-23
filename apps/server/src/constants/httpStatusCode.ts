@@ -20,53 +20,56 @@ export const HTTP_STATUS_HELPER = {
     const defaultError = `Something went wrong, our team has been notified`
 
     res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: Env.IS_PROD
-        ? `Something went wrong, our team has been notified`
-        : err ?? defaultError,
+      message: Env.IS_PROD ? defaultError : err ?? defaultError,
     })
   },
   [HTTP_STATUS_CODE.BAD_REQUEST]: function (
     res: Response,
-    obj: Record<string, unknown>
+    obj: Record<string, unknown> = {}
   ) {
     res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+      message: 'Bad Request',
       ...obj,
-      message: obj.message ?? 'Bad Request',
     })
   },
-  [HTTP_STATUS_CODE.UNAUTHORIZED]: function (res: Response, message: string) {
-    res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({ message })
+  [HTTP_STATUS_CODE.UNAUTHORIZED]: function (
+    res: Response,
+    obj: Record<string, unknown> = {}
+  ) {
+    res
+      .status(HTTP_STATUS_CODE.UNAUTHORIZED)
+      .json({ message: "You don't have access to this resource.", ...obj })
   },
   [HTTP_STATUS_CODE.FORBIDDEN]: function (
     res: Response,
-    obj: Record<string, unknown>
+    obj: Record<string, unknown> = {}
   ) {
     res
       .status(HTTP_STATUS_CODE.FORBIDDEN)
-      .json({ ...obj, message: 'You are not allowed to make this request' })
+      .json({ message: 'You are not allowed to make this request', ...obj })
   },
   [HTTP_STATUS_CODE.NOT_FOUND]: function (
     res: Response,
     obj: Record<string, unknown>
   ) {
     res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
+      message: 'Not Found',
       ...obj,
-      message: obj.message ?? 'Not Found',
     })
   },
   [HTTP_STATUS_CODE.CONFLICT]: function (
     res: Response,
     obj: Record<string, unknown>
   ) {
-    res.status(HTTP_STATUS_CODE.CONFLICT).json({ ...obj })
+    res.status(HTTP_STATUS_CODE.CONFLICT).json({ message: '', ...obj })
   },
   [HTTP_STATUS_CODE.SUCCESS]: function (
     res: Response,
     obj: Record<string, unknown>
   ) {
     res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      message: 'Success',
       ...obj,
-      message: obj.message ?? 'Success',
     })
   },
 } as const
