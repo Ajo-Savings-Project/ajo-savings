@@ -96,8 +96,3 @@ export const fundGroupWalletSchema = z.object({
     message: 'amount must be greater than zero',
   }),
 })
-
-export const transactionHistorySchema = z.object({
-  page: z.number().optional(),
-  pageSize: z.number().optional(),
-})

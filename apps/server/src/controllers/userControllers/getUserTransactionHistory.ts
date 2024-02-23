@@ -1,72 +1,71 @@
 import { Response } from 'express'
+import { prop, pick, map, pipe, mergeAll } from 'rambda'
 import { Op } from 'sequelize'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Transactions from '../../models/transactions'
-import { HTTP_STATUS_CODE } from '../../constants'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import Wallets from '../../models/wallets'
 import Users from '../../models/users'
-import { transactionHistorySchema } from '../../utils/validators/index'
+import { betweenSaturdayAndSunday } from '../../utils/betweenSatSun'
+import { withPaginate } from '../../utils/hocs/withPaginate'
+
+const pickFieldsWithKey =
+  (key: string, propsToPick: string[]) => (obj: unknown | object) => {
+    const modData = pick(propsToPick)(prop(key, obj))
+    return mergeAll([obj as object, { [key]: modData }])
+  }
+
+const publicUserFields = pickFieldsWithKey('User', [
+  'id',
+  'email',
+  'firstName',
+  'lastName',
+])
+
+const publicWalletFields = pickFieldsWithKey('Wallet', [
+  'id',
+  'balance',
+  'type',
+])
+
+const publicTransactionFields = pick([
+  'id',
+  'amount',
+  'type',
+  'status',
+  'createdAt',
+  'receiverId',
+  'senderId',
+  'Wallet',
+  'User',
+])
+
+const resolveTransactionResponse = map(
+  pipe(publicTransactionFields, publicWalletFields, publicUserFields)
+)
 
 export const getTransactionHistory = async (req: RequestExt, res: Response) => {
   try {
-    const { _user: user, _userId: userId, ...rest } = req.body
-    const paginate = { page: rest.page, pageSize: rest.pageSize }
-    const validatePage = transactionHistorySchema.strict().safeParse(paginate)
-    if (!validatePage.success) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: validatePage.error.issues,
-      })
-    }
-    const { page = 1, pageSize = 5 } = validatePage.data
-    const startDate = new Date()
-    startDate.setHours(0, 0, 0, 0) // Set hours to beginning of the day
-    startDate.setDate(startDate.getDate() - startDate.getDay()) // Set date to Sunday
+    const { _userId: userId } = req.body
 
-    // Get the end date of the current week (Saturday)
-    const endDate = new Date(startDate)
-    endDate.setDate(startDate.getDate() + 6) // Add 6 days to get to Saturday
-
-    const offset = (page - 1) * pageSize // Calculate offset for pagination
-
-    const userTransactions = await Transactions.findAndCountAll({
+    const userTransactions = await withPaginate(Transactions, {
+      page: Number(req.query?.page),
+      limit: Number(req.query?.limit),
+    })({
       where: {
         ownerId: userId,
         // Query the database to get data within the current week
-        createdAt: { [Op.between]: [startDate, endDate] },
+        createdAt: { [Op.between]: betweenSaturdayAndSunday().arr },
       },
       order: [['createdAt', 'DESC']],
       include: [{ model: Wallets }, { model: Users }],
-      offset,
-      limit: pageSize,
     })
 
-    const totalTransactions = userTransactions.count
-    const totalPages = Math.ceil(totalTransactions / pageSize)
-
-    // Extract relevant information for the response
-    const transactionHistory = userTransactions.rows.map((transaction) => ({
-      id: transaction.id,
-      walletId: transaction.walletId,
-      ownerId: transaction.ownerId,
-      action: transaction.action,
-      type: transaction.type,
-      receiverId: transaction.receiverId,
-      senderId: transaction.senderId,
-      date: transaction.createdAt,
-      amount: transaction.amount,
-      name: `${user.firstName} ${user.lastName}`,
-    }))
-
-    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-      message: `Transaction history fetched successfully`,
-      transactionHistory,
-      totalPages,
-      currentPage: page,
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      ...userTransactions,
+      data: resolveTransactionResponse(userTransactions.data),
     })
-  } catch (error) {
-    console.log(error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'Something went wrong, our team has been notified.',
-    })
+  } catch (err) {
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

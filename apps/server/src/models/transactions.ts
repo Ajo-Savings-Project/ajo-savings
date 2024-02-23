@@ -47,6 +47,7 @@ class Transactions extends Model<
   declare createdAt: CreationOptional<string>
   declare updatedAt?: CreationOptional<string>
 }
+
 Transactions.init(
   {
     id: {
