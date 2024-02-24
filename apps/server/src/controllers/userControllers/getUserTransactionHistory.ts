@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { prop, pick, map, pipe, mergeAll } from 'rambda'
+import { prop, pick, map, pipe, mergeAll, toUpper } from 'rambda'
 import { Op } from 'sequelize'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Transactions from '../../models/transactions'
@@ -40,8 +40,23 @@ const publicTransactionFields = pick([
   'User',
 ])
 
+const objKeysToLower = (obj: unknown | Record<string, unknown>) => {
+  const newObj: Record<string, unknown> = {}
+  for (const key in obj as object) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[key.toLowerCase()] = (obj as Record<string, unknown>)[key]
+    }
+  }
+  return newObj
+}
+
 const resolveTransactionResponse = map(
-  pipe(publicTransactionFields, publicWalletFields, publicUserFields)
+  pipe(
+    publicTransactionFields,
+    publicWalletFields,
+    publicUserFields,
+    objKeysToLower
+  )
 )
 
 export const getTransactionHistory = async (req: RequestExt, res: Response) => {
@@ -57,7 +72,12 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
         // Query the database to get data within the current week
         createdAt: { [Op.between]: betweenSaturdayAndSunday().arr },
       },
-      order: [['createdAt', 'DESC']],
+      order: [
+        [
+          'createdAt',
+          req.query?.order ? toUpper(<string>req.query?.order) : 'DESC',
+        ],
+      ],
       include: [{ model: Wallets }, { model: Users }],
     })
 

@@ -5,5 +5,3 @@ export const betweenSaturdayAndSunday = (date = new Date()) => {
   const endDate = endOfWeek(date)
   return { arr: [startDate, endDate], startDate, endDate }
 }
-
-console.log(betweenSaturdayAndSunday().arr)
