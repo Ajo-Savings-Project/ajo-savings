@@ -5,6 +5,8 @@ import UpcomingActivities from 'components/compounds/UpcomingActivities/Upcoming
 
 import ChartWithUpcoming from './chartAndUpcoming'
 
+import MyGoals from 'components/compounds/Goal/MyGoals'
+// import TransactionHistory from 'components/compounds/transactionHistory/TransactionHistory'
 
 const HomePage = () => {
   const { firstName, lastName } = useAuth()
@@ -19,6 +21,7 @@ const HomePage = () => {
       <UpcomingActivities />
       <ChartWithUpcoming />
       <TransactionHistory />
+      <MyGoals />
     </>
   )
 }

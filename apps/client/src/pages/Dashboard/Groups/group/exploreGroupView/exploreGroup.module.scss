@@ -1,0 +1,102 @@
+.container {
+  max-width: 100%;
+
+  &First {
+    .heading {
+      .head {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      .sub {
+        margin-top: 10px;
+        .subOne {
+          display: flex;
+          gap: 3px;
+        }
+        .arrow {
+          margin-top: 5px;
+          &One,
+          &Two {
+            display: flex;
+            gap: 3px;
+            margin-top: 5px;
+          }
+        }
+      }
+    }
+
+    .join {
+      max-width: 80px;
+      height: 40px;
+      padding: 7px 0;
+      text-align: center;
+      background-color: #088ab2;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+  }
+
+  &Middle {
+    padding-top: 10px;
+
+    .image {
+      flex: 1;
+      width: 50%;
+      min-width: 100%;
+    }
+
+    .text {
+      flex: 1;
+      padding-top: 5px;
+    }
+  }
+
+  &Lastly {
+    margin-top: 40px;
+  }
+  @media (min-width: 48rem) {
+    max-width: 1000px;
+
+    &First {
+      display: flex;
+      justify-content: space-between;
+
+      .heading .head {
+        font-size: 32px;
+        margin-top: 10px;
+      }
+
+      .sub {
+        display: flex;
+        align-items: center;
+        .arrow {
+          display: flex;
+          gap: 10px;
+          padding: 10px;
+          background: #fff;
+          margin: 10px;
+
+          .arrowOne,
+          .arrowTwo {
+            gap: 10px;
+          }
+        }
+      }
+
+      .join {
+        padding-top: 10px;
+      }
+    }
+
+    &Middle .text {
+      margin-top: 20px;
+      letter-spacing: 0.15px;
+    }
+
+    &Lastly {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

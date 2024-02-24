@@ -1,0 +1,39 @@
+.firstCard {
+  max-width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px 0 10px 10px;
+  border-collapse: collapse;
+  display: block;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.leftCard {
+  display: flex;
+  padding: 10px;
+}
+
+.right {
+  margin-left: 80px;
+}
+
+.left,
+.right {
+  flex: 1;
+}
+
+.leftOne,
+.rightOne {
+  letter-spacing: 0.15px;
+}
+
+.rightOne {
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+.left {
+  min-width: 80px;
+}

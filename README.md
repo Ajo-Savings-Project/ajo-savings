@@ -53,3 +53,4 @@ git push origin HEAD -f
 
 1. navigate to server directory ("./apps/server")
 2. run yarn prod
+  

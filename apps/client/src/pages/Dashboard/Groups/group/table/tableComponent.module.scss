@@ -1,0 +1,113 @@
+.container {
+  margin-top: 10px;
+
+  .member {
+    padding-left: 20px;
+  }
+  .layout {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin-top: 8px;
+  }
+  .card {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: 'slot' 'name' 'performace';
+
+    .data {
+      display: flex;
+      justify-content: space-between;
+      text-align: start;
+      background: white;
+      border-bottom: 1px solid gray;
+
+      .type {
+        padding: 14px;
+        min-width: 100px;
+      }
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .card {
+      width: 100%;
+
+      .data {
+        display: flex;
+        justify-content: space-between;
+        text-align: start;
+      }
+    }
+
+    //   max-width: 100%;
+
+    //   &card{
+    //     // display: flex;
+    //     // justify-content: space-between;
+    //     // padding-left: 30px;
+
+    //     .body{
+    //       display: flex;
+    //       justify-content: space-between;
+    //       align-items: center;
+    //       gap: 5b0px;
+
+    //       .data {
+    //         display: flex;
+    //         gap: 20px;
+    //       }
+  }
+}
+
+// .heading{
+//   display: flex;
+//   justify-content: space-between;
+//   border-bottom: 1px solid #eee;
+//   padding: 10px;
+//  }
+
+//  .body{
+//   background: white;
+//   padding: 10px;
+
+//  .data{
+//   display: flex;
+//   justify-content: space-between;
+//   border-bottom: 1px solid #eee;
+//   padding: 10px;
+//  }
+
+// }
+
+// }
+
+// // @media (min-width: 48rem) {
+
+// //   max-width: 100%;
+
+// //   &card{
+// //     // display: flex;
+// //     // justify-content: space-between;
+// //     // padding-left: 30px;
+
+// //     .body{
+// //       display: flex;
+// //       justify-content: space-between;
+// //       align-items: center;
+// //       gap: 5b0px;
+
+// //       .data {
+// //         display: flex;
+// //         gap: 20px;
+// //       }
+// //     }
+
+// //     }
+
+// //   }
+
+//  }
