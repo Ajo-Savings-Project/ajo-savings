@@ -1,42 +1,41 @@
 import { Response } from 'express'
 import { Op } from 'sequelize'
-import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
+import { HTTP_STATUS_CODE } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Wallets, { walletType, ownerType } from '../../models/wallets'
-import Earnings from '../../models/walletEarnings'
-import { fundWalletSchema } from '../../utils/validators'
+import { fundGroupWalletSchema } from '../../utils/validators'
 import { v4 as uuidV4 } from 'uuid'
-
 import {
   transactionStatus,
   transactionType,
   action,
 } from '../../models/transactions'
 import { createTransaction } from '../../utils/helpers'
+import Earnings from '../../models/walletEarnings'
 
-export const fundPersonalSavingsWallet = async (
+export const fundPersonalGroupWallet = async (
   req: RequestExt,
   res: Response
 ) => {
   try {
     const { _user: user, _userId: userId, ...rest } = req.body
     const verifyAmount = { amount: rest.amount }
-    const reqData = fundWalletSchema.strict().safeParse(verifyAmount)
+    const reqData = fundGroupWalletSchema.strict().safeParse(verifyAmount)
 
     if (!reqData.success) {
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
         message: reqData.error.issues,
       })
     }
 
     const { amount } = reqData.data
 
-    const savingsWallet = await Wallets.findOne({
+    const groupSavingsWallet = await Wallets.findOne({
       where: {
         [Op.and]: [
           { ownerId: userId },
           { ownerType: ownerType.USER },
-          { type: walletType.SAVINGS },
+          { type: walletType.GROUP_WALLET },
         ],
       },
     })
@@ -50,79 +49,75 @@ export const fundPersonalSavingsWallet = async (
       },
     })
 
-    if (globalWallet && savingsWallet) {
+    if (globalWallet && groupSavingsWallet) {
       if (globalWallet.balance < amount) {
-        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
+        return res.status(HTTP_STATUS_CODE.FORBIDDEN).json({
           message: 'Insufficient funds in your global wallet',
         })
       }
-
       const newGlobalBalance = globalWallet.balance - amount
-      const newSavingsBalance = savingsWallet.balance + amount
+      const newGroupSavingsBalance = groupSavingsWallet.balance + amount
       const id = uuidV4()
 
       const newIncome = {
         id,
-        walletId: savingsWallet.id,
+        walletId: globalWallet.id,
         amount,
         date: new Date().toISOString(),
       }
-
-      const newEarningsRecord = await Earnings.create(newIncome)
-
+      const newEarnings = await Earnings.create(newIncome)
       globalWallet.balance = newGlobalBalance
       const newGlobalWallet = await globalWallet.save()
 
-      savingsWallet.balance = newSavingsBalance
-      const newSavingsWallet = await savingsWallet.save()
+      groupSavingsWallet.balance = newGroupSavingsBalance
+      const newGroupSavingsWallet = await groupSavingsWallet.save()
 
-      if (newSavingsWallet && newGlobalWallet) {
+      if (newGroupSavingsWallet && newGlobalWallet) {
         //create successful debit  transaction
-        const globalTransactionDetails = {
+        const globalGroupTransactionDetails = {
           walletId: newGlobalWallet.id,
           ownerId: userId,
-          name: `${user.firstName} ${user.lastName}`,
           amount: amount,
+          name: `${user.firstName} ${user.lastName}`,
           status: transactionStatus.SUCCESSFUL,
           action: action.DEBIT,
           type: transactionType.INTERNAL_TRANSFER,
-          receiverId: newSavingsWallet.id,
+          receiverId: newGroupSavingsWallet.id,
         }
-        const globalDebitTransaction = await createTransaction(
-          globalTransactionDetails
+        const groupGlobalDebit = await createTransaction(
+          globalGroupTransactionDetails
         )
-
         //create successfull credit transaction
-        const savingsTransDetails = {
-          walletId: newSavingsWallet.id,
+        const savingsGroupTransDetails = {
+          walletId: newGroupSavingsWallet.id,
           ownerId: userId,
-          name: `${user.firstName + user.lastName}`,
           amount: amount,
+          name: `${user.firstName}${user.lastName}`,
           status: transactionStatus.SUCCESSFUL,
           action: action.CREDIT,
           type: transactionType.INTERNAL_TRANSFER,
           senderId: newGlobalWallet.id,
         }
-        const savingsCreditTransaction =
-          await createTransaction(savingsTransDetails)
+        const groupSavingsTrans = await createTransaction(
+          savingsGroupTransDetails
+        )
 
-        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+        return res.status(HTTP_STATUS_CODE.SUCCESS).json({
           message: `Transaction successful`,
           data: {
-            newSavingsWallet,
+            newGroupSavingsWallet,
             newGlobalWallet,
-            globalDebitTransaction,
-            savingsCreditTransaction,
-            newEarningsRecord,
+            groupSavingsTrans,
+            groupGlobalDebit,
+            newEarnings,
           },
         })
       }
     }
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res, {
-      message: 'Your global wallet and savings wallet are not found',
-    })
   } catch (error) {
     console.log(error)
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
+      message: 'Something went wrong, our team has been notified.',
+    })
   }
 }

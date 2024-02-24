@@ -8,6 +8,7 @@ import Settings from './settings'
 import GroupMembers from './groupMembers'
 import GroupTransactions from './groupTransactions'
 import GroupContributors from './contributorsInGroup'
+// import Earnings from "./walletEarnings"
 
 // Define your associations here
 Wallets.hasMany(Transactions, { foreignKey: 'walletId' })
@@ -50,3 +51,5 @@ Wallets.belongsTo(Users, { foreignKey: 'ownerId' })
 Wallets.belongsTo(Groups, { foreignKey: 'ownerId' })
 
 Wallets.belongsTo(Savings, { foreignKey: 'ownerId' })
+// Wallets.hasMany(Earnings, { foreignKey: 'walletId' });
+// Earnings.belongsTo(Wallets, { foreignKey: 'walletId' });

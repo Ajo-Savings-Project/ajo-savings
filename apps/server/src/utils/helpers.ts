@@ -159,6 +159,8 @@ export interface TransactionDetails {
   type: string
   receiverId?: string
   senderId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export const createTransaction = async (details: TransactionDetails) => {
@@ -166,13 +168,13 @@ export const createTransaction = async (details: TransactionDetails) => {
     id: v4(),
     walletId: details.walletId,
     ownerId: details.ownerId,
-    name: details.name,
     amount: details.amount,
     status: details.status,
     action: details.action,
     type: details.type,
     receiverId: details.receiverId,
     senderId: details.senderId,
+    name: details.name,
   })
   return transaction
 }
