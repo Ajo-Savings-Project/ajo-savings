@@ -1,4 +1,5 @@
 import { Response } from 'express'
+import _ from 'lodash'
 import { prop, pick, map, pipe, mergeAll, toUpper } from 'rambda'
 import { Op } from 'sequelize'
 import { RequestExt } from '../../middleware/authorization/authentication'
@@ -40,11 +41,11 @@ const publicTransactionFields = pick([
   'User',
 ])
 
-const objKeysToLower = (obj: unknown | Record<string, unknown>) => {
+const objKeysToCamelCase = (obj: unknown | Record<string, unknown>) => {
   const newObj: Record<string, unknown> = {}
   for (const key in obj as object) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      newObj[key.toLowerCase()] = (obj as Record<string, unknown>)[key]
+      newObj[_.camelCase(key)] = (obj as Record<string, unknown>)[key]
     }
   }
   return newObj
@@ -55,7 +56,7 @@ const resolveTransactionResponse = map(
     publicTransactionFields,
     publicWalletFields,
     publicUserFields,
-    objKeysToLower
+    objKeysToCamelCase
   )
 )
 
