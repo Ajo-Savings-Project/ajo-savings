@@ -50,7 +50,7 @@ export const HTTP_STATUS_HELPER = {
   },
   [HTTP_STATUS_CODE.NOT_FOUND]: function (
     res: Response,
-    obj: Record<string, unknown>
+    obj: Record<string, unknown> = {}
   ) {
     res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
       message: 'Not Found',
@@ -59,13 +59,13 @@ export const HTTP_STATUS_HELPER = {
   },
   [HTTP_STATUS_CODE.CONFLICT]: function (
     res: Response,
-    obj: Record<string, unknown>
+    obj: Record<string, unknown> = {}
   ) {
     res.status(HTTP_STATUS_CODE.CONFLICT).json({ message: '', ...obj })
   },
   [HTTP_STATUS_CODE.SUCCESS]: function (
     res: Response,
-    obj: Record<string, unknown>
+    obj: Record<string, unknown> = {}
   ) {
     res.status(HTTP_STATUS_CODE.SUCCESS).json({
       message: 'Success',
