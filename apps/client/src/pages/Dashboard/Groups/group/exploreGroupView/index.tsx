@@ -2,8 +2,8 @@ import { Button, Text } from 'components'
 import styles from './exploreGroup.module.scss'
 import frame from './images/Frame.svg'
 import rightless from './images/rightless.svg'
-import TableComponent from '../table'
-import CardComponent from '../groupCard'
+import TableComponent from '../Table'
+import CardComponent from '../GroupCard'
 // import TableComponent from '../table/TableComponent'
 
 const textArray = [
