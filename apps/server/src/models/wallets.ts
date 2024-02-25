@@ -12,8 +12,8 @@ const TABLE_NAME = 'Wallet'
 // https://sequelize.org/docs/v6/other
 
 export const walletType = {
-  GLOBAL: 'global',
-  SAVINGS: 'savings',
+  GLOBAL: 'GLOBAL',
+  SAVINGS: 'SAVINGS',
 } as const
 export type WalletType = (typeof walletType)[keyof typeof walletType]
 

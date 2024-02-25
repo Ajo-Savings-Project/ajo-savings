@@ -1,5 +1,9 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
+import {
+  transactionActionType,
+  transactionWalletType,
+} from '../../models/transactions'
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
 
@@ -93,10 +97,14 @@ export const fundWalletSchema = z.object({
   amount: z.number().refine((value) => value > 0, {
     message: 'amount must be greater than zero',
   }),
-})
-
-export const fundGroupWalletSchema = z.object({
-  amount: z.number().refine((value) => value > 0, {
-    message: 'amount must be greater than zero',
-  }),
+  walletType: z.union([
+    z.literal(transactionWalletType.GLOBAL),
+    z.literal(transactionWalletType.SAVINGS),
+    z.literal(transactionWalletType.GROUP),
+  ]),
+  groupId: z.string(),
+  transactionType: z.union([
+    z.literal(transactionActionType.CREDIT),
+    z.literal(transactionActionType.DEBIT),
+  ]),
 })

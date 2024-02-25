@@ -1,11 +1,10 @@
 import {
-  Model,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  Model,
 } from 'sequelize'
 import { db } from '../config'
-import Groups from './groups'
 
 const TABLE_NAME = 'GroupWallet'
 
@@ -40,10 +39,5 @@ GroupWallet.init(
     timestamps: true,
   }
 )
-
-// Associations
-GroupWallet.belongsTo(Groups, {
-  foreignKey: 'ownerId',
-})
 
 export default GroupWallet

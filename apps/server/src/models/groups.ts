@@ -15,9 +15,9 @@ const TABLE_NAME = 'Groups'
  * @type {{WEEKLY: string, DAILY: string, MONTHLY: string}}
  */
 export const frequencyType = {
-  DAILY: 'daily',
-  WEEKLY: 'weekly',
-  MONTHLY: 'monthly',
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
 }
 export type FrequencyType = (typeof frequencyType)[keyof typeof frequencyType]
 

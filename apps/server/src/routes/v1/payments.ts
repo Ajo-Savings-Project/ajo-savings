@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { fundPersonalSavingsWallet } from '../../controllers/paymentsController'
+import {
+  fundGroupWallet,
+  fundWallet,
+} from '../../controllers/paymentsController/fundWallet'
 import { authorizationMiddleware } from '../../middleware/authorization/authentication'
-import { fundPersonalGroupWallet } from '../../controllers/paymentsController/fundGroupSavingsWallet'
 
 const router = Router()
 /**
@@ -69,11 +71,11 @@ const router = Router()
  *               example:
  *                 message: "Something went wrong, our team has been notified."
  */
-router.post(
-  '/fundPersonalWallet',
-  authorizationMiddleware,
-  fundPersonalSavingsWallet
-)
+// router.post(
+//   '/fundPersonalWallet',
+//   authorizationMiddleware,
+//   fundPersonalSavingsWallet
+// )
 
 /**
  * @swagger
@@ -162,10 +164,13 @@ router.post(
  *               example:
  *                 message: "Something went wrong, our team has been notified."
  */
-router.post(
-  '/fundpersonalgroupwallet',
-  authorizationMiddleware,
-  fundPersonalGroupWallet
-)
+// router.post(
+//   '/fundpersonalgroupwallet',
+//   authorizationMiddleware,
+//   fundPersonalGroupWallet
+// )
+
+router.post('/fundWallet', authorizationMiddleware, fundWallet)
+router.post('/fundGroupWallet', authorizationMiddleware, fundGroupWallet)
 
 export default router

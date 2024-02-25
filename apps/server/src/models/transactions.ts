@@ -1,51 +1,64 @@
 import {
-  Model,
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
-  CreationOptional,
+  Model,
 } from 'sequelize'
 import { db } from '../config'
-import Wallets from './wallets'
-import Users from './users'
+import Groups from './groups'
+import { walletType } from './wallets'
 
 const TABLE_NAME = 'Transactions'
 
-export const action = {
-  DEBIT: 'Debit',
-  CREDIT: 'Credit',
-} as const
+export const transactionWalletType = { ...walletType, GROUP: 'GROUP' } as const
+export type TransactionWalletType =
+  (typeof transactionWalletType)[keyof typeof transactionWalletType]
 
-export const transactionStatus = {
-  SUCCESSFUL: 'Successful',
-  PENDING: 'Pending',
-  UNSUCCESSFUL: 'Unsuccessful',
+export const transactionActionType = {
+  DEBIT: 'DEBIT',
+  CREDIT: 'CREDIT',
 } as const
+export type TransactionActionType =
+  (typeof transactionActionType)[keyof typeof transactionActionType]
 
-export const transactionType = {
-  GLOBAL_TRANSACTIONS: 'Global transactions', //Transactions between global wallet and external source/destination
-  SAVINGS_TRANSACTIONS: 'Savings transcations', //Transactions between personal savings wallet and all goals wallets.
-  GROUP_TRANSACTIONS: 'Group Wallet Transactions', //Transactions between personal group wallet and all groups wallets.
-  INTERNAL_TRANSFER: 'Internal funding', // Transactions between global wallet and other personal wallets(savings, group etc.)
+export const transactionStatusType = {
+  SUCCESSFUL: 'SUCCESSFUL',
+  PENDING: 'PENDING',
+  UNSUCCESSFUL: 'UNSUCCESSFUL',
 } as const
+export type TransactionStatusType =
+  (typeof transactionStatusType)[keyof typeof transactionStatusType]
+
+export const transactionTransferType = {
+  //Transactions between global wallet and external source/destination
+  GLOBAL_TRANSACTIONS: 'GLOBAL_TRANSACTIONS',
+  //Transactions between personal savings wallet and all goals wallets.
+  SAVINGS_TRANSACTIONS: 'SAVINGS_TRANSACTIONS',
+  //Transactions between personal group wallet and all groups wallets.
+  GROUP_TRANSACTIONS: 'GROUP_TRANSACTIONS',
+  // Transactions between global wallet and other personal wallets(savings, group etc.)
+  INTERNAL_TRANSFERS: 'INTERNAL_TRANSFERS',
+} as const
+export type TransactionTransferType =
+  (typeof transactionTransferType)[keyof typeof transactionTransferType]
 
 class Transactions extends Model<
   InferAttributes<Transactions>,
   InferCreationAttributes<Transactions>
 > {
-  static transaction: never
   declare id: string
-  declare walletId: string
-  declare ownerId: string
+  declare transactionId: string
+  declare walletType: TransactionWalletType
+  declare transferType: TransactionTransferType
+  declare balance: number
   declare amount: number
-  declare name: string
-  declare status: string
-  declare action: string
-  declare type: string
+  declare previousBalance: number
+  declare status: TransactionStatusType
+  declare description: CreationOptional<string>
+  declare action: TransactionActionType
   declare receiverId: CreationOptional<string>
   declare senderId: CreationOptional<string>
-  declare createdAt: CreationOptional<string>
-  declare updatedAt?: CreationOptional<string>
 }
 
 Transactions.init(
@@ -55,73 +68,63 @@ Transactions.init(
       primaryKey: true,
       allowNull: false,
     },
-    walletId: {
-      type: DataTypes.UUID,
-      references: {
-        model: Wallets,
-        key: 'id',
-      },
-    },
-
-    ownerId: {
-      type: DataTypes.UUID,
-      references: {
-        model: Users,
-        key: 'id',
-      },
-    },
     amount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    balance: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    previousBalance: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    walletType: {
+      type: DataTypes.ENUM(...Object.values(transactionWalletType)),
+      allowNull: false,
+    },
+    transactionId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    transferType: {
+      type: DataTypes.ENUM(...Object.values(transactionTransferType)),
+      allowNull: false,
+    },
     status: {
-      type: DataTypes.ENUM(...Object.values(transactionStatus)),
+      type: DataTypes.ENUM(...Object.values(transactionStatusType)),
       allowNull: false,
     },
     action: {
-      type: DataTypes.ENUM(...Object.values(action)),
+      type: DataTypes.ENUM(...Object.values(transactionActionType)),
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM(...Object.values(transactionType)),
-      allowNull: false,
-    },
-    name: {
+    description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     receiverId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    senderId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.UUID,
       allowNull: false,
     },
-    updatedAt: {
-      type: DataTypes.DATE,
+    senderId: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
   },
-
   {
     timestamps: true,
     sequelize: db,
     modelName: TABLE_NAME,
   }
 )
-Transactions.belongsTo(Wallets, {
-  foreignKey: 'walletId',
-  as: 'wallets',
-})
 
-Transactions.belongsTo(Users, {
-  foreignKey: 'ownerId',
-  as: 'users',
+Groups.hasMany(Transactions, {
+  foreignKey: 'receiverId',
+  as: 'transactions',
+  constraints: false,
+  onDelete: 'CASCADE',
 })
 
 export default Transactions

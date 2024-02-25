@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import _ from 'lodash'
+import _, { toUpper } from 'lodash'
 import { mergeAll, pick, prop } from 'rambda'
 import { ENV } from '../config'
-import { v4 } from 'uuid'
-import Transactions from '../models/transactions'
 
 export const passwordUtils = {
   length: 5,
@@ -120,6 +118,13 @@ export const generateLongString = (length: number) => {
   return result
 }
 
+export const generateTransactionString = () => {
+  const date = new Date()
+  return toUpper(
+    `AJO-${generateLongString(4)}-${date.getFullYear()}-${generateLongString(8)}`
+  )
+}
+
 export class DateHandler {
   static getDaysInMonth = (year: number, month: number): number => {
     return new Date(year, month + 1, 0).getDate()
@@ -149,36 +154,6 @@ export class DateHandler {
     const currentDate = new Date()
     return date < currentDate
   }
-}
-
-export interface TransactionDetails {
-  walletId: string
-  ownerId: string
-  name: string
-  amount: number
-  status: string
-  action: string
-  type: string
-  receiverId?: string
-  senderId?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export const createTransaction = async (details: TransactionDetails) => {
-  const transaction = await Transactions.create({
-    id: v4(),
-    walletId: details.walletId,
-    ownerId: details.ownerId,
-    amount: details.amount,
-    status: details.status,
-    action: details.action,
-    type: details.type,
-    receiverId: details.receiverId,
-    senderId: details.senderId,
-    name: details.name,
-  })
-  return transaction
 }
 
 export const objKeysToCamelCase = (obj: unknown | Record<string, unknown>) => {

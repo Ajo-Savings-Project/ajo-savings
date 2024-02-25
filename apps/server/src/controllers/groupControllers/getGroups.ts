@@ -5,6 +5,7 @@ import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import GroupMembers from '../../models/groupMembers'
 import Groups from '../../models/groups'
+import Transactions from '../../models/transactions'
 import Users from '../../models/users'
 import { withPaginate } from '../../utils/hocs/withPaginate'
 import { joinGroupSchema } from '../../utils/validators'
@@ -22,27 +23,37 @@ const userAttributes = ['firstName', 'email', 'lastName', 'id']
  */
 export const getGroups = async (req: Request, res: Response) => {
   const { _userId } = req.body
-  const result = await withPaginate(Groups, { ...req.query })({
-    where: { [Op.not]: { ownerId: _userId } },
-    include: [
-      {
-        model: GroupMembers,
-        as: 'members',
-        include: [
-          {
-            model: Users,
-            as: 'user',
-            attributes: ['profilePic', 'id', 'firstName'],
-          },
-        ],
-      },
-      { model: Users, as: 'user', attributes: userAttributes },
-    ],
-  })
+  try {
+    const result = await withPaginate(Groups, { ...req.query })({
+      where: { [Op.not]: { ownerId: _userId } },
+      include: [
+        {
+          model: GroupMembers,
+          as: 'members',
+          include: [
+            {
+              model: Users,
+              as: 'user',
+              attributes: ['profilePic', 'id', 'firstName'],
+            },
+          ],
+        },
+        { model: Users, as: 'user', attributes: userAttributes },
+        {
+          model: Transactions,
+          as: 'transactions',
+          required: false,
+        },
+      ],
+    })
 
-  return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-    ...result,
-  })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      ...result,
+    })
+  } catch (e) {
+    console.log(e)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
+  }
 }
 
 /**
