@@ -74,4 +74,6 @@ GroupMembers.belongsTo(Users, {
   as: 'user',
 })
 
+Groups.hasMany(GroupMembers, { foreignKey: 'groupId', as: 'members' }) // One-to-many relationship
+
 export default GroupMembers

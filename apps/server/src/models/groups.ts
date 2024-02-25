@@ -10,8 +10,6 @@ import Users from './users'
 
 const TABLE_NAME = 'Groups'
 
-// https://sequelize.org/docs/v6/other
-
 /**
  * Supported frequency types
  * @type {{WEEKLY: string, DAILY: string, MONTHLY: string}}

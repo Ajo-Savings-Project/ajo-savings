@@ -24,7 +24,20 @@ export const getGroups = async (req: Request, res: Response) => {
   const { _userId } = req.body
   const result = await withPaginate(Groups, { ...req.query })({
     where: { [Op.not]: { ownerId: _userId } },
-    include: [{ model: Users, as: 'user', attributes: userAttributes }],
+    include: [
+      {
+        model: GroupMembers,
+        as: 'members',
+        include: [
+          {
+            model: Users,
+            as: 'user',
+            attributes: ['profilePic', 'id', 'firstName'],
+          },
+        ],
+      },
+      { model: Users, as: 'user', attributes: userAttributes },
+    ],
   })
 
   return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
