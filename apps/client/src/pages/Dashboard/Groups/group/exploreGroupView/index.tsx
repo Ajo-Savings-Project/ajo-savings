@@ -3,7 +3,7 @@ import styles from './exploreGroup.module.scss'
 import frame from './images/Frame.svg'
 import rightless from './images/rightless.svg'
 import TableComponent from '../groupTable'
-import CardComponent from '../groupTable'
+import CardComponent from '../groupCard'
 
 const textArray = [
   'Bros/Sis, no dull yourself for dis service year money mata Join Lagos Corp Members Thrift Saving Group sharp-sharp!We go secure your money, make am grow well-well, and support each other for dis money journey.Learn money sense, plan for your future, and enjoy the benefits of our community. No time to waste, come join us now! Contact [07067482633].Make we flex our money together!',
