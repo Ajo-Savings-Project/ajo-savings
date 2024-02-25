@@ -1,33 +1,14 @@
 import { Response } from 'express'
-import _ from 'lodash'
-import { prop, pick, map, pipe, mergeAll } from 'rambda'
+import { map, pick, pipe } from 'rambda'
 import { Op } from 'sequelize'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Transactions from '../../models/transactions'
-import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
-import Wallets from '../../models/wallets'
 import Users from '../../models/users'
+import Wallets from '../../models/wallets'
 import { betweenSaturdayAndSunday } from '../../utils/betweenSatSun'
+import { publicUserFields, publicWalletFields } from '../../utils/helpers'
 import { withPaginate } from '../../utils/hocs/withPaginate'
-
-const pickFieldsWithKey =
-  (key: string, propsToPick: string[]) => (obj: unknown | object) => {
-    const modData = pick(propsToPick)(prop(key, obj))
-    return mergeAll([obj as object, { [key]: modData }])
-  }
-
-const publicUserFields = pickFieldsWithKey('User', [
-  'id',
-  'email',
-  'firstName',
-  'lastName',
-])
-
-const publicWalletFields = pickFieldsWithKey('Wallet', [
-  'id',
-  'balance',
-  'type',
-])
 
 const publicTransactionFields = pick([
   'id',
@@ -41,23 +22,8 @@ const publicTransactionFields = pick([
   'User',
 ])
 
-const objKeysToCamelCase = (obj: unknown | Record<string, unknown>) => {
-  const newObj: Record<string, unknown> = {}
-  for (const key in obj as object) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      newObj[_.camelCase(key)] = (obj as Record<string, unknown>)[key]
-    }
-  }
-  return newObj
-}
-
 const resolveTransactionResponse = map(
-  pipe(
-    publicTransactionFields,
-    publicWalletFields,
-    publicUserFields,
-    objKeysToCamelCase
-  )
+  pipe(publicTransactionFields, publicWalletFields, publicUserFields)
 )
 
 export const getTransactionHistory = async (req: RequestExt, res: Response) => {
@@ -73,7 +39,10 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
         // Query the database to get data within the current week
         createdAt: { [Op.between]: betweenSaturdayAndSunday().arr },
       },
-      include: [{ model: Wallets }, { model: Users }],
+      include: [
+        { model: Wallets, as: 'wallets' },
+        { model: Users, as: 'users' },
+      ],
     })
 
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {

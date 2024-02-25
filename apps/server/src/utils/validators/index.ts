@@ -85,6 +85,10 @@ export const createGroupSchema = z.object({
   groupImage: z.string().optional(),
 })
 
+export const joinGroupSchema = z.object({
+  groupId: z.string(),
+})
+
 export const fundWalletSchema = z.object({
   amount: z.number().refine((value) => value > 0, {
     message: 'amount must be greater than zero',

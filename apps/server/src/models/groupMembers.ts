@@ -66,10 +66,12 @@ GroupMembers.init(
 
 GroupMembers.belongsTo(Groups, {
   foreignKey: 'groupId',
+  as: 'group',
 })
 
 GroupMembers.belongsTo(Users, {
   foreignKey: 'userId',
+  as: 'user',
 })
 
 export default GroupMembers

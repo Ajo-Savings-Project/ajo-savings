@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import _ from 'lodash'
+import { mergeAll, pick, prop } from 'rambda'
 import { ENV } from '../config'
 import { v4 } from 'uuid'
 import Transactions from '../models/transactions'
@@ -178,3 +180,32 @@ export const createTransaction = async (details: TransactionDetails) => {
   })
   return transaction
 }
+
+export const objKeysToCamelCase = (obj: unknown | Record<string, unknown>) => {
+  const newObj: Record<string, unknown> = {}
+  for (const key in obj as object) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[_.camelCase(key)] = (obj as Record<string, unknown>)[key]
+    }
+  }
+  return newObj
+}
+
+export const pickFieldsWithKey =
+  (key: string, propsToPick: string[]) => (obj: unknown | object) => {
+    const modData = pick(propsToPick)(prop(key, obj))
+    return mergeAll([obj as object, { [key]: modData }])
+  }
+
+export const publicUserFields = pickFieldsWithKey('user', [
+  'id',
+  'email',
+  'firstName',
+  'lastName',
+])
+
+export const publicWalletFields = pickFieldsWithKey('wallet', [
+  'id',
+  'balance',
+  'type',
+])
