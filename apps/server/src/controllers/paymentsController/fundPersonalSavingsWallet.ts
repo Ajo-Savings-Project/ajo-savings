@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { walletType, ownerType } from '../../models/wallets'
+import Wallets, { walletType } from '../../models/wallets'
 import Earnings from '../../models/walletEarnings'
 import { fundWalletSchema } from '../../utils/validators'
 import { v4 as uuidV4 } from 'uuid'
@@ -33,20 +33,12 @@ export const fundPersonalSavingsWallet = async (
 
     const savingsWallet = await Wallets.findOne({
       where: {
-        [Op.and]: [
-          { ownerId: userId },
-          { ownerType: ownerType.USER },
-          { type: walletType.SAVINGS },
-        ],
+        [Op.and]: [{ ownerId: userId }, { type: walletType.SAVINGS }],
       },
     })
     const globalWallet = await Wallets.findOne({
       where: {
-        [Op.and]: [
-          { ownerId: userId },
-          { ownerType: ownerType.USER },
-          { type: walletType.GLOBAL },
-        ],
+        [Op.and]: [{ ownerId: userId }, { type: walletType.GLOBAL }],
       },
     })
 

@@ -5,29 +5,20 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
-import Users from './users'
+import Groups from './groups'
 
-const TABLE_NAME = 'Wallet'
+const TABLE_NAME = 'GroupWallet'
 
-// https://sequelize.org/docs/v6/other
-
-export const walletType = {
-  GLOBAL: 'global',
-  SAVINGS: 'savings',
-} as const
-export type WalletType = (typeof walletType)[keyof typeof walletType]
-
-class Wallets extends Model<
-  InferAttributes<Wallets>,
-  InferCreationAttributes<Wallets>
+class GroupWallet extends Model<
+  InferAttributes<GroupWallet>,
+  InferCreationAttributes<GroupWallet>
 > {
   declare id: string
   declare ownerId: string
   declare balance: number
-  declare type: WalletType
 }
 
-Wallets.init(
+GroupWallet.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -42,10 +33,6 @@ Wallets.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM(...Object.values(walletType)),
-      allowNull: false,
-    },
   },
   {
     sequelize: db,
@@ -55,10 +42,8 @@ Wallets.init(
 )
 
 // Associations
-Wallets.belongsTo(Users, {
+GroupWallet.belongsTo(Groups, {
   foreignKey: 'ownerId',
-  constraints: false,
-  as: 'user',
 })
 
-export default Wallets
+export default GroupWallet

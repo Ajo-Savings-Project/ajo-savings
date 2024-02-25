@@ -1,16 +1,14 @@
+import { v2 as cloudinary } from 'cloudinary'
 import { Response } from 'express'
 import _ from 'lodash'
-import { RequestExt } from '../../middleware/authorization/authentication'
-import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { v4 } from 'uuid'
-import Groups, { FrequencyType } from '../../models/groups'
+import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
+import { RequestExt } from '../../middleware/authorization/authentication'
 import GroupMembers from '../../models/groupMembers'
-import GroupTransactions from '../../models/groupTransactions'
-import GroupContributors from '../../models/contributorsInGroup'
+import Groups, { FrequencyType } from '../../models/groups'
+import GroupWallet from '../../models/groupWallet'
 import Wallets from '../../models/wallets'
-import { transactionType } from '../../models/transactions'
 import { createGroupSchema } from '../../utils/validators'
-import { v2 as cloudinary } from 'cloudinary'
 import { createNewMember } from './helpers'
 
 export const createGroup = async (req: RequestExt, res: Response) => {
@@ -31,18 +29,6 @@ export const createGroup = async (req: RequestExt, res: Response) => {
   const groupId = v4()
 
   try {
-    const adminMember = await createNewMember({
-      userId,
-      adminId: userId,
-      options: { isAdmin: true },
-    })
-
-    if (!adminMember) {
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {})
-    }
-
-    await GroupMembers.create(adminMember)
-
     // Move the upload operation to background task
     let groupImage = 'https://picsum.photos/200/300'
     if (req.file) {
@@ -58,7 +44,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       id: groupId,
       title: _data.groupName,
       description: _data.purposeAndGoals,
-      adminId: userId,
+      ownerId: userId,
       recurringAmount: _data.recurringAmount,
       groupImage: groupImage,
       amountContributedWithinFrequency: 0,
@@ -71,43 +57,27 @@ export const createGroup = async (req: RequestExt, res: Response) => {
 
     const createdGroup = await Groups.create(newGroup)
 
-    const groupTransactions = {
-      id: v4(),
-      groupId: createdGroup.id,
-      amount: 0,
-      transactionType: transactionType.GROUP_TRANSACTIONS,
-      dateInitiated: new Date().toISOString(),
-    }
+    // associate user to group
+    await GroupMembers.create(
+      createNewMember({
+        userId,
+        groupId,
+      })
+    )
 
-    await GroupTransactions.create(groupTransactions)
-
-    const groupContributor = {
-      contributorsId: v4(),
-      groupId: createdGroup.id,
-    }
-
-    await GroupContributors.create(groupContributor)
-
-    const groupWallet = await Wallets.create({
+    await GroupWallet.create({
       id: v4(),
       ownerId: groupId,
-      ownerType: 'group',
       balance: 0,
-      type: 'group',
     })
 
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-      message: 'Group created successfully',
-      group: createdGroup,
-      wallet: groupWallet,
+      data: createdGroup,
     })
   } catch (error) {
-    console.log(error)
     await Wallets.destroy({ where: { ownerId: groupId } })
     await Groups.destroy({ where: { id: groupId } })
-    await GroupMembers.destroy({ where: { adminId: userId } })
-    await GroupTransactions.destroy({ where: { groupId: groupId } })
-    await GroupContributors.destroy({ where: { groupId: groupId } })
+    await GroupMembers.destroy({ where: { groupId } })
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }

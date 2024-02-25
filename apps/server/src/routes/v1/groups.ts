@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createGroup } from '../../controllers/groupControllers'
+import { createGroup, getGroups } from '../../controllers/groupControllers'
 import { authorizationMiddleware } from '../../middleware/authorization/authentication'
 import { upload } from '../../middleware/upload'
 
@@ -141,4 +141,6 @@ router.post(
   upload.single('groupImage'),
   createGroup
 )
+
+router.get('/getGroups', authorizationMiddleware, getGroups)
 export default router

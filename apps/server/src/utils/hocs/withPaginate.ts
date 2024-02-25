@@ -4,6 +4,8 @@ import { FindAndCountOptions } from 'sequelize/types/model'
 interface PaginationI {
   page?: number
   limit?: number
+  order?: string | 'ASC' | 'DESC'
+  orderBy?: string
 }
 
 export const withPaginate =
@@ -21,6 +23,7 @@ export const withPaginate =
     const offset = (page - 1) * limit
 
     const data = await model.findAndCountAll({
+      order: [[pagination.orderBy ?? 'createdAt', pagination.order ?? 'DESC']],
       ...options,
       offset,
       limit,
@@ -29,6 +32,7 @@ export const withPaginate =
     return {
       data: data.rows as M[],
       totalPages,
-      currentPage: page,
+      currentPage: +page,
+      count: data.count,
     }
   }

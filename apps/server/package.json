@@ -5,11 +5,14 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint . --fix --report-unused-disable-directives --max-warnings 0",
+    "redis": "docker run -d -p 6379:6379 redis",
+    "seed": "NODE_ENV=development npx ts-node ./src/scripts/seed.ts",
     "dev": "NODE_ENV=development nodemon",
     "prod": "NODE_ENV=production nodemon",
     "build": "tsc -w"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.6",
     "@types/express": "^4.17.21",

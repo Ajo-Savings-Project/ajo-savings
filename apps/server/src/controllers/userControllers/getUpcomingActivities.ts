@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Groups, { frequency } from '../../models/groups'
+import Groups, { frequencyType } from '../../models/groups'
 import GroupMembers from '../../models/groupMembers'
 import { DateHandler } from '../../utils/helpers'
 
@@ -29,7 +29,7 @@ export const getUpcomingUserActivities = async (
         },
       ],
       where: {
-        [Op.or]: [{ adminId: userId }, { '$members.userId$': userId }],
+        [Op.or]: [{ ownerId: userId }, { '$members.userId$': userId }],
       },
     })
 
@@ -40,7 +40,7 @@ export const getUpcomingUserActivities = async (
       const groupName = group.title
       const image = group.groupImage
 
-      if (group.frequency === frequency.DAILY) {
+      if (group.frequency === frequencyType.DAILY) {
         const daysInMonth = DateHandler.getDaysInMonth(
           currentYear,
           currentMonth
@@ -58,7 +58,7 @@ export const getUpcomingUserActivities = async (
             contributions.push(contributionDetails)
           }
         }
-      } else if (group.frequency === frequency.WEEKLY) {
+      } else if (group.frequency === frequencyType.WEEKLY) {
         let currentWeekEnd = DateHandler.getNextFriday(currentDate)
 
         while (currentWeekEnd <= lastDayOfMonth) {
@@ -76,7 +76,7 @@ export const getUpcomingUserActivities = async (
 
           currentWeekEnd = new Date(currentWeekEnd.getTime() + oneWeek)
         }
-      } else if (group.frequency === frequency.MONTHLY) {
+      } else if (group.frequency === frequencyType.MONTHLY) {
         const contributionDetails = {
           groupName,
           recurringAmount,

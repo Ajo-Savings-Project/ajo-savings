@@ -2,7 +2,8 @@ import { Response } from 'express'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
-import Wallets, { walletType, ownerType } from '../../models/wallets'
+import GroupWallet from '../../models/groupWallet'
+import Wallets, { walletType } from '../../models/wallets'
 import { fundGroupWalletSchema } from '../../utils/validators'
 import { v4 as uuidV4 } from 'uuid'
 import {
@@ -30,22 +31,13 @@ export const fundPersonalGroupWallet = async (
 
     const { amount } = reqData.data
 
-    const groupSavingsWallet = await Wallets.findOne({
-      where: {
-        [Op.and]: [
-          { ownerId: userId },
-          { ownerType: ownerType.USER },
-          { type: walletType.GROUP_WALLET },
-        ],
-      },
+    const groupSavingsWallet = await GroupWallet.findOne({
+      where: { ownerId: userId },
     })
+
     const globalWallet = await Wallets.findOne({
       where: {
-        [Op.and]: [
-          { ownerId: userId },
-          { ownerType: ownerType.USER },
-          { type: walletType.GLOBAL },
-        ],
+        [Op.and]: [{ ownerId: userId }, { type: walletType.GLOBAL }],
       },
     })
 

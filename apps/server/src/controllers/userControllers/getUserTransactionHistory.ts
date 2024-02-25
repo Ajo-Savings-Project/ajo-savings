@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import _ from 'lodash'
-import { prop, pick, map, pipe, mergeAll, toUpper } from 'rambda'
+import { prop, pick, map, pipe, mergeAll } from 'rambda'
 import { Op } from 'sequelize'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Transactions from '../../models/transactions'
@@ -73,12 +73,6 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
         // Query the database to get data within the current week
         createdAt: { [Op.between]: betweenSaturdayAndSunday().arr },
       },
-      order: [
-        [
-          'createdAt',
-          req.query?.order ? toUpper(<string>req.query?.order) : 'DESC',
-        ],
-      ],
       include: [{ model: Wallets }, { model: Users }],
     })
 

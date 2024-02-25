@@ -84,9 +84,7 @@ export const registerUser = async (req: Request, res: Response) => {
         otp,
         firstName: user.firstName,
       })
-      bgJobs.setupGlobalWallet({ userId: user.id })
-      bgJobs.setupPersonalGroupWallet({ userId: user.id })
-      bgJobs.setupPersonalSavingsWallet({ userId: user.id })
+      bgJobs.setupWallets({ userId: user.id })
       bgJobs.setupSettings({ userId: user.id })
 
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
