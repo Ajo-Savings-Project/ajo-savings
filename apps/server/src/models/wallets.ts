@@ -6,24 +6,16 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
-import Groups from './groups'
 
-const TABLE_NAME = 'Wallets'
+const TABLE_NAME = 'Wallet'
 
 // https://sequelize.org/docs/v6/other
 
 export const walletType = {
-  GLOBAL: 'global',
-  SAVINGS: 'savings',
-  GROUP_WALLET: 'group',
+  GLOBAL: 'GLOBAL',
+  SAVINGS: 'SAVINGS',
 } as const
 export type WalletType = (typeof walletType)[keyof typeof walletType]
-
-export const ownerType = {
-  USER: 'user',
-  GROUP: 'group',
-} as const
-export type OwnerType = (typeof ownerType)[keyof typeof ownerType]
 
 class Wallets extends Model<
   InferAttributes<Wallets>,
@@ -31,7 +23,6 @@ class Wallets extends Model<
 > {
   declare id: string
   declare ownerId: string
-  declare ownerType: OwnerType
   declare balance: number
   declare type: WalletType
 }
@@ -45,10 +36,6 @@ Wallets.init(
     },
     ownerId: {
       type: DataTypes.UUID,
-      allowNull: false,
-    },
-    ownerType: {
-      type: DataTypes.ENUM(...Object.values(ownerType)),
       allowNull: false,
     },
     balance: {
@@ -72,11 +59,6 @@ Wallets.belongsTo(Users, {
   foreignKey: 'ownerId',
   constraints: false,
   as: 'user',
-})
-Wallets.belongsTo(Groups, {
-  foreignKey: 'ownerId',
-  constraints: false,
-  as: 'group',
 })
 
 export default Wallets

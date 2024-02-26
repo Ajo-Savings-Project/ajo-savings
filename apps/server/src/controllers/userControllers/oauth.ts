@@ -75,9 +75,7 @@ const getUserData = async (access_token: unknown, res: Response) => {
         { expiresIn: '30s' }
       )
 
-      bgJobs.setupGlobalWallet({ userId: user.id })
-      bgJobs.setupPersonalGroupWallet({ userId: user.id })
-      bgJobs.setupPersonalSavingsWallet({ userId: user.id })
+      bgJobs.setupWallets({ userId: user.id })
       bgJobs.setupSettings({ userId: user.id })
 
       return res.redirect(

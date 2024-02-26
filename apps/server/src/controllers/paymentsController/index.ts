@@ -1,2 +1,2 @@
-export * from './fundPersonalSavingsWallet'
+// export * from './fundPersonalSavingsWallet'
 // export * from './fundGroupSavingsWallet'

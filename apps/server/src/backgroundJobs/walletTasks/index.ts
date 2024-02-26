@@ -1,16 +1,7 @@
-import {
-  createGlobalWalletJob,
-  createPersonalSavingsWalletJob,
-  createPersonalGroupWalletJob,
-  createSettingsJob,
-} from './jobs'
-import {
-  setupGlobalWalletQueue,
-  setupPersonalGroupWalletQueue,
-  setupPersonalSavingsWalletQueue,
-  setupSettingQueue,
-} from './queues'
+import { createSettingsJob, createWalletsJob } from './jobs'
+import { setupSettingQueue, setupWalletsQueue } from './queues'
 
+// Settings
 setupSettingQueue.process((job) => {
   return createSettingsJob(job.data)
 })
@@ -18,23 +9,11 @@ export const setupSettings = (values: { userId: string }) => {
   setupSettingQueue.add(values)
 }
 
-setupPersonalSavingsWalletQueue.process((job) => {
-  return createPersonalSavingsWalletJob(job.data)
+// Wallet
+setupWalletsQueue.process((job) => {
+  return createWalletsJob(job.data)
 })
-export const setupPersonalSavingsWallet = (values: { userId: string }) => {
-  setupPersonalSavingsWalletQueue.add(values)
-}
 
-setupPersonalGroupWalletQueue.process((job) => {
-  return createPersonalGroupWalletJob(job.data)
-})
-export const setupPersonalGroupWallet = (values: { userId: string }) => {
-  setupPersonalGroupWalletQueue.add(values)
-}
-
-setupGlobalWalletQueue.process((job) => {
-  return createGlobalWalletJob(job.data)
-})
-export const setupGlobalWallet = (values: { userId: string }) => {
-  setupGlobalWalletQueue.add(values)
+export const setupWallets = (values: { userId: string }) => {
+  setupWalletsQueue.add(values)
 }

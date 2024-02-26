@@ -3,7 +3,6 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
-  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
 import Groups from './groups'
@@ -16,14 +15,10 @@ class GroupMembers extends Model<
   InferCreationAttributes<GroupMembers>
 > {
   declare id: string
-  declare adminId: string
+  declare groupId: string
   declare userId: string
-  declare firstName: string
-  declare lastName: string
-  declare profilePic: CreationOptional<string>
   declare amountContributed: number
   declare dateOfLastContribution: string | null
-  declare isAdmin: boolean
   declare totalAmountWithdrawnByUser: number
 }
 
@@ -34,28 +29,21 @@ GroupMembers.init(
       primaryKey: true,
       allowNull: false,
     },
-    adminId: {
+    groupId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Users,
+        model: Groups,
         key: 'id',
       },
     },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    profilePic: {
-      type: DataTypes.STRING,
+      references: {
+        model: Users,
+        key: 'id',
+      },
     },
     amountContributed: {
       type: DataTypes.INTEGER,
@@ -68,10 +56,6 @@ GroupMembers.init(
     dateOfLastContribution: {
       type: DataTypes.STRING,
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
   },
   {
     sequelize: db,
@@ -81,7 +65,15 @@ GroupMembers.init(
 )
 
 GroupMembers.belongsTo(Groups, {
-  foreignKey: 'adminId',
+  foreignKey: 'groupId',
+  as: 'group',
 })
+
+GroupMembers.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'user',
+})
+
+Groups.hasMany(GroupMembers, { foreignKey: 'groupId', as: 'members' }) // One-to-many relationship
 
 export default GroupMembers

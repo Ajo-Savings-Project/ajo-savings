@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import _, { toUpper } from 'lodash'
+import { mergeAll, pick, prop } from 'rambda'
 import { ENV } from '../config'
-import { v4 } from 'uuid'
-import Transactions from '../models/transactions'
 
 export const passwordUtils = {
   length: 5,
@@ -118,6 +118,13 @@ export const generateLongString = (length: number) => {
   return result
 }
 
+export const generateTransactionString = () => {
+  const date = new Date()
+  return toUpper(
+    `AJO-${generateLongString(4)}-${date.getFullYear()}-${generateLongString(8)}`
+  )
+}
+
 export class DateHandler {
   static getDaysInMonth = (year: number, month: number): number => {
     return new Date(year, month + 1, 0).getDate()
@@ -149,32 +156,31 @@ export class DateHandler {
   }
 }
 
-export interface TransactionDetails {
-  walletId: string
-  ownerId: string
-  name: string
-  amount: number
-  status: string
-  action: string
-  type: string
-  receiverId?: string
-  senderId?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+export const objKeysToCamelCase = (obj: unknown | Record<string, unknown>) => {
+  const newObj: Record<string, unknown> = {}
+  for (const key in obj as object) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[_.camelCase(key)] = (obj as Record<string, unknown>)[key]
+    }
+  }
+  return newObj
 }
 
-export const createTransaction = async (details: TransactionDetails) => {
-  const transaction = await Transactions.create({
-    id: v4(),
-    walletId: details.walletId,
-    ownerId: details.ownerId,
-    amount: details.amount,
-    status: details.status,
-    action: details.action,
-    type: details.type,
-    receiverId: details.receiverId,
-    senderId: details.senderId,
-    name: details.name,
-  })
-  return transaction
-}
+export const pickFieldsWithKey =
+  (key: string, propsToPick: string[]) => (obj: unknown | object) => {
+    const modData = pick(propsToPick)(prop(key, obj))
+    return mergeAll([obj as object, { [key]: modData }])
+  }
+
+export const publicUserFields = pickFieldsWithKey('user', [
+  'id',
+  'email',
+  'firstName',
+  'lastName',
+])
+
+export const publicWalletFields = pickFieldsWithKey('wallet', [
+  'id',
+  'balance',
+  'type',
+])

@@ -6,18 +6,20 @@ import {
   CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
+import Users from './users'
 
 const TABLE_NAME = 'Groups'
 
-// https://sequelize.org/docs/v6/other
-
-// contribution rate
-export const frequency = {
-  DAILY: 'daily',
-  WEEKLY: 'weekly',
-  MONTHLY: 'monthly',
+/**
+ * Supported frequency types
+ * @type {{WEEKLY: string, DAILY: string, MONTHLY: string}}
+ */
+export const frequencyType = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
 }
-export type FrequencyType = (typeof frequency)[keyof typeof frequency]
+export type FrequencyType = (typeof frequencyType)[keyof typeof frequencyType]
 
 class Groups extends Model<
   InferAttributes<Groups>,
@@ -26,7 +28,7 @@ class Groups extends Model<
   declare id: string
   declare title: string
   declare description: string
-  declare adminId: string
+  declare ownerId: string
   declare recurringAmount: number
   declare groupImage: CreationOptional<string>
   declare amountContributedWithinFrequency: number
@@ -56,11 +58,11 @@ Groups.init(
       field: 'Content of the post',
       allowNull: false,
     },
-    adminId: {
+    ownerId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: Users,
         key: 'id',
       },
     },
@@ -85,7 +87,7 @@ Groups.init(
       allowNull: false,
     },
     frequency: {
-      type: DataTypes.ENUM(...Object.values(frequency)),
+      type: DataTypes.ENUM(...Object.values(frequencyType)),
       allowNull: false,
     },
     duration: {
@@ -100,4 +102,8 @@ Groups.init(
   }
 )
 
+Groups.belongsTo(Users, {
+  foreignKey: 'ownerId',
+  as: 'user',
+})
 export default Groups
