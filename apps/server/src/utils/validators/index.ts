@@ -1,5 +1,6 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
+import { targetCategoryType, targetFrequencyType } from '../../models/targets'
 import {
   transactionActionType,
   transactionWalletType,
@@ -111,10 +112,21 @@ export const fundWalletSchema = z.object({
 
 export const createSavingsSchema = z.object({
   name: z.string(),
-  target: z.string(),
-  target_amount: z.number(),
-  frequency: z.string(),
-  category: z.string(),
+  targetAmount: z.number(),
+  frequency: z.union([
+    z.literal(targetFrequencyType.ANNUALLY),
+    z.literal(targetFrequencyType.MONTHLY),
+    z.literal(targetFrequencyType.WEEKLY),
+    z.literal(targetFrequencyType.DAILY),
+  ]),
+  category: z.union([
+    z.literal(targetCategoryType.TRAVEL),
+    z.literal(targetCategoryType.DREAM_CAR),
+    z.literal(targetCategoryType.GADGETS),
+    z.literal(targetCategoryType.RENT),
+    z.literal(targetCategoryType.OTHER),
+    z.literal(targetCategoryType.DREAM_HOME),
+  ]),
   startDate: z.string(),
-  endDate: z.string(),
+  withdrawalDate: z.string(),
 })
