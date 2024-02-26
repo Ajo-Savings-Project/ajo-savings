@@ -18,6 +18,7 @@ interface TransactionI {
   action: TransactionActionType
   status: TransactionStatusType
   transferType: TransactionTransferType
+  transactionId?: string
 }
 
 export const createTransaction = async ({
@@ -30,6 +31,7 @@ export const createTransaction = async ({
   transferType,
   senderId,
   receiverId,
+  transactionId,
 }: TransactionI) => {
   return await Transactions.create({
     id: v4(),
@@ -40,7 +42,7 @@ export const createTransaction = async ({
     status,
     transferType,
     walletType: transactionWalletType[walletType],
-    transactionId: generateTransactionString(),
+    transactionId: transactionId ?? generateTransactionString(),
     senderId,
     receiverId,
     description: '',

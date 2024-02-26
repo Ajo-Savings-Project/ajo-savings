@@ -1,6 +1,8 @@
 import { Response } from 'express'
+import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
+import GroupMembers from '../../models/groupMembers'
 import GroupWallet from '../../models/groupWallet'
 import {
   transactionActionType,
@@ -94,45 +96,50 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
 
     if (!parsedData.success) {
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
-        message: parsedData.error.message,
+        message: parsedData.error.issues,
       })
     }
 
     const _groupId = parsedData.data.groupId
     const _amount = parsedData.data.amount
 
-    const groupWallet = await GroupWallet.findOne({
-      where: { ownerId: _groupId },
+    const isUserInGroup = await GroupMembers.findOne({
+      where: { [Op.and]: [{ userId: _userId }, { groupId: _groupId }] },
     })
 
-    if (groupWallet) {
-      const previousBalance = groupWallet.balance
-
-      const wallet = await groupWallet.update(
-        {
-          balance: (groupWallet.balance += _amount),
-        },
-        { returning: true }
-      )
-
-      await createTransaction({
-        senderId: _userId,
-        receiverId: _groupId,
-        action: transactionActionType.CREDIT,
-        previousBalance,
-        balance: wallet.balance,
-        amount: _amount,
-        status: transactionStatusType.PENDING,
-        transferType: transactionTransferType.INTERNAL_TRANSFERS,
-        walletType: transactionWalletType.GROUP,
+    if (isUserInGroup) {
+      const groupWallet = await GroupWallet.findOne({
+        where: { ownerId: _groupId },
       })
 
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
-    }
+      if (groupWallet) {
+        const previousBalance = groupWallet.balance
 
+        const wallet = await groupWallet.update(
+          {
+            balance: (groupWallet.balance += _amount),
+          },
+          { returning: true }
+        )
+
+        await createTransaction({
+          senderId: _userId,
+          receiverId: _groupId,
+          action: transactionActionType.CREDIT,
+          previousBalance,
+          balance: wallet.balance,
+          amount: _amount,
+          status: transactionStatusType.PENDING,
+          transferType: transactionTransferType.GROUP_TRANSACTIONS,
+          walletType: transactionWalletType.GROUP,
+        })
+
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
+      }
+    }
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
   } catch (error) {
-    // reverse the transaction if any error
+    // TODO: reverse the transaction if any error
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
