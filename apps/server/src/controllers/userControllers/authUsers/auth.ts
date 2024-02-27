@@ -55,7 +55,7 @@ export const loginUser = async (req: Request, res: Response) => {
         })
 
         return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-          user: _.pick(confirmUser.dataValues, [
+          data: _.pick(confirmUser.dataValues, [
             'id',
             'email',
             'firstName',

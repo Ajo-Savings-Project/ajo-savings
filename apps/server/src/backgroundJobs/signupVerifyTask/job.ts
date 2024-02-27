@@ -8,8 +8,6 @@ export type MailSignupT = {
   lastName: string
 }
 export const mailSignUpVerify = async (values: MailSignupT) => {
-  console.log(values)
-
   try {
     const registrationVerifyEmail = await createEmail({
       to: values.email,

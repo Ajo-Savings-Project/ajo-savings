@@ -279,11 +279,7 @@ router.patch(
   updateKycProfile
 )
 
-router.get(
-  '/getUserProfileDetails',
-  authorizationMiddleware,
-  userProfileDetails
-)
+router.get('/profile', authorizationMiddleware, userProfileDetails)
 
 router.post('/verifyEmail', verifyUserEmail)
 
