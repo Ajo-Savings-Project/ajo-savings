@@ -8,13 +8,13 @@ import Targets, {
 import { v4 } from 'uuid'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import TargetWallets from '../../models/targetWallets'
-import { createSavingsSchema } from '../../utils/validators'
+import { createTargetSchema } from '../../utils/validators'
 
 export const createTarget = async (req: RequestExt, res: Response) => {
   const { _userId: userId } = req.body
 
   try {
-    const requestData = createSavingsSchema.safeParse(req.body)
+    const requestData = createTargetSchema.safeParse(req.body)
 
     if (!requestData.success) {
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
@@ -52,7 +52,6 @@ export const createTarget = async (req: RequestExt, res: Response) => {
       data: { daysLeft, name: rest.name, id: target.id },
     })
   } catch (error) {
-    console.log('Error creating target', error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

@@ -119,7 +119,7 @@ export const fundWalletSchema = z.object({
   ]),
 })
 
-export const createSavingsSchema = z.object({
+export const createTargetSchema = z.object({
   name: z.string(),
   targetAmount: z.number(),
   frequency: z.union([
