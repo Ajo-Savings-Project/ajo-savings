@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
 import _ from 'lodash'
-import { Op } from 'sequelize'
-import { v4 as uuidV4 } from 'uuid'
-import * as bgJobs from '../../backgroundJobs'
-import Env from '../../config/env'
+import { v4 } from 'uuid'
+import { resetPasswordSendEmail } from '../../../backgroundJobs/resetPasswordTask'
+import Env from '../../../config/env'
 import {
   HTTP_STATUS_CODE,
   HTTP_STATUS_HELPER,
@@ -11,98 +10,23 @@ import {
   JWT_INVALID_STATUS_CODE,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   REFRESH_TOKEN,
-} from '../../constants'
-import Users, { authMethod, role } from '../../models/users'
-import UserResetPasswordToken from '../../models/userPasswordToken'
-import { RequestExt } from '../../middleware/authorization/authentication'
+} from '../../../constants'
+import { RequestExt } from '../../../middleware/authorization/authentication'
+import TempTokens from '../../../models/userPasswordToken'
+import Users from '../../../models/users'
 import {
-  GenerateOTP,
+  generateLongString,
   Jwt,
   PasswordHarsher,
   passwordUtils,
-  generateLongString,
-} from '../../utils/helpers'
+} from '../../../utils/helpers'
 import {
+  changePasswordSchema,
   forgotPasswordSchema,
   loginSchema,
   refreshTokenSchema,
-  registerSchema,
-  changePasswordSchema,
-} from '../../utils/validators'
-
-export const registerUser = async (req: Request, res: Response) => {
-  const passwordRegex = passwordUtils.regex
-
-  try {
-    const userValidate = registerSchema.strict().safeParse(req.body)
-
-    if (!userValidate.success) {
-      // TODO: send to error logger - userValidate.error.issues
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
-        message: userValidate.error.issues,
-      })
-    }
-
-    const { firstName, lastName, email, phone, password } = userValidate.data
-
-    const newEmail = email.trim().toLowerCase()
-
-    if (!passwordRegex.test(password)) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: passwordUtils.error,
-      })
-    }
-
-    //TODO: Validate 9ja phone number
-    const userExist = await Users.findOne({
-      where: {
-        [Op.or]: [{ email: newEmail }, { phone: phone }],
-      },
-    })
-
-    if (!userExist) {
-      const hashedPassword = await PasswordHarsher.hash(password)
-      const otpInfo = GenerateOTP()
-      const otp = otpInfo.otp.toString()
-      const id = uuidV4()
-
-      const user = await Users.create({
-        id,
-        firstName: firstName.toLowerCase().trim(),
-        lastName: lastName.toLowerCase().trim(),
-        email: newEmail,
-        phone: phone.trim(),
-        password: hashedPassword,
-        role: role.CONTRIBUTOR,
-        authMethod: authMethod.BASIC,
-        emailIsVerified: false,
-        kycComplete: false,
-      })
-
-      bgJobs.signUpSendVerificationEmail({
-        email,
-        otp,
-        firstName: user.firstName,
-      })
-      bgJobs.setupWallets({ userId: user.id })
-      bgJobs.setupSettings({ userId: user.id })
-
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-        user: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-        },
-      })
-    } else {
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
-        message: 'This account already exist',
-      })
-    }
-  } catch (error) {
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
-  }
-}
+  resetPasswordSchema,
+} from '../../../utils/validators'
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
@@ -244,120 +168,104 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
       email = email.trim().toLowerCase()
 
-      const user = await Users.findOne({ where: { email } })
+      const user = await Users.findOne({
+        where: { email },
+        attributes: ['id', 'firstName', 'lastName', 'email'],
+      })
 
       if (user) {
-        const { otp, expiry: tokenExpiry } = GenerateOTP()
-        const longString = generateLongString(80) //generate 80 chars long random string
-        const secret = generateLongString(20) //generate 20 chars long random string
-        const expiresIn = 300 // seconds
+        const secret = generateLongString(25)
 
-        // create unique verify token
         const token = await Jwt.sign(
           {
             id: user.id,
-            otp: otp.toString(),
-            tokenExpiry: tokenExpiry.getTime().toString(),
+            type: 'reset-password',
           },
-          { _secret: Env.JWT_SECRET + longString, expiresIn }
+          { _secret: Env.JWT_SECRET + secret, expiresIn: '1m' }
         )
 
         //create password reset data instance
-        await UserResetPasswordToken.create({
-          id: longString,
+        await TempTokens.create({
+          id: v4(),
           secret,
           token,
           used: false,
         })
 
-        const link = `${Env.FE_BASE_URL}/auth/reset-password?verify=${longString}`
-
-        bgJobs.resetPasswordSendEmail({
-          firstName: user.firstName,
-          email: email,
-          message: link,
+        resetPasswordSendEmail({
+          ...user.dataValues,
+          token: secret,
         })
       }
 
-      return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
         message: `Password reset link will be sent to your email if you have an account with us.`,
       })
     }
 
-    return res.status(HTTP_STATUS_CODE.BAD_REQUEST).send({
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
       message: isValidBody.error.issues,
     })
   } catch (error) {
-    console.log(error)
-
-    // TODO: send to error logger - error
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: [
-        { message: `This is our fault, our team are working to resolve this.` },
-      ],
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const { verify: longString } = req.query
+    const { newPassword, verify: secret } = req.body
 
-    const { newPassword } = req.body
+    const dataValid = resetPasswordSchema
+      .strict()
+      .safeParse({ newPassword, secret })
 
-    if (!newPassword || !passwordUtils.regex.test(newPassword)) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
-        message: passwordUtils.error,
+    if (!dataValid.success) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        message: dataValid.error.issues,
       })
     }
 
-    // Check for reset-token instance using query-string(id)
-    const resetTokenInstance = await UserResetPasswordToken.findOne({
-      where: { id: longString as string, used: false },
+    const resetTokenInstance = await TempTokens.findOne({
+      where: { secret: dataValid.data.secret, used: false },
     })
 
     if (!resetTokenInstance) {
-      return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
-        message: 'Invalid or already used verification token.',
-      })
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.UNAUTHORIZED](res)
     }
 
-    const { id, token } = resetTokenInstance
+    const { secret: _secret, token } = resetTokenInstance
 
     /**
      * References JWT secret in forgotPassword function
      * @see forgotPassword
      **/
-    const tokenStatus = await Jwt.isTokenExpired(token, Env.JWT_SECRET + id)
+    const decodedJwt = await Jwt.isTokenExpired(token, Env.JWT_SECRET + _secret)
 
-    if (!tokenStatus.valid || tokenStatus.expired) {
+    if (!decodedJwt.valid || decodedJwt.expired) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
         message: 'Invalid or expired reset password token.',
       })
     }
 
-    const decodedToken = tokenStatus.data
-
-    const hashedPassword = await PasswordHarsher.hash(newPassword)
+    const hashedPassword = await PasswordHarsher.hash(
+      dataValid.data.newPassword
+    )
 
     const user = await Users.update(
       { password: hashedPassword },
-      { where: { id: decodedToken.id }, returning: true }
+      { where: { id: decodedJwt.data.id }, returning: true }
     )
 
     // Invalidate the reset token after it's used
     await resetTokenInstance.update({ used: true })
 
-    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
       message:
         'Password reset successful. You can now log in with your new password.',
       email: user[1][0].email,
     })
   } catch (error) {
-    console.log('new error', error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: 'This is our fault, our team is working to resolve this.',
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
 
@@ -403,14 +311,9 @@ export const changePassword = async (req: RequestExt, res: Response) => {
 
     await user.update({ password: hashedPassword })
 
-    return res.status(HTTP_STATUS_CODE.SUCCESS).json({
-      message: 'Password updated successfully',
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
   } catch (error) {
-    console.log(error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: `Internal Server Error`,
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
 

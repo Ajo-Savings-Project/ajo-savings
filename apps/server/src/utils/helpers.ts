@@ -14,15 +14,14 @@ export const passwordUtils = {
     : 'Password: Min 5 characters, uppercase or lowercase.',
 }
 
-export class PasswordHarsher {
-  static async compare(password: string, hash: string) {
+export const PasswordHarsher = {
+  async compare(password: string, hash: string) {
     return await bcrypt.compare(password, hash)
-  }
-
-  static async hash(password: string) {
+  },
+  async hash(password: string) {
     const salt = await bcrypt.genSalt(10)
     return await bcrypt.hash(password, salt)
-  }
+  },
 }
 
 export class Jwt {
