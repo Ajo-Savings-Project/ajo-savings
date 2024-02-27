@@ -1,0 +1,27 @@
+.Container {
+  &Header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &HeaderRight {
+    color: var(--primary-600);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    &Text {
+      cursor: pointer;
+      color: var(--primary-600);
+    }
+    &Divider {
+      content: '';
+      height: 100%;
+      border: 1px solid var(--primary-600);
+    }
+  }
+}
+.ContainerHeaderRightDivider > * {
+  display: none;
+}
