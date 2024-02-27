@@ -4,6 +4,7 @@ export {
   resendVerifyUserEmail,
   verifyUserEmail,
 } from './authUsers/registerUser'
+export { getUserWallets } from './wallets/getUserWallets'
 export { refreshToken } from './authUsers/refreshUserToken'
 export {
   resetPassword,
@@ -11,7 +12,6 @@ export {
   changePassword,
 } from './authUsers/password'
 export * from './getUpcomingActivities'
-export * from './getUserPersonalSavingsWallet'
 export * from './authUsers/oauthUser'
 export * from './getUserTransactionHistory'
 export * from './userUpdateKyc'

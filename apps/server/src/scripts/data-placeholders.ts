@@ -40,7 +40,7 @@ export const userSeedPlaceholder = async () => {
   }
 }
 
-export const userSeedCreateGroup = async (users: Users[]) => {
+export const userSeedCreateGroup = async (users: Users[], maxGroup = 9) => {
   let totalCreatedGroup = 0
   const randomSelectedUsers = [
     ...new Set(
@@ -52,7 +52,10 @@ export const userSeedCreateGroup = async (users: Users[]) => {
 
   randomSelectedUsers.map(async (userPosition) => {
     const user = users[userPosition]
-    const randomGroupAmount = faker.helpers.rangeToNumber({ min: 1, max: 9 })
+    const randomGroupAmount = faker.helpers.rangeToNumber({
+      min: 1,
+      max: maxGroup,
+    })
     totalCreatedGroup += randomGroupAmount
 
     return await Promise.all(
