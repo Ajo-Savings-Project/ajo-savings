@@ -14,6 +14,7 @@ import {
   resendVerifyUserEmail,
   verifyUserEmail,
   getUserWallets,
+  getUserWalletBalances,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -288,5 +289,7 @@ router.get(
   authorizationMiddleware,
   resendVerifyUserEmail
 )
+
+router.get('/walletBalances', authorizationMiddleware, getUserWalletBalances)
 
 export default router

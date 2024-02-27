@@ -10,7 +10,11 @@ export const GlobalWallet = ({ amount }: { amount: string }) => {
     <Card className={styles.globalWallet}>
       <AcctBal />
       <Text size={'Small'} color={'Inherit'} content={'Global Wallet'} />
-      <Text color={'Inherit'} content={amount} size={'Subtext'} />
+      <Text
+        color={'Inherit'}
+        content={String(amount || '__')}
+        size={'Subtext'}
+      />
       <div className={'row-between'}>
         <Modal
           modalContentClassName={styles.modalContent}
