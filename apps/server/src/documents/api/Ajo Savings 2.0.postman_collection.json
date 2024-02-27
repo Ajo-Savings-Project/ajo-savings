@@ -4,7 +4,8 @@
 		"name": "Ajo Savings 2.0",
 		"description": "API documentation for Ajo Savings",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10773940"
+		"_exporter_id": "10773940",
+		"_collection_link": "https://gwayva.postman.co/workspace/Ajo-Savings~a9348fb5-ef27-430c-906f-aba6d85270f4/collection/10773940-8f615bb2-2f65-4965-82a2-0392bad4a49d?action=share&source=collection_link&creator=10773940"
 	},
 	"item": [
 		{
@@ -1240,6 +1241,89 @@
 							"body": "{\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": \"dc7e7b0d-ef43-449c-9a3b-ac3722b85169\",\n            \"amount\": 80000,\n            \"type\": \"Internal funding\",\n            \"status\": \"Successful\",\n            \"createdAt\": \"2024-02-23T16:33:36.583Z\",\n            \"receiverId\": null,\n            \"senderId\": \"f680b18e-cbf7-426a-8177-7e98dd3357ce\",\n            \"Wallet\": {\n                \"id\": \"08e7d3b5-3168-4440-bfda-596f8f6f3e80\",\n                \"balance\": 80000,\n                \"type\": \"savings\"\n            },\n            \"User\": {\n                \"id\": \"189d69a4-11c6-43a3-8439-b3d813a11ecc\",\n                \"email\": \"creepycreepes@yopmail.com\",\n                \"firstName\": \"james\",\n                \"lastName\": \"andrew\"\n            }\n        },\n        {\n            \"id\": \"004ecd2b-a233-4381-824e-b36aae2f1104\",\n            \"amount\": 80000,\n            \"type\": \"Internal funding\",\n            \"status\": \"Successful\",\n            \"createdAt\": \"2024-02-23T16:33:36.404Z\",\n            \"receiverId\": \"08e7d3b5-3168-4440-bfda-596f8f6f3e80\",\n            \"senderId\": null,\n            \"Wallet\": {\n                \"id\": \"f680b18e-cbf7-426a-8177-7e98dd3357ce\",\n                \"balance\": 420000,\n                \"type\": \"global\"\n            },\n            \"User\": {\n                \"id\": \"189d69a4-11c6-43a3-8439-b3d813a11ecc\",\n                \"email\": \"creepycreepes@yopmail.com\",\n                \"firstName\": \"james\",\n                \"lastName\": \"andrew\"\n            }\n        }\n    ],\n    \"totalPages\": 1,\n    \"currentPage\": 1\n}"
 						}
 					]
+				},
+				{
+					"name": "walletBalances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/walletBalances",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"walletBalances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/walletBalances",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"walletBalances"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer-when-downgrade"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "324"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"144-3/DhmR3gbySikc+LqXlUNJ2EwrM\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 27 Feb 2024 16:18:37 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"data\": {\n        \"GLOBAL\": {\n            \"id\": \"f4fac17b-ec9e-49b2-87a3-30d4076983c1\",\n            \"balance\": 0\n        },\n        \"SAVINGS\": {\n            \"id\": \"3bbc173b-7ccf-4966-927a-a7a9cff5505c\",\n            \"balance\": 0\n        },\n        \"GROUPS\": {\n            \"records\": [\n                {\n                    \"id\": \"23964427-01f4-4cdb-b589-a05ddec5e762\",\n                    \"balance\": 38100\n                },\n                {\n                    \"id\": \"131dbcb0-e475-4e57-b7bc-6c125aaf8e4c\",\n                    \"balance\": 0\n                }\n            ],\n            \"balance\": 38100\n        }\n    }\n}"
+						}
+					]
 				}
 			],
 			"description": "Users endpoints"
@@ -1608,6 +1692,115 @@
 							"body": "{\n    \"message\": \"You are already a member of this group\"\n}"
 						}
 					]
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "createGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"groupName\":\"GHJ\",\n    \"purposeAndGoals\":\"lol test\",\n    \"recurringAmount\": 80000,\n    \"frequency\": \"monthly\",\n    \"maxNumberOfParticipants\": 30,\n    \"duration\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/groups/createGroup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"groups",
+								"createGroup"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"groupName\":\"GHJ\",\n    \"purposeAndGoals\":\"lol test\",\n    \"recurringAmount\": 80000,\n    \"frequency\": \"monthly\",\n    \"maxNumberOfParticipants\": 30,\n    \"duration\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/groups/createGroup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"groups",
+										"createGroup"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer-when-downgrade"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "470"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d6-ViQJjgGJy7aPq1rbpldoJ3o1sxA\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 27 Feb 2024 16:08:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"23964427-01f4-4cdb-b589-a05ddec5e762\",\n        \"title\": \"GHJ\",\n        \"description\": \"lol test\",\n        \"ownerId\": \"275e7b4b-246a-4688-96e6-b44c1db60fc7\",\n        \"recurringAmount\": 80000,\n        \"groupImage\": \"https://picsum.photos/200/300\",\n        \"amountContributedWithinFrequency\": 0,\n        \"totalAmountWithdrawn\": 0,\n        \"availableNumberOfParticipants\": 1,\n        \"maxNumberOfParticipants\": 30,\n        \"frequency\": \"monthly\",\n        \"duration\": \"\",\n        \"updatedAt\": \"2024-02-27T16:08:03.301Z\",\n        \"createdAt\": \"2024-02-27T16:08:03.301Z\"\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -1941,14 +2134,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "access_token",
-			"value": "",
-			"type": "string",
-			"disabled": true
 		}
 	]
 }
