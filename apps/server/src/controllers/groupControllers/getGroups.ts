@@ -58,9 +58,6 @@ export const getGroups = async (req: Request, res: Response) => {
 
 /**
  * Get Active/Created groups where the authenticated user is a member
- * @param {RequestExt} req
- * @param {e.Response} res
- * @returns {Promise<void>}
  */
 export const getGroup = async (req: RequestExt, res: Response) => {
   const { _userId } = req.body
@@ -68,7 +65,6 @@ export const getGroup = async (req: RequestExt, res: Response) => {
   const result = await withPaginate(GroupMembers, { ...req.query })({
     where: { userId: _userId },
     include: [
-      { model: Users, as: 'user', attributes: userAttributes },
       {
         model: Groups,
         as: 'group',

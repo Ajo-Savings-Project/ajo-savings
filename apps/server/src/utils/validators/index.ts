@@ -70,13 +70,17 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email({ message: 'email is invalid' }),
 })
 
+export const verifyEmailSchema = z.object({
+  token: z.string().min(0),
+})
+
 export const changePasswordSchema = z.object({
   oldPassword: z.string().min(5, passwordUtils.error),
   newPassword: z.string().min(5, passwordUtils.error),
 })
 
 export const resetPasswordSchema = z.object({
-  secret: z.string(),
+  token: z.string(),
   newPassword: z.string().min(5, passwordUtils.error),
 })
 

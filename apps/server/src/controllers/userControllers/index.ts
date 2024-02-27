@@ -1,8 +1,18 @@
-export * from './authUsers'
-export { registerUser } from './authUsers/registerUser'
+export { loginUser } from './authUsers/auth'
+export {
+  registerUser,
+  resendVerifyUserEmail,
+  verifyUserEmail,
+} from './authUsers/registerUser'
+export { refreshToken } from './authUsers/refreshUserToken'
+export {
+  resetPassword,
+  forgotPassword,
+  changePassword,
+} from './authUsers/password'
 export * from './getUpcomingActivities'
 export * from './getUserPersonalSavingsWallet'
-export * from './authUsers/oauth'
+export * from './authUsers/oauthUser'
 export * from './getUserTransactionHistory'
 export * from './userUpdateKyc'
 export * from './getUserProfileDetails'

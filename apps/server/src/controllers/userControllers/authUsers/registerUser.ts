@@ -10,6 +10,7 @@ import {
 } from '../../../backgroundJobs/walletTasks'
 import Env from '../../../config/env'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../../constants'
+import { RequestExt } from '../../../middleware/authorization/authentication'
 import TempTokens from '../../../models/userPasswordToken'
 import Users, { authMethod, role } from '../../../models/users'
 import {
@@ -18,7 +19,7 @@ import {
   PasswordHarsher,
   passwordUtils,
 } from '../../../utils/helpers'
-import { registerSchema } from '../../../utils/validators'
+import { registerSchema, verifyEmailSchema } from '../../../utils/validators'
 
 type JobType = Users & { token: string }
 
@@ -36,6 +37,25 @@ const emailVerifyJob = (user: JobType) => {
 }
 
 const runSetupTasks = pipe(emailVerifyJob, walletsJob, settingsJob)
+
+const createEmailVerificationToken = async (id: string) => {
+  const secret = generateLongString(50)
+  const verifyToken = await Jwt.sign(
+    {
+      id,
+      type: 'signup-verify',
+    },
+    { _secret: Env.JWT_SECRET + secret, expiresIn: '1d' }
+  )
+
+  await TempTokens.create({
+    id: v4(),
+    secret,
+    token: verifyToken,
+    used: false,
+  })
+  return secret
+}
 
 export const registerUser = async (req: Request, res: Response) => {
   const passwordRegex = passwordUtils.regex
@@ -85,21 +105,7 @@ export const registerUser = async (req: Request, res: Response) => {
         { returning: true }
       )
 
-      const secret = generateLongString(50)
-      const verifyToken = await Jwt.sign(
-        {
-          id: user.id,
-          type: 'signup-verify',
-        },
-        { _secret: Env.JWT_SECRET + secret, expiresIn: '1d' }
-      )
-
-      await TempTokens.create({
-        id: v4(),
-        secret,
-        token: verifyToken,
-        used: false,
-      })
+      const secret = await createEmailVerificationToken(id)
 
       runSetupTasks({
         token: secret,
@@ -116,6 +122,66 @@ export const registerUser = async (req: Request, res: Response) => {
     })
   } catch (error) {
     console.log(error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
+  }
+}
+
+export const verifyUserEmail = async (req: Request, res: Response) => {
+  try {
+    const isSecretValid = verifyEmailSchema.strict().safeParse(req.body)
+
+    if (!isSecretValid.success) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        message: isSecretValid.error.issues,
+      })
+    }
+
+    const verifyRecord = await TempTokens.findOne({
+      where: { secret: isSecretValid.data.token, used: false },
+    })
+
+    if (!verifyRecord) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
+    }
+
+    const { secret: _secret, token } = verifyRecord
+
+    const { valid, expired, data } = await Jwt.isTokenExpired(
+      token,
+      Env.JWT_SECRET + _secret
+    )
+
+    if (!valid || expired) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
+        message: 'Invalid or expired token.',
+      })
+    }
+
+    await Users.update({ emailIsVerified: true }, { where: { id: data.id } })
+    await verifyRecord.update({ used: true })
+
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
+  } catch (error) {
+    console.error(error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
+      error: 'Verification failed',
+    })
+  }
+}
+
+export const resendVerifyUserEmail = async (req: RequestExt, res: Response) => {
+  try {
+    const { _userId: id, _user } = req.body
+    if (!_user.emailIsVerified) {
+      const secret = await createEmailVerificationToken(id)
+      emailVerifyJob({ ..._user.dataValues, token: secret } as JobType)
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
+    }
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
+      message: 'User already verified.',
+    })
+  } catch (error) {
+    console.error(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

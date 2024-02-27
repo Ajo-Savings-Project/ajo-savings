@@ -4,14 +4,16 @@ import {
   registerUser,
   loginUser,
   refreshToken,
+  resetPassword,
+  changePassword,
   forgotPassword,
   getUpcomingUserActivities,
   getUserPersonalSavingsWallet,
-  resetPassword,
-  changePassword,
   getTransactionHistory,
   updateKycProfile,
   userProfileDetails,
+  resendVerifyUserEmail,
+  verifyUserEmail,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -676,6 +678,14 @@ router.get(
   '/getUserProfileDetails',
   authorizationMiddleware,
   userProfileDetails
+)
+
+router.post('/verifyEmail', verifyUserEmail)
+
+router.get(
+  '/resendVerifyUserEmail',
+  authorizationMiddleware,
+  resendVerifyUserEmail
 )
 
 export default router
