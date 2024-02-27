@@ -5,7 +5,3 @@ export const signUpSendVerificationEmailQueue = new Bull(
   'SignUp Confirm Email',
   { redis: Env.REDIS }
 )
-
-export const resetPasswordSendEmailQueue = new Bull('Reset Password Email', {
-  redis: Env.REDIS,
-})

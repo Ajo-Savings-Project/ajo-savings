@@ -2,11 +2,13 @@ import { v4 as uuidV4 } from 'uuid'
 import Settings from '../../models/settings'
 import Wallets, { walletType } from '../../models/wallets'
 
-export interface WalletJobData {
+export interface WalletJobDataI {
   userId: string
 }
 
-const createWalletsJob = async (data: WalletJobData) => {
+export interface SettingJobDataI extends WalletJobDataI {}
+
+const createWalletsJob = async (data: WalletJobDataI) => {
   const res = [walletType.GLOBAL, walletType.SAVINGS].map(
     async (type) =>
       await Wallets.create({
@@ -16,11 +18,10 @@ const createWalletsJob = async (data: WalletJobData) => {
         type,
       })
   )
-
-  return await Promise.all(res).then((wallets) => wallets[0].id)
+  return await Promise.all(res)
 }
 
-const createSettingsJob = async (data: WalletJobData) => {
+const createSettingsJob = async (data: SettingJobDataI) => {
   return await Settings.create({
     id: uuidV4(),
     ownerId: data.userId,

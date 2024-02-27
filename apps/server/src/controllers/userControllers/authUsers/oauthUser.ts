@@ -1,20 +1,35 @@
 import { Request, Response } from 'express'
-import { ENV } from '../../config'
-import { HTTP_STATUS_CODE } from '../../constants'
-import logger from '../../utils/logger'
+import { pipe } from 'rambda'
+import {
+  setupSettings,
+  setupWallets,
+} from '../../../backgroundJobs/walletTasks'
+import { ENV } from '../../../config'
+import { HTTP_STATUS_CODE } from '../../../constants'
+import logger from '../../../utils/logger'
 import { OAuth2Client } from 'google-auth-library'
-import Users, { role, authMethod } from '../../models/users'
+import Users, { role, authMethod } from '../../../models/users'
 import { v4 as uuidV4 } from 'uuid'
-import * as bgJobs from '../../backgroundJobs'
-import Env from '../../config/env'
+import Env from '../../../config/env'
 import {
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   REFRESH_TOKEN,
-} from '../../constants'
-import { Jwt } from '../../utils/helpers'
+} from '../../../constants'
+import { Jwt } from '../../../utils/helpers'
 
-const port = ENV.PORT
+const redirectUrl = `${ENV.HOSTNAME}:${ENV.PORT}/api/v1/oauth/oauth`
+
+const settingsJob = (userId: string) => {
+  setupSettings({ userId })
+  return userId
+}
+const walletsJob = (userId: string) => {
+  setupWallets({ userId })
+  return userId
+}
+
+const runSetupJobs = pipe(settingsJob, walletsJob)
 
 const getUserData = async (access_token: unknown, res: Response) => {
   try {
@@ -75,8 +90,7 @@ const getUserData = async (access_token: unknown, res: Response) => {
         { expiresIn: '30s' }
       )
 
-      bgJobs.setupWallets({ userId: user.id })
-      bgJobs.setupSettings({ userId: user.id })
+      runSetupJobs(user.id)
 
       return res.redirect(
         ENV.FE_BASE_URL + `/auth/login?type=success&oauth_token=${authToken}`
@@ -126,7 +140,6 @@ const getUserData = async (access_token: unknown, res: Response) => {
 
 export const oAuthUrl = async (req: Request, res: Response) => {
   try {
-    const redirectUrl = `${ENV.HOSTNAME}:${port}/api/v1/oauth/oauth`
     const oAuth2Client = new OAuth2Client(
       ENV.OAUTH_CLIENT_ID,
       ENV.OAUTH_CLIENT_SECRET,
@@ -151,7 +164,6 @@ export const oAuthUrl = async (req: Request, res: Response) => {
 export const getUserTokens = async (req: Request, res: Response) => {
   const code = req.query.code as string
   try {
-    const redirectUrl = `http://127.0.0.1:${port}/api/v1/oauth/oauth`
     const oAuth2Client = new OAuth2Client(
       ENV.OAUTH_CLIENT_ID,
       ENV.OAUTH_CLIENT_SECRET,

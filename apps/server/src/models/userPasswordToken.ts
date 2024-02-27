@@ -6,11 +6,11 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 
-const TABLE_NAME = 'UserResetPasswordToken'
+const TABLE_NAME = 'TempTokens'
 
-class UserResetPasswordToken extends Model<
-  InferAttributes<UserResetPasswordToken>,
-  InferCreationAttributes<UserResetPasswordToken>
+class TempTokens extends Model<
+  InferAttributes<TempTokens>,
+  InferCreationAttributes<TempTokens>
 > {
   declare id: string
   declare secret: string
@@ -18,7 +18,7 @@ class UserResetPasswordToken extends Model<
   declare used: boolean
 }
 
-UserResetPasswordToken.init(
+TempTokens.init(
   {
     id: {
       type: DataTypes.STRING,
@@ -30,7 +30,7 @@ UserResetPasswordToken.init(
       allowNull: false,
     },
     token: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     used: {
@@ -45,4 +45,4 @@ UserResetPasswordToken.init(
   }
 )
 
-export default UserResetPasswordToken
+export default TempTokens

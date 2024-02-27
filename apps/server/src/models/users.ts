@@ -52,9 +52,9 @@ class Users extends Model<
   declare identificationNumber: CreationOptional<string>
   declare identificationDoc: CreationOptional<string>
   declare proofOfAddressDoc: CreationOptional<string>
-  declare emailIsVerified: boolean
+  declare emailIsVerified: CreationOptional<boolean>
   declare kycComplete: CreationOptional<boolean>
-  declare authMethod: AuthMethodType
+  declare authMethod: CreationOptional<AuthMethodType>
 }
 
 Users.init(
@@ -89,7 +89,6 @@ Users.init(
     },
     emailIsVerified: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
     kycComplete: {

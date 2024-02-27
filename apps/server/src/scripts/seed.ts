@@ -6,10 +6,10 @@ import { db } from '../config'
 import Users from '../models/users'
 import { userSeedCreateGroup, userSeedPlaceholder } from './data-placeholders'
 
-async function seedUsers() {
+async function seedUsers(size: number) {
   try {
     const newUsers = await Promise.all(
-      Array.from({ length: 50 }, async () => {
+      Array.from({ length: size }, async () => {
         const user = await userSeedPlaceholder()
 
         const createdUser = await Users.create(user)
@@ -29,8 +29,8 @@ async function seedUsers() {
   }
 }
 
-async function seedGroups(users: Users[]) {
-  const { groupsTotal, usersTotal } = await userSeedCreateGroup(users)
+async function seedGroups(users: Users[], size: number) {
+  const { groupsTotal, usersTotal } = await userSeedCreateGroup(users, size)
   console.log(
     `Associated ${usersTotal} users with groups\n Total groups created: ${groupsTotal}`
   )
@@ -38,8 +38,8 @@ async function seedGroups(users: Users[]) {
 
 async function main() {
   await db.sync({ force: true })
-  const createdUsers = await seedUsers()
-  await seedGroups(createdUsers)
+  const createdUsers = await seedUsers(20)
+  await seedGroups(createdUsers, 3)
 }
 
 main().catch((err) => {
