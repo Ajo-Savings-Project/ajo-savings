@@ -12,14 +12,13 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-export const signupVerificationMail = async (values: {
+export const sendExpiredVerificationEmail = async (values: {
   email: string
   firstName: string
-  token: string
 }) => {
   try {
     // Read the Handlebars template
-    const template = await readTemplate('verifySignup')
+    const template = await readTemplate('expiredVerifyEmail')
 
     // Compile the template
     const compiledTemplate = compile(template)
@@ -27,7 +26,7 @@ export const signupVerificationMail = async (values: {
     // Replace placeholders in the template with actual data
     const html = compiledTemplate({
       ...values,
-      link: `${Env.FE_BASE_URL}/verify-email?user=${values.token}`,
+      firstName: `${values.firstName}`,
     })
 
     const mailOptions = {
@@ -41,6 +40,5 @@ export const signupVerificationMail = async (values: {
     console.log('Email sent:' + info.response)
   } catch (error) {
     console.error(error)
-    // Handle email sending failure
   }
 }

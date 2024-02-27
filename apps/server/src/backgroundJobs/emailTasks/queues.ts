@@ -6,6 +6,11 @@ export const signUpSendVerificationEmailQueue = new Bull(
   { redis: Env.REDIS }
 )
 
+export const sendExpiredVerificationEmailQueue = new Bull(
+  'Expired Verification Email',
+  { redis: Env.REDIS }
+)
+
 export const resetPasswordSendEmailQueue = new Bull('Reset Password Email', {
   redis: Env.REDIS,
 })

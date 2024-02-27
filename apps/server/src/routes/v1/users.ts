@@ -13,6 +13,7 @@ import {
   getTransactionHistory,
   updateKycProfile,
   userProfileDetails,
+  verifyUserEmail,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -82,6 +83,8 @@ const router = Router()
  *                 message: "Internal Server Error"
  */
 router.post('/register', registerUser)
+
+router.post('/verifyEmail', verifyUserEmail)
 
 /**
  * @swagger

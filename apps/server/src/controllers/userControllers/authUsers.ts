@@ -14,6 +14,7 @@ import {
 } from '../../constants'
 import Users, { authMethod, role } from '../../models/users'
 import UserResetPasswordToken from '../../models/userPasswordToken'
+import UserVerifyEmail from '../../models/userVerifyEmail'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import {
   GenerateOTP,
@@ -62,8 +63,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
     if (!userExist) {
       const hashedPassword = await PasswordHarsher.hash(password)
-      const otpInfo = GenerateOTP()
-      const otp = otpInfo.otp.toString()
+
       const id = uuidV4()
 
       const user = await Users.create({
@@ -79,9 +79,26 @@ export const registerUser = async (req: Request, res: Response) => {
         kycComplete: false,
       })
 
+      const longString = generateLongString(40)
+
+      const jwtUserToken = await Jwt.sign(
+        {
+          // id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+        },
+        { _secret: longString, expiresIn: '24h' }
+      )
+
+      await UserVerifyEmail.create({
+        id: uuidV4(),
+        token: longString,
+        user: jwtUserToken,
+      })
+
       bgJobs.signUpSendVerificationEmail({
+        token: longString,
         email,
-        otp,
         firstName: user.firstName,
       })
       bgJobs.setupWallets({ userId: user.id })
@@ -100,6 +117,7 @@ export const registerUser = async (req: Request, res: Response) => {
       })
     }
   } catch (error) {
+    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
@@ -127,16 +145,14 @@ export const loginUser = async (req: Request, res: Response) => {
       )
 
       if (confirmPassword) {
-        // TODO: once verify email is implemented, we can check if the user is verified
+        const isVerified = confirmUser.emailIsVerified
 
-        // const isVerified = confirmUser.isVerified
-        //
-        // if (!isVerified) {
-        //   return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.UNAUTHORIZED](
-        //     res,
-        //     'Account not verified, please check your email for the verification link'
-        //   )
-        // }
+        if (!isVerified) {
+          return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.UNAUTHORIZED](res, {
+            message:
+              'Account not verified, please check your email for the verification link',
+          })
+        }
 
         const payload = {
           id: confirmUser.id,
@@ -424,3 +440,68 @@ export const changePassword = async (req: RequestExt, res: Response) => {
  *   status: 'success' | 'expired' | 'error',
  *   user: RegisterSchema - send back form fields except confirmPassword and password
  */
+
+export const verifyUserEmail = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body
+
+    const verifyRecord = await UserVerifyEmail.findOne({
+      where: { token },
+    })
+
+    if (!verifyRecord) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {})
+    }
+
+    const { data, expired, valid } = await Jwt.isTokenExpired<Users>(
+      verifyRecord.user,
+      token
+    )
+
+    const user = await Users.findOne({ where: { id: data.id } })
+
+    if (!user) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {})
+    }
+
+    if (user.emailIsVerified) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
+        message: 'Email already verified!',
+      })
+    }
+
+    if (valid && expired) {
+      bgJobs.sendExpiredVerificationEmail({
+        email: user.email,
+        firstName: user.firstName,
+      })
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.UNAUTHORIZED](res, {
+        message:
+          'Expired email verification token. Kindly resend verification email',
+      })
+    }
+
+    await Users.update(
+      {
+        emailIsVerified: true,
+      },
+      { where: { id: data.id } }
+    )
+
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      message: `Email successfully verified`,
+      user: _.pick(user.dataValues, [
+        'id',
+        'email',
+        'firstName',
+        'lastName',
+        'kycComplete',
+      ]),
+    })
+  } catch (error) {
+    console.error(error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
+      error: 'Verification failed',
+    })
+  }
+}

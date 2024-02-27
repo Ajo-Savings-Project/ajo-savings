@@ -1,22 +1,36 @@
 import { mailResetPassword } from './jobs/resetPasswordJob'
-import { mailOTP } from './jobs/signupVerifyJob'
+import { signupVerificationMail } from './jobs/signupVerifyJob'
 import {
   resetPasswordSendEmailQueue,
+  sendExpiredVerificationEmailQueue,
   signUpSendVerificationEmailQueue,
 } from './queues'
 
 //  consumer/worker
 signUpSendVerificationEmailQueue.process((job) => {
-  return mailOTP(job.data)
+  return signupVerificationMail(job.data)
 })
 
 export const signUpSendVerificationEmail = (values: {
   email: string
-  otp: string
+  token: string
   firstName: string
 }) => {
   // producer
   signUpSendVerificationEmailQueue.add(values)
+}
+
+//  consumer/worker
+sendExpiredVerificationEmailQueue.process((job) => {
+  return sendExpiredVerificationEmail(job.data)
+})
+
+export const sendExpiredVerificationEmail = (values: {
+  email: string
+  firstName: string
+}) => {
+  // producer
+  sendExpiredVerificationEmailQueue.add(values)
 }
 
 //  consumer/worker
