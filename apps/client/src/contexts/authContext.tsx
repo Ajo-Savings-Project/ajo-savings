@@ -10,13 +10,17 @@ const contextValues = {
   email: '',
   id: '',
   kycComplete: false,
+  profilePic: '',
 }
 
-type ContextValueT = typeof contextValues
+type ContextValueT = Partial<typeof contextValues>
 
 interface AuthContextI extends ContextValueT {
   handleAuthSession: (values: {
-    data: Omit<typeof contextValues, 'isAuth' | 'showAutoLogoutMessage'>
+    data: Omit<
+      typeof contextValues,
+      'isAuth' | 'showAutoLogoutMessage' | 'profilePic'
+    >
     token?: string
   }) => void
   handleClearSession: (options?: { auto: boolean }) => void
@@ -42,6 +46,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     id: '',
     kycComplete: false,
   })
+
+  console.log(state)
 
   const handleAuthSession = (
     values: Parameters<AuthContextI['handleAuthSession']>[0]

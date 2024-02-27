@@ -8,7 +8,7 @@ import { Text } from '../../elements'
 import styles from './dashboardheader.module.scss'
 
 const AccountSnippet = () => {
-  const { firstName } = useAuth()
+  const { firstName, profilePic } = useAuth()
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
@@ -48,12 +48,12 @@ const AccountSnippet = () => {
           onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         >
           <img
-            src="https://picsum.photos/130/130"
+            src={profilePic}
             alt={`profile picture of ${firstName}`}
             className={styles.headerImg}
           />
           <Text
-            content={capitalizeWord(firstName) || '__'}
+            content={capitalizeWord(firstName || '__')}
             size={'Small'}
             color={'Gray'}
             className={styles.headerText}

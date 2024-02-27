@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query'
+import { useMutation, QueryClient } from 'react-query'
 import request from 'api'
 import { z } from 'zod'
 
@@ -18,13 +18,21 @@ export const LoginResponseSchema = z.object({
   }),
 })
 
+const queryClient = new QueryClient()
+
 export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (data: z.infer<typeof LoginSchema>) => {
       const res = await request.post('/users/login', data)
       request.defaults.headers['Authorization'] = `Bearer ${res.data.token}`
       const result = LoginResponseSchema.safeParse(res.data)
-      if (result.success) return result
+      if (result.success) {
+        await queryClient.prefetchQuery({
+          queryKey: [result.data.data.id, 'user'],
+          queryFn: async () => await request.get('/users/profile'),
+        })
+        return result
+      }
     },
   })
 }
