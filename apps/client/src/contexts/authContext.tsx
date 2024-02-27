@@ -16,7 +16,7 @@ type ContextValueT = typeof contextValues
 
 interface AuthContextI extends ContextValueT {
   handleAuthSession: (values: {
-    user: Omit<typeof contextValues, 'isAuth' | 'showAutoLogoutMessage'>
+    data: Omit<typeof contextValues, 'isAuth' | 'showAutoLogoutMessage'>
     token?: string
   }) => void
   handleClearSession: (options?: { auto: boolean }) => void
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleAuthSession = (
     values: Parameters<AuthContextI['handleAuthSession']>[0]
   ) => {
-    const s_id = `${String(new Date().getTime())}:${values.user.id}`
+    const s_id = `${String(new Date().getTime())}:${values.data.id}`
 
     setState((prev) => {
       sessionStorage.setItem(SESSION_COUNT_KEY, values.token as string)
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       return {
         ...prev,
-        ...values.user,
+        ...values.data,
         isAuth: true,
         showAutoLogoutMessage: false,
       }
