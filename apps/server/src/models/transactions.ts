@@ -39,6 +39,8 @@ export const transactionTransferType = {
   GROUP_TRANSACTIONS: 'GROUP_TRANSACTIONS',
   // Transactions between global wallet and other personal wallets(savings, group etc.)
   INTERNAL_TRANSFERS: 'INTERNAL_TRANSFERS',
+  // Transactions between global wallet and other personal wallets(savings, group etc.)
+  PAY_STACK: 'PAY_STACK',
 } as const
 export type TransactionTransferType =
   (typeof transactionTransferType)[keyof typeof transactionTransferType]
