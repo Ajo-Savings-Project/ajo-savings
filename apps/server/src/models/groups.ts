@@ -6,6 +6,7 @@ import {
   CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
+import GroupWallet from './groupWallet'
 import Users from './users'
 
 const TABLE_NAME = 'Groups'
@@ -105,5 +106,11 @@ Groups.init(
 Groups.belongsTo(Users, {
   foreignKey: 'ownerId',
   as: 'user',
+})
+
+Groups.belongsTo(GroupWallet, {
+  foreignKey: 'id',
+  as: 'groupWallet',
+  targetKey: 'ownerId',
 })
 export default Groups

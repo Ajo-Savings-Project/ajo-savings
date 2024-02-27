@@ -12,9 +12,19 @@ export const getUserWallets = async (req: RequestExt, res: Response) => {
       attributes: ['id', 'balance', 'type'],
     })
 
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-      data: personalWallets,
-    })
+    if (personalWallets) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+        data: personalWallets.reduce(
+          (acc, wallet) => {
+            acc[wallet.type] = wallet
+            return acc
+          },
+          {} as Record<string, unknown>
+        ),
+      })
+    }
+
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
   } catch (error) {
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }

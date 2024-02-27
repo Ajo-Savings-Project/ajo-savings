@@ -46,9 +46,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     id: '',
     kycComplete: false,
   })
-
-  console.log(state)
-
   const handleAuthSession = (
     values: Parameters<AuthContextI['handleAuthSession']>[0]
   ) => {

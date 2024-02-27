@@ -5,6 +5,7 @@ export {
   verifyUserEmail,
 } from './authUsers/registerUser'
 export { getUserWallets } from './wallets/getUserWallets'
+export { getUserWalletBalances } from './wallets/walletBalances'
 export { refreshToken } from './authUsers/refreshUserToken'
 export {
   resetPassword,

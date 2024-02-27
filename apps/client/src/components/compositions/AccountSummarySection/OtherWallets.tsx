@@ -24,7 +24,7 @@ export const OtherWallet = ({
     <Card className={classNames(styles.globalWallet, styles.otherWallet)}>
       <Icon />
       <Text size={'Small'} content={label} />
-      <Text content={amount} size={'Subtext'} />
+      <Text content={String(amount || '__')} size={'Subtext'} />
       <Modal
         modalContentClassName={styles.modalContent}
         disableOutsideClose
