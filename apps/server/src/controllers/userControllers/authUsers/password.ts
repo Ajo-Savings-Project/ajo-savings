@@ -1,5 +1,5 @@
+import { differenceInSeconds } from 'date-fns'
 import { Request, Response } from 'express'
-import { v4 } from 'uuid'
 import { resetPasswordSendEmail } from '../../../backgroundJobs/resetPasswordTask'
 import Env from '../../../config/env'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../../constants'
@@ -18,10 +18,60 @@ import {
   resetPasswordSchema,
 } from '../../../utils/validators'
 
+const hasPendingRequest = async (userId: string) => {
+  const existingRequest = await TempTokens.findOne({
+    where: { id: userId },
+  })
+
+  if (existingRequest) {
+    const { secret, token } = existingRequest
+    const { expired, data } = await Jwt.isTokenExpired(
+      token,
+      Env.JWT_SECRET + secret
+    )
+    return { pending: !expired, createdAt: data.createdAt as string }
+  }
+  return { pending: false, createdAt: new Date().toISOString() }
+}
+
+const createTempToken = async (userId: string, time: number = 60) => {
+  const secret = generateLongString(25)
+
+  const createdAt = new Date().toISOString()
+
+  const token = await Jwt.sign(
+    {
+      id: userId,
+      createdAt,
+      type: 'reset-password',
+    },
+    { _secret: Env.JWT_SECRET + secret, expiresIn: `${time}s` }
+  )
+
+  const exist = await TempTokens.findOne({ where: { id: userId } })
+  if (exist) {
+    await exist.update({
+      secret,
+      token,
+      used: false,
+    })
+  } else {
+    await TempTokens.create({
+      id: userId,
+      secret,
+      token,
+      used: false,
+    })
+  }
+
+  return { secret, createdAt }
+}
+
 /**
  * Send a reset password link to the user's email
  */
 export const forgotPassword = async (req: Request, res: Response) => {
+  const ELAPSE_TIME_IN_SECONDS = 60
   try {
     const isValidBody = forgotPasswordSchema.strict().safeParse(req.body)
 
@@ -36,32 +86,27 @@ export const forgotPassword = async (req: Request, res: Response) => {
       })
 
       if (user) {
-        const secret = generateLongString(25)
-
-        const token = await Jwt.sign(
-          {
-            id: user.id,
-            type: 'reset-password',
-          },
-          { _secret: Env.JWT_SECRET + secret, expiresIn: '1m' }
+        const { pending, createdAt } = await hasPendingRequest(user.id)
+        if (pending) {
+          const timeLeft = differenceInSeconds(new Date(), new Date(createdAt))
+          return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+            message: `You will receive an email if you have an account with us.`,
+            data: { createdAt, timeLeft: ELAPSE_TIME_IN_SECONDS - timeLeft },
+          })
+        }
+        const { secret } = await createTempToken(
+          user.id,
+          ELAPSE_TIME_IN_SECONDS
         )
-
-        //create password reset data instance
-        await TempTokens.create({
-          id: v4(),
-          secret,
-          token,
-          used: false,
-        })
-
-        resetPasswordSendEmail({
-          ...user.dataValues,
-          token: secret,
-        })
+        resetPasswordSendEmail({ ...user.dataValues, token: secret })
       }
 
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-        message: `Password reset link will be sent to your email if you have an account with us.`,
+        message: `You will receive an email if you have an account with us.`,
+        data: {
+          createdAt: new Date().toISOString(),
+          timeLeft: ELAPSE_TIME_IN_SECONDS,
+        },
       })
     }
 

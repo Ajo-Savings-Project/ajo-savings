@@ -30,7 +30,7 @@ TempTokens.init(
       allowNull: false,
     },
     token: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(3000),
       allowNull: false,
     },
     used: {

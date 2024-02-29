@@ -38,11 +38,12 @@ const emailVerifyJob = (user: JobType) => {
 
 const runSetupTasks = pipe(emailVerifyJob, walletsJob, settingsJob)
 
-const createEmailVerificationToken = async (id: string) => {
+const createEmailVerificationToken = async (id: string, email?: string) => {
   const secret = generateLongString(50)
   const verifyToken = await Jwt.sign(
     {
       id,
+      email: email ?? '',
       type: 'signup-verify',
     },
     { _secret: Env.JWT_SECRET + secret, expiresIn: '1d' }
@@ -105,7 +106,7 @@ export const registerUser = async (req: Request, res: Response) => {
         { returning: true }
       )
 
-      const secret = await createEmailVerificationToken(id)
+      const secret = await createEmailVerificationToken(id, trim(newEmail))
 
       runSetupTasks({
         token: secret,
@@ -186,7 +187,7 @@ export const resendVerifyUserEmail = async (req: RequestExt, res: Response) => {
   try {
     const { _userId: id, _user } = req.body
     if (!_user.emailIsVerified) {
-      const secret = await createEmailVerificationToken(id)
+      const secret = await createEmailVerificationToken(id, trim(_user.email))
       emailVerifyJob({ ..._user.dataValues, token: secret } as JobType)
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
     }
@@ -195,6 +196,56 @@ export const resendVerifyUserEmail = async (req: RequestExt, res: Response) => {
     })
   } catch (error) {
     console.error(error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
+  }
+}
+
+export const resendVerifyUserEmailWithToken = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const validData = verifyEmailSchema.strict().safeParse(req.body)
+
+    if (!validData.success) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        message: validData.error.issues,
+      })
+    }
+
+    const verifyRecord = await TempTokens.findOne({
+      where: { secret: validData.data.token, used: false },
+    })
+
+    if (!verifyRecord) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
+        message: 'Token already used!',
+      })
+    }
+
+    const { secret, token } = verifyRecord
+
+    const { valid, expired, data } = await Jwt.isTokenExpired(
+      token,
+      Env.JWT_SECRET + secret
+    )
+
+    if (valid && expired) {
+      const user = await Users.findOne({ where: { id: data.id } })
+      if (user) {
+        const secret = await createEmailVerificationToken(data.id, user?.email)
+        await verifyRecord.update({ used: true })
+        emailVerifyJob({ ...user.dataValues, token: secret } as JobType)
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
+      }
+    }
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
+      message:
+        valid && !expired
+          ? "Your previous token isn't expired yet."
+          : 'Invalid token!',
+    })
+  } catch (error) {
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
