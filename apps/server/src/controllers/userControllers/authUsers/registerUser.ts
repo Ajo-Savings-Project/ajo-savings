@@ -152,15 +152,28 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
     )
 
     if (!valid || expired) {
+      const user = await Users.findOne({ where: { id: data.id } })
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.FORBIDDEN](res, {
         message: 'Invalid or expired token.',
+        data: {
+          code: !valid ? 'IN_VALID' : 'EXPIRED',
+          email: user?.email,
+        },
       })
     }
 
-    await Users.update({ emailIsVerified: true }, { where: { id: data.id } })
     await verifyRecord.update({ used: true })
+    const user = await Users.update(
+      { emailIsVerified: true },
+      { where: { id: data.id }, returning: true }
+    )
 
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+      message: 'Email verified successfully',
+      data: {
+        email: user[1][0].email,
+      },
+    })
   } catch (error) {
     console.error(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
