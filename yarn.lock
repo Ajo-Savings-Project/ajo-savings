@@ -699,6 +699,53 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.12.0.tgz#9ffdf9ed133a7464f4ae187eb9e1294413fab235"
   integrity sha512-ZYmr5mS2wd4Dew/JjT0Fqi2NPB/ZhZ2VvPp7SmvPZb4Y1CG/LRcS6tcRo2cYU7zLK5A7cdbhWnnWmUjoI4qapg==
 
+"@sentry-internal/tracing@7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/tracing/-/tracing-7.103.0.tgz#b18ef65f610099ee2fc74f91f9ccfdb0353580c4"
+  integrity sha512-sZ/Wao8HOvGaBs7WlOdflMpHGAFkOBWL6hBiirHaOy5d+IDm7n7et5U6zhvcfiyYBO4nY36gy1Tg5mw+aNO0Vw==
+  dependencies:
+    "@sentry/core" "7.103.0"
+    "@sentry/types" "7.103.0"
+    "@sentry/utils" "7.103.0"
+
+"@sentry/core@7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.103.0.tgz#8f626362c96f9aa4b4a52042c431d16372491dc1"
+  integrity sha512-LCI+PIDoF/RLqN41fNXum3ilmS6ukni6L7t38vSdibbe2G0804EbPLtOIpv2PkS8E6CFuRW5zOb+8OwEAAtZWw==
+  dependencies:
+    "@sentry/types" "7.103.0"
+    "@sentry/utils" "7.103.0"
+
+"@sentry/node@^7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.103.0.tgz#9cf488086717c2920c43568432d14232b6783a9e"
+  integrity sha512-/bS/WNeO+PEd0r3o3LN0XGJV+l7hLNy1dTcn61VRgWGVs8SqMBb3uAvXAibZ9zGTCkaX/Ky3JumMcOOoxmNCtg==
+  dependencies:
+    "@sentry-internal/tracing" "7.103.0"
+    "@sentry/core" "7.103.0"
+    "@sentry/types" "7.103.0"
+    "@sentry/utils" "7.103.0"
+
+"@sentry/profiling-node@^7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry/profiling-node/-/profiling-node-7.103.0.tgz#1a87c6e86ba3afb939f2af5b34f1ab7165812c81"
+  integrity sha512-CUW8MlNS0vrFLbkF0+LSRv6wu5iWF4XWnKk9vm6+z8jNg0aonRLgdbqeEbXsXKbgxI5eZ1tt4/OFjZbpBszRDA==
+  dependencies:
+    detect-libc "^2.0.2"
+    node-abi "^3.52.0"
+
+"@sentry/types@7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.103.0.tgz#f413f922216c97ec86bae39f9d527669d8afedbd"
+  integrity sha512-NCvKyx8d2AGBQKPARrJemZmZ16DiMo688OEikZg4BbvFNDUzK5Egm2BH0vfLDhbNkU19o3maJowrYo42m8r9Zw==
+
+"@sentry/utils@7.103.0":
+  version "7.103.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.103.0.tgz#803b76e2adfdcec0d4ab6369cc8990dde19b55f4"
+  integrity sha512-phkUJt3F0UOkVq+M4GfdAh2ewI3ASrNiJddx9aO7GnT0aDwwVBHZltnqt95qgAB8W+BipTSt1dAh8yUbbq1Ceg==
+  dependencies:
+    "@sentry/types" "7.103.0"
+
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -2336,7 +2383,7 @@ destroy@1.2.0:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.2.0.tgz#4803735509ad8be552934c67df614f94e66fa015"
   integrity sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==
 
-detect-libc@^2.0.0:
+detect-libc@^2.0.0, detect-libc@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.2.tgz#8ccf2ba9315350e1241b88d0ac3b0e1fbd99605d"
   integrity sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==
@@ -4362,6 +4409,13 @@ no-case@^3.0.4:
   dependencies:
     lower-case "^2.0.2"
     tslib "^2.0.3"
+
+node-abi@^3.52.0:
+  version "3.56.0"
+  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.56.0.tgz#ca807d5ff735ac6bbbd684ae3ff2debc1c2a40a7"
+  integrity sha512-fZjdhDOeRcaS+rcpve7XuwHBmktS1nS1gzgghwKUQQ8nTy2FdSDr6ZT8k6YhvlJeHmmQMYiT/IH9hfco5zeW2Q==
+  dependencies:
+    semver "^7.3.5"
 
 node-abort-controller@^3.1.1:
   version "3.1.1"

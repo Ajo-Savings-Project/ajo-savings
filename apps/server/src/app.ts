@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express'
 import cookieParser from 'cookie-parser'
-import dotenv from 'dotenv'
 import logger from 'morgan'
 import path from 'path'
 import createError, { HttpError } from 'http-errors'
@@ -10,11 +9,24 @@ import specs from './swagger'
 import { db, ENV } from './config'
 import { serverAdapter } from './config/bullBoardConfig'
 import cors from 'cors'
+import * as Sentry from '@sentry/node'
+import { ProfilingIntegration } from '@sentry/profiling-node'
+import { HTTP_STATUS_CODE } from './constants'
 
-dotenv.config()
 const app = express()
 
 const port = ENV.PORT || 5500
+
+Sentry.init({
+  dsn: ENV.DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+})
 
 const allowedOrigins: Array<string> = [
   ENV.FE_BASE_URL as string,
@@ -42,6 +54,9 @@ app.use(express.static(path.join(__dirname, '../public')))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
 
+app.use(Sentry.Handlers.requestHandler())
+app.use(Sentry.Handlers.tracingHandler())
+
 db.sync()
   .then(() => {
     console.log('Database is connected')
@@ -52,9 +67,34 @@ db.sync()
 
 app.use('/api/v1', apiV1Routes)
 
+app.use(Sentry.Handlers.errorHandler())
+interface SentryRequestInfo {
+  url: string
+  method: string
+  headers: Record<string, any>
+  body: any
+}
+app.use(function onError(err: HttpError, req: Request, res: Response) {
+  const sentryRequest: SentryRequestInfo = {
+    url: req.originalUrl,
+    method: req.method,
+    headers: req.headers,
+    body: req.body,
+  }
+
+  const sentryContext: Sentry.EventHint = {
+    ...{ request: sentryRequest },
+    originalException: err,
+  }
+  Sentry.captureException(err, sentryContext)
+
+  res.statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER
+  res.end((res as any).sentry + '\n')
+})
+
 // catch 404 and forward to error handler
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  next(createError(404))
+app.use(function (_req: Request, _res: Response, next: NextFunction) {
+  next(createError(HTTP_STATUS_CODE.NOT_FOUND))
 })
 
 // error handler
@@ -63,8 +103,10 @@ app.use(function (err: HttpError, req: Request, res: Response) {
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 
+  Sentry.captureException(err)
+
   // render the error page
-  res.status(err.status || 500)
+  res.status(err.status || HTTP_STATUS_CODE.INTERNAL_SERVER)
   res.render('error')
 })
 
