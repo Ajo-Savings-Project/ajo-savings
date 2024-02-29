@@ -706,7 +706,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"crystal0956@yopmail.com\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -721,6 +721,53 @@
 							"path": [
 								"users",
 								"resendVerifyUserEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resendVerifyUserEmailWithToken",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"CpXYaitCgXRspFH68OuJo7lGcSZYLu7mOIQcCRP930rXpJjUbf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/resendVerifyUserEmailWithToken",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"resendVerifyUserEmailWithToken"
 							]
 						}
 					},
