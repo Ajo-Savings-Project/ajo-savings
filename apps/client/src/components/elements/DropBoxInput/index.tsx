@@ -137,6 +137,7 @@ const DropBoxInput = ({
                 size="Default"
                 content={files[0].name}
                 className={styles.DocNane}
+                style={{ paddingTop: '10px' }}
               />
               <button
                 className={styles.removeBtn}
