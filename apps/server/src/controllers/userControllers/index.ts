@@ -3,6 +3,7 @@ export {
   registerUser,
   resendVerifyUserEmail,
   verifyUserEmail,
+  resendVerifyUserEmailWithToken,
 } from './authUsers/registerUser'
 export { getUserWallets } from './wallets/getUserWallets'
 export { getUserWalletBalances } from './wallets/walletBalances'

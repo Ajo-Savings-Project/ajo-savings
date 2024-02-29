@@ -15,6 +15,7 @@ import {
   verifyUserEmail,
   getUserWallets,
   getUserWalletBalances,
+  resendVerifyUserEmailWithToken,
 } from '../../controllers/userControllers'
 import {
   authorizationMiddleware,
@@ -289,6 +290,8 @@ router.get(
   authorizationMiddleware,
   resendVerifyUserEmail
 )
+
+router.post('/resendVerifyUserEmailWithToken', resendVerifyUserEmailWithToken)
 
 router.get('/walletBalances', authorizationMiddleware, getUserWalletBalances)
 
