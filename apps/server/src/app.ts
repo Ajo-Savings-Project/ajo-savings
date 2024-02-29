@@ -42,7 +42,9 @@ app.use(express.static(path.join(__dirname, '../public')))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
 
-db.sync()
+db.sync({
+  //  force: true,
+})
   .then(() => {
     console.log('Database is connected')
   })
