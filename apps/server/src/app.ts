@@ -17,17 +17,6 @@ const app = express()
 
 const port = ENV.PORT || 5500
 
-Sentry.init({
-  dsn: ENV.DSN,
-  integrations: [
-    new Sentry.Integrations.Http({ tracing: true }),
-    new Sentry.Integrations.Express({ app }),
-    new ProfilingIntegration(),
-  ],
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
-})
-
 const allowedOrigins: Array<string> = [
   ENV.FE_BASE_URL as string,
   // CORS allow use of swagger on local environment
@@ -50,6 +39,17 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
+
+Sentry.init({
+  dsn: ENV.DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+})
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
@@ -89,7 +89,6 @@ app.use(function onError(err: HttpError, req: Request, res: Response) {
   Sentry.captureException(err, sentryContext)
 
   res.statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER
-  res.end((res as any).sentry + '\n')
 })
 
 // catch 404 and forward to error handler
@@ -111,12 +110,6 @@ app.use(function (err: HttpError, req: Request, res: Response) {
 })
 
 app.listen(port, () => {
-  console.log(
-    `\n\nAjo Server:\n\nApi docs, open @  http://localhost:${port}/api-docs`
-  )
-  console.log(`\nLocal baseUrl, use @ http://localhost:${port}/api/`)
-  console.log(`\nBull UI, open @ http://localhost:${port}/admin/queues`)
-  //you can use docker: docker run -d -p 6379:6379 redis
   console.log('\nMake sure Redis is running on port 6379 by default')
   console.log('you can use docker: docker run -d -p 6379:6379 redis\n')
 })
