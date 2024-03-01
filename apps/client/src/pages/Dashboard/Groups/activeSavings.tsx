@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Modal, Text } from 'components'
 import { routes } from 'router'
 import styles from './activeSavings.module.scss'
-import MyActiveSavings from 'components/compounds/ActiveSavings/ActiveSavings'
+import MyActiveSavings from 'components/compounds/ActiveSavings/MyActiveSavings'
 
 const ActiveSavings = () => {
   return (
@@ -44,7 +44,9 @@ const ActiveSavings = () => {
           </Link>
         </div>
       </div>
-      <MyActiveSavings />
+      <div>
+        <MyActiveSavings />
+      </div>
     </div>
   )
 }
