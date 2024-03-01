@@ -21,19 +21,6 @@
     grid-template-columns: 5.5fr 3.5fr 0.3fr;
     gap: 2rem;
     align-items: center;
-
-    &Modal {
-      width: 8rem;
-      height: 6rem;
-      background: #f9fafb;
-      display: grid;
-      text-align: center;
-      padding: 0.5rem;
-
-      & > * {
-        cursor: pointer;
-      }
-    }
   }
 
   &left {
@@ -109,6 +96,26 @@
 
     &Hide {
       display: none;
+    }
+  }
+
+  &SnippetDrop {
+    display: grid;
+    gap: 1rem;
+    background-color: white;
+    margin: 5px;
+    text-align: start;
+    color: black;
+    padding: 20px;
+    list-style: none;
+    border-radius: 8px;
+    box-shadow: -1px 2px 12px 1px #00000033;
+
+    > li {
+      cursor: pointer;
+    }
+    > li a {
+      text-decoration: none;
     }
   }
 }
