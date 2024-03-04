@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Modal } from 'components'
 import { routes } from 'router'
-import ExploreGroupView from 'components/compounds/GroupView/ExploreGroupView'
 
 const ActiveSavings = () => {
   return (
@@ -17,7 +16,6 @@ const ActiveSavings = () => {
       <Link to={routes.dashboard.groups.abs_path + '?page=explore'}>
         Explore Groups
       </Link>
-      <ExploreGroupView />
     </div>
   )
 }

@@ -1,25 +1,9 @@
-// TableComponent.tsx
-import React from 'react'
 import { Text } from 'components'
+import { getPerformanceColor } from './helpers.ts'
+import { Transaction } from './mockData.ts'
 import styles from './tableComponent.module.scss'
-import { mockTransactions } from '../ContributionDetails/helper'
-import { transData } from '../ContributionDetails/mockData'
 
-const transactions = mockTransactions(transData)
-
-interface Props {}
-
-const TableComponent: React.FC<Props> = () => {
-  const getPerformanceColor = (performance: string | number): string => {
-    if (performance === 'new User') {
-      return 'blue'
-    } else {
-      const percentage =
-        typeof performance === 'number' ? performance : parseFloat(performance)
-      return percentage >= 50 ? 'green' : 'red'
-    }
-  }
-
+const MembersPerformance = ({ data }: { data: Transaction[] }) => {
   return (
     <div className={styles.container}>
       <Text content={'Members'} className={styles.member} size={'Small'} />
@@ -37,17 +21,17 @@ const TableComponent: React.FC<Props> = () => {
             size={'Small'}
           />
         </div>
-        {transactions.map((data, index) => (
+        {data.map(({ name, performance }, index) => (
           <div className={styles.row} key={index}>
             <Text
               content={(index + 1).toString()}
               className={styles.serialNumber}
             />
-            <Text content={data.name} className={styles.name} />
+            <Text content={name} className={styles.name} />
             <Text
-              content={data.performance}
+              content={`${performance}%`}
               className={styles.performance}
-              style={{ color: getPerformanceColor(data.performance) }}
+              style={{ color: getPerformanceColor(performance) }}
             />
           </div>
         ))}
@@ -56,4 +40,4 @@ const TableComponent: React.FC<Props> = () => {
   )
 }
 
-export default TableComponent
+export default MembersPerformance

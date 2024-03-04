@@ -1,23 +1,31 @@
 import React from 'react'
 import { Text } from 'components'
+import { Link } from 'react-router-dom'
+import { viewData } from './mockData.ts'
 import styles from './cardComponent.module.scss'
-import { ViewData } from '../ContributionDetails/mockData'
 
-interface Props {}
+interface Props {
+  isMember?: boolean
+}
 
-const CardComponent: React.FC<Props> = () => {
+const ContributionOverview: React.FC<Props> = ({ isMember }) => {
   return (
     <div className={styles.container}>
       <div className={styles.containerCard}>
-        {ViewData.map((item, index) => (
+        {viewData.map((item, index) => (
           <div key={index} className={styles.row}>
             <Text content={item.label} className={styles.label} />
             <Text content={item.value} className={styles.value} />
           </div>
         ))}
       </div>
+      {isMember && (
+        <Link to={'/flow'}>
+          <Text content={'viewFlow'} />
+        </Link>
+      )}
     </div>
   )
 }
 
-export default CardComponent
+export default ContributionOverview
