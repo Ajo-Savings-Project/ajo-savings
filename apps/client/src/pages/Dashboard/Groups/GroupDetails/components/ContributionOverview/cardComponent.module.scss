@@ -21,11 +21,21 @@
       font-weight: bold;
       padding-top: 10px;
     }
+
+    .flow {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      text-decoration: none;
+      line-height: 140%;
+      letter-spacing: 0.15px;
+    }
   }
 
   @media (min-width: 48rem) {
     width: 40%;
   }
 }
-
-
