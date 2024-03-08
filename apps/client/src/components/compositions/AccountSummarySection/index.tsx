@@ -1,12 +1,14 @@
-// import { useEffect, useState } from 'react'
 import { GlobalWallet } from './GlobalWallet.tsx'
 import { OtherWallet } from './OtherWallets.tsx'
-import { useQueryWallets } from './request.ts'
+import { useQueryWallets, ResponseType } from './request.ts'
 import styles from './styles.module.scss'
 import Group from './assets/group.svg?react'
 import Profile from './assets/profile.svg?react'
 import Eye from './assets/hide.svg?react'
+
+import 'react-loading-skeleton/dist/skeleton.css'
 import { formatCurrency } from 'utils/currencyFormatter.ts'
+
 const otherWalletData = [
   {
     Icon: Group,
@@ -26,17 +28,31 @@ const otherWalletData = [
 ]
 
 export const AccountSummarySection = () => {
-  const { data } = useQueryWallets() // api logic
-  const amounts = formatCurrency(data?.data.GLOBAL?.balance || 0)
+  const { data, isLoading } = useQueryWallets()
+  console.log(data)
+
   return (
     <section id="account summary" className={styles.accountSummary}>
-      <GlobalWallet amount={amounts} />
+      {}
+
+      <GlobalWallet
+        amount={
+          isLoading ? '- - -' : formatCurrency(data?.data?.GLOBAL?.balance || 0)
+        }
+      />
+
       {otherWalletData.map(({ name, ...props }) => (
         <OtherWallet
           key={name}
           {...props}
           name={name}
-          amount={formatCurrency(data?.data[name]?.balance || 0)}
+          amount={
+            isLoading
+              ? '- - -'
+              : formatCurrency(
+                  data?.data[name as keyof ResponseType]?.balance || 0
+                )
+          }
         />
       ))}
     </section>

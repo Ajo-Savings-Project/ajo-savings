@@ -1,29 +1,52 @@
 import { useQuery } from 'react-query'
 import request from '../../../api'
+import { z } from 'zod'
 
-interface RecordI {
+type RecordI = {
   id: string
   balance: number
 }
-interface WalletI {
-  id: string
+type WalletI = {
   balance: number
   records?: RecordI[]
 }
-interface WalletDataI {
+type D = {
   [key: string]: WalletI
 }
 
-interface DataI {
-  data: WalletDataI
+export type ResponseType = {
+  GLOBAL: RecordI
+  SAVINGS: RecordI
+  GROUPS: D
 }
+export const walletSchema = z.object({
+  GLOBAL: z.object({
+    id: z.string(),
+    balance: z.number(),
+  }),
+  SAVINGS: z.object({
+    id: z.string(),
+    balance: z.number(),
+  }),
+
+  GROUPS: z.object({
+    balance: z.number(),
+    records: z.array(
+      z.object({
+        id: z.string(),
+        balance: z.number(),
+      })
+    ),
+  }),
+})
 
 export const useQueryWallets = () => {
   return useQuery({
     queryKey: ['allWallets'],
     queryFn: async () => {
-      const response = await request.get<DataI>('/users/wallets')
-      return response.data
+      const response = await request.get<ResponseType>('/users/wallets')
+      const result = walletSchema.safeParse(response.data)
+      if (result.success) return result
     },
   })
 }
