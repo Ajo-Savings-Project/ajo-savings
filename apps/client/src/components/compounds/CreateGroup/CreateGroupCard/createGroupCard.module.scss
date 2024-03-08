@@ -1,0 +1,28 @@
+.cardContainer {
+  width: 100%;
+  max-width: 26.75rem;
+  max-height: 19.375rem;
+  .cardBody {
+    text-align: center;
+    &Logo {
+      width: 3.375rem;
+      height: 3.375rem;
+      border-radius: 50%;
+      background: var(--primary-50);
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &Text {
+      margin: 1rem;
+    }
+    &Share {
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    &Socials > * + * {
+      margin-left: 20px;
+    }
+  }
+}

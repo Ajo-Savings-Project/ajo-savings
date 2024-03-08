@@ -3,6 +3,7 @@ import { Modal, Text } from 'components'
 import { routes } from 'router'
 import styles from './activeSavings.module.scss'
 import MyActiveSavings from 'components/compounds/ActiveSavings/MyActiveSavings'
+import CreateGroup from 'components/compounds/CreateGroup'
 
 const ActiveSavings = () => {
   return (
@@ -27,7 +28,10 @@ const ActiveSavings = () => {
                 />
               </button>
             )}
-            renderModalContent={() => <div>Create new group body</div>}
+            renderModalContent={({ onClose }) => (
+              <CreateGroup onClose={onClose} />
+            )}
+            disableOutsideClose
           />
           <span className={styles.ContainerHeaderRightDivider}>
             <p>.</p>
