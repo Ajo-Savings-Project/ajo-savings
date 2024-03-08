@@ -78,6 +78,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     await Wallets.destroy({ where: { ownerId: groupId } })
     await Groups.destroy({ where: { id: groupId } })
     await GroupMembers.destroy({ where: { groupId } })
+
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }
