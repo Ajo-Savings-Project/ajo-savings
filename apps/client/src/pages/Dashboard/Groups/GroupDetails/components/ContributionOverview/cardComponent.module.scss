@@ -21,6 +21,15 @@
       font-weight: bold;
       padding-top: 10px;
     }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      letter-spacing: 0.15px;
+    }
   }
 
   @media (min-width: 48rem) {

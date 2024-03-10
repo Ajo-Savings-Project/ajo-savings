@@ -29,7 +29,11 @@ const MembersPerformance = ({ data }: { data: Transaction[] }) => {
             />
             <Text content={name} className={styles.name} />
             <Text
-              content={`${performance}%`}
+              content={
+                typeof performance === 'number'
+                  ? `${performance}%`
+                  : performance
+              }
               className={styles.performance}
               style={{ color: getPerformanceColor(performance) }}
             />

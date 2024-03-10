@@ -1,12 +1,12 @@
 import { Button, Text } from 'components'
-import ContributionOverview from './components/ContributionOverview'
-import MembersPerformance from './components/MembersPerformance'
-import { mockTransData } from './components/MembersPerformance/mockData.ts'
+import ContributionOverview from '../components/ContributionOverview'
+import MembersPerformance from '../components/MembersPerformance'
+import { mockTransData } from '../components/MembersPerformance/mockData'
 import styles from './exploreGroup.module.scss'
-import Chevron from './images/cheveron-right.svg?react'
+import { IoChevronForward } from 'react-icons/io5'
 
 const GroupDetails = () => {
-  const isMember = true
+  const isMember = false
 
   return (
     <div className={styles.container}>
@@ -23,11 +23,11 @@ const GroupDetails = () => {
             <div className={styles.data}>
               <div className={styles.left}>
                 <Text content="Active Savings Group" size="Small" />
-                <Chevron />
+                <IoChevronForward />
               </div>
               <div className={styles.right}>
                 <Text content="Active Savings Group" size="Small" />
-                <Chevron />
+                <IoChevronForward />
                 <Text content="Lagos Corp Members" size="Small" />
               </div>
             </div>
