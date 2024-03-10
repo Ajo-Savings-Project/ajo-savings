@@ -1,0 +1,45 @@
+.container {
+  .layout {
+    .row {
+      .topic {
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .date {
+        margin-top: 15px;
+      }
+      .wallet {
+        font-weight: 500;
+      }
+    }
+
+    &Button {
+      margin-top: 10px;
+
+      .dismiss {
+        margin-top: 3px;
+        color: #000;
+        background: white;
+        border: 1px solid rgba(105, 103, 103, 0.255);
+      }
+    }
+  }
+
+  @media (min-width: 400px) {
+    .layout {
+      display: flex;
+      justify-content: space-between;
+
+      &Button {
+        display: flex;
+        gap: 10px;
+        height: 40px;
+
+        .dismiss {
+          height: 42px;
+          margin-top: 1px;
+        }
+      }
+    }
+  }
+}
