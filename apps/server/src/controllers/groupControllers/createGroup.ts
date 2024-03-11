@@ -6,7 +6,6 @@ import { RequestExt } from '../../middleware/authorization/authentication'
 import GroupMembers from '../../models/groupMembers'
 import Groups, { FrequencyType } from '../../models/groups'
 import GroupWallet from '../../models/groupWallet'
-import Wallets from '../../models/wallets'
 import { createGroupSchema } from '../../utils/validators'
 import { createNewMember } from './helpers'
 import { Duration, add, format } from 'date-fns'
@@ -16,9 +15,10 @@ import {
   getCronExpressionFromFrequency,
 } from './helpers'
 import cron from 'node-cron'
+import { transactionWalletType } from '../../models/transactions'
 
 const handleCreateGroupError = async (groupId: string): Promise<void> => {
-  await Wallets.destroy({ where: { ownerId: groupId } })
+  await GroupWallet.destroy({ where: { groupId: groupId } })
   await Groups.destroy({ where: { id: groupId } })
   await GroupMembers.destroy({ where: { groupId } })
 }
@@ -122,6 +122,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
             id: v4(),
             groupId: newGroup.id,
             balance: 0,
+            type: transactionWalletType.GROUP,
           },
           { transaction }
         )

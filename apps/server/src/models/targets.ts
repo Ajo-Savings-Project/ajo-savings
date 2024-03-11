@@ -6,7 +6,6 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
-import TargetWallets from './targetWallets'
 import Users from './users'
 
 const TABLE_NAME = 'AllTargets'
@@ -40,7 +39,6 @@ class Targets extends Model<
   declare id: string
   declare userId: string
   declare avatar: string
-  declare walletId: string
   declare name: string
   declare frequency: TargetFrequencyType
   declare category: TargetCategoryType
@@ -67,13 +65,6 @@ Targets.init(
       type: DataTypes.UUID,
       references: {
         model: Users,
-        key: 'id',
-      },
-    },
-    walletId: {
-      type: DataTypes.UUID,
-      references: {
-        model: TargetWallets,
         key: 'id',
       },
     },
@@ -112,11 +103,5 @@ Targets.init(
     timestamps: true,
   }
 )
-
-Targets.belongsTo(TargetWallets, {
-  foreignKey: 'walletId',
-  as: 'wallet',
-  onDelete: 'CASCADE',
-})
 
 export default Targets

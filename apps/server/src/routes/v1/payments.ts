@@ -169,7 +169,6 @@ const router = Router()
 //   authorizationMiddleware,
 //   fundPersonalGroupWallet
 // )
-
 router.post('/fundWallet', authorizationMiddleware, fundWallet)
 router.post('/fundGroupWallet', authorizationMiddleware, fundGroupWallet)
 
