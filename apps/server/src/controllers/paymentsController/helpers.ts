@@ -1,4 +1,4 @@
-import { v4 } from 'uuid'
+// import { v4 } from 'uuid'
 import Transactions, {
   TransactionActionType,
   TransactionStatusType,
@@ -7,44 +7,70 @@ import Transactions, {
   transactionWalletType,
 } from '../../models/transactions'
 import { generateTransactionString } from '../../utils/helpers'
+import { Transaction } from 'sequelize'
 
 interface TransactionI {
-  senderId: string
-  receiverId: string
+  senderWalletId?: string
+  receiverWalletId?: string
+  senderName?: string
+  receiverName?: string
   walletType: TransactionWalletType
-  previousBalance: number
-  balance: number
+  walletId: string
   amount: number
   action: TransactionActionType
   status: TransactionStatusType
   transferType: TransactionTransferType
-  transactionId?: string
+  transaction: Transaction
 }
 
 export const createTransaction = async ({
   walletType,
   amount,
-  previousBalance,
-  balance,
+  walletId,
   action,
   status,
   transferType,
-  senderId,
-  receiverId,
-  transactionId,
+  senderWalletId,
+  receiverWalletId,
+  senderName,
+  receiverName,
+  transaction,
 }: TransactionI) => {
-  return await Transactions.create({
-    id: v4(),
-    action,
-    previousBalance,
-    balance,
-    amount,
-    status,
-    transferType,
-    walletType: transactionWalletType[walletType],
-    transactionId: transactionId ?? generateTransactionString(),
-    senderId,
-    receiverId,
-    description: '',
-  })
+  if ((senderWalletId && senderName) || (receiverWalletId && receiverName)) {
+    const transactionData = {
+      id: generateTransactionString(),
+      walletId,
+      walletType: transactionWalletType[walletType],
+      transferType,
+      amount,
+      status,
+      action,
+      description: '',
+      createdAt: new Date(),
+    }
+
+    if (senderWalletId && senderName) {
+      return await Transactions.create(
+        {
+          ...transactionData,
+          senderWalletId,
+          senderName,
+        },
+        { transaction }
+      )
+    } else if (receiverWalletId && receiverName) {
+      return await Transactions.create(
+        {
+          ...transactionData,
+          receiverWalletId,
+          receiverName,
+        },
+        { transaction }
+      )
+    }
+  } else {
+    throw new Error(
+      'Provide either senderWalletId and senderName or receiverWalletId and receiverName'
+    )
+  }
 }

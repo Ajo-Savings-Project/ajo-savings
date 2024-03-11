@@ -80,16 +80,15 @@ GroupMembers.init(
   }
 )
 
-GroupMembers.belongsTo(Groups, {
-  foreignKey: 'groupId',
-  as: 'group',
-})
-
 GroupMembers.belongsTo(Users, {
   foreignKey: 'userId',
   as: 'user',
 })
 
-Groups.hasMany(GroupMembers, { foreignKey: 'userId', as: 'members' }) // One-to-many relationship
-
+GroupMembers.belongsTo(Groups, {
+  foreignKey: 'groupId',
+})
+Groups.hasMany(GroupMembers, {
+  foreignKey: 'groupId',
+})
 export default GroupMembers

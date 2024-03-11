@@ -24,24 +24,25 @@ export const createTarget = async (req: RequestExt, res: Response) => {
 
     const { frequency, category, ...rest } = requestData.data
 
+    const target = await Targets.create({
+      ...rest,
+      id: v4(),
+      avatar: '',
+      userId: userId,
+      category: targetCategoryType[category],
+      frequency: targetFrequencyType[frequency],
+    })
+
     const wallet = await TargetWallets.create(
       {
         id: v4(),
         targetAmount: 0,
         amountSaved: 0,
+        targetId: target.id,
+        userId: userId,
       },
       { returning: true }
     )
-
-    const target = await Targets.create({
-      ...rest,
-      id: v4(),
-      avatar: '',
-      walletId: wallet.id,
-      userId: userId,
-      category: targetCategoryType[category],
-      frequency: targetFrequencyType[frequency],
-    })
 
     const daysLeft = differenceInDays(
       new Date(rest.withdrawalDate),
@@ -49,7 +50,7 @@ export const createTarget = async (req: RequestExt, res: Response) => {
     )
 
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-      data: { daysLeft, name: rest.name, id: target.id },
+      data: { daysLeft, name: rest.name, id: target.id, wallet },
     })
   } catch (error) {
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
