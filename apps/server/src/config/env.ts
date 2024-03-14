@@ -5,13 +5,11 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 // Specify the path to the .env file
 const envFilePath = isProduction ? '.env.production' : '.env.development'
-console.log(`running in ${process.env.NODE_ENV} mode`)
 
 // Load the environment variables from the specified file
 const result = dotenv.config({ path: envFilePath })
 
 if (result.error) {
-  console.error(`Failed to load environment variables from ${envFilePath}`)
   process.exit(1)
 }
 
@@ -36,6 +34,7 @@ const {
   API_KEY_4_CLOUDINARY,
   API_SECRET_4_CLOUDINARY,
   PAYSTACK_KEY,
+  DSN,
 } = process.env
 
 const ENV = {
@@ -60,6 +59,7 @@ const ENV = {
   API_KEY_4_CLOUDINARY,
   API_SECRET_4_CLOUDINARY,
   PAYSTACK_KEY,
+  DSN,
 }
 
 export default ENV

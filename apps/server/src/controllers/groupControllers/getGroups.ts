@@ -51,7 +51,6 @@ export const getGroups = async (req: Request, res: Response) => {
       ...result,
     })
   } catch (e) {
-    console.log(e)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

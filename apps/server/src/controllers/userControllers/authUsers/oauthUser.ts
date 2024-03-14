@@ -6,7 +6,6 @@ import {
 } from '../../../backgroundJobs/walletTasks'
 import { ENV } from '../../../config'
 import { HTTP_STATUS_CODE } from '../../../constants'
-import logger from '../../../utils/logger'
 import { OAuth2Client } from 'google-auth-library'
 import Users, { role, authMethod } from '../../../models/users'
 import { v4 as uuidV4 } from 'uuid'
@@ -156,7 +155,6 @@ export const oAuthUrl = async (req: Request, res: Response) => {
       url: authorizeUrl,
     })
   } catch (error) {
-    logger.error('OAuth Request Error', error)
     return res.redirect(ENV.FE_BASE_URL + `/auth/login?type=error`)
   }
 }
@@ -171,12 +169,9 @@ export const getUserTokens = async (req: Request, res: Response) => {
     )
     const tokenResponse = await oAuth2Client.getToken(code)
     await oAuth2Client.setCredentials(tokenResponse.tokens)
-    logger.info('Tokens acquired successfully')
     const user = oAuth2Client.credentials
-    logger.info('User Credentials', user)
     await getUserData(user.access_token, res)
   } catch (error) {
-    logger.error('Error with signing in with Google', error)
     return res.redirect(ENV.FE_BASE_URL + `/auth/login?type=error`)
   }
 }
