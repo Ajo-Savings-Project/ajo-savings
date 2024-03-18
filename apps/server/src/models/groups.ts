@@ -19,7 +19,7 @@ export const frequencyType = {
   DAILY: 'DAILY',
   WEEKLY: 'WEEKLY',
   MONTHLY: 'MONTHLY',
-}
+} as const
 export type FrequencyType = (typeof frequencyType)[keyof typeof frequencyType]
 
 class Groups extends Model<
@@ -29,15 +29,15 @@ class Groups extends Model<
   declare id: string
   declare title: string
   declare description: string
-  declare ownerId: string
+  declare adminId: string
+  declare groupWalletId: string
   declare recurringAmount: number
   declare groupImage: CreationOptional<string>
   declare amountContributedWithinFrequency: number
   declare totalAmountWithdrawn: number
-  declare availableNumberOfParticipants: number
+  declare numberOfPresentParticipants: number
   declare maxNumberOfParticipants: number
   declare frequency: FrequencyType
-  declare duration: string
 }
 
 Groups.init(
@@ -59,11 +59,19 @@ Groups.init(
       field: 'Content of the post',
       allowNull: false,
     },
-    ownerId: {
+    adminId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Users,
+        model: 'Users',
+        key: 'id',
+      },
+    },
+    groupWalletId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'GroupWallet',
         key: 'id',
       },
     },
@@ -83,16 +91,12 @@ Groups.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    availableNumberOfParticipants: {
+    numberOfPresentParticipants: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     frequency: {
       type: DataTypes.ENUM(...Object.values(frequencyType)),
-      allowNull: false,
-    },
-    duration: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -104,13 +108,14 @@ Groups.init(
 )
 
 Groups.belongsTo(Users, {
-  foreignKey: 'ownerId',
+  foreignKey: 'adminId',
   as: 'user',
+  targetKey: 'id',
 })
 
 Groups.belongsTo(GroupWallet, {
-  foreignKey: 'id',
+  foreignKey: 'groupWalletId',
   as: 'groupWallet',
-  targetKey: 'ownerId',
+  targetKey: 'id',
 })
 export default Groups

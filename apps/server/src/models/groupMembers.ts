@@ -17,6 +17,7 @@ class GroupMembers extends Model<
   declare id: string
   declare groupId: string
   declare userId: string
+  declare groupTitle: string
   declare amountContributed: number
   declare dateOfLastContribution: string | null
   declare totalAmountWithdrawnByUser: number
@@ -33,7 +34,7 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Groups,
+        model: 'Groups',
         key: 'id',
       },
     },
@@ -41,9 +42,13 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Users,
+        model: 'Users',
         key: 'id',
       },
+    },
+    groupTitle: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     amountContributed: {
       type: DataTypes.INTEGER,
@@ -74,6 +79,6 @@ GroupMembers.belongsTo(Users, {
   as: 'user',
 })
 
-Groups.hasMany(GroupMembers, { foreignKey: 'groupId', as: 'members' }) // One-to-many relationship
+Groups.hasMany(GroupMembers, { foreignKey: 'userId', as: 'members' }) // One-to-many relationship
 
 export default GroupMembers

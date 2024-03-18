@@ -108,6 +108,7 @@ export const joinGroup = async (req: RequestExt, res: Response) => {
           createNewMember({
             userId: _userId,
             groupId: hasGroupId.data.groupId,
+            groupTitle: hasGroupId.data.groupTitle,
           }),
           { include: [{ model: Groups, as: 'group' }] }
         )

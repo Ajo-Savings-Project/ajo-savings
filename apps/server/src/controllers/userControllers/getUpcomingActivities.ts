@@ -17,7 +17,7 @@ export const getUpcomingUserActivities = async (
     const currentMonth = currentDate.getMonth()
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0)
 
-    const userGroups = await Groups.findAll({
+    const userGroups: Groups[] = await Groups.findAll({
       include: [
         {
           model: GroupMembers,
@@ -29,7 +29,7 @@ export const getUpcomingUserActivities = async (
         },
       ],
       where: {
-        [Op.or]: [{ ownerId: userId }, { '$members.userId$': userId }],
+        [Op.or]: [{ adminId: userId }, { '$members.userId$': userId }],
       },
     })
 
