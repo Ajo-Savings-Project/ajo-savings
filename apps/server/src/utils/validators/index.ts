@@ -98,9 +98,9 @@ export const createGroupSchema = z.object({
   }),
   // frequency: z.union([...Object.values(frequency).map((v)=> z.literal(v))]),
   frequency: z.union([
-    z.literal('daily'),
-    z.literal('weekly'),
-    z.literal('monthly'),
+    z.literal('DAILY'),
+    z.literal('WEEKLY'),
+    z.literal('MONTHLY'),
   ]),
   maxNumberOfParticipants: z.number().refine((value) => value > 0, {
     message: 'amount must be greater than zero',

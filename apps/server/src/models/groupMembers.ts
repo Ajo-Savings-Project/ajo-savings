@@ -3,6 +3,7 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
 import Groups from './groups'
@@ -19,8 +20,10 @@ class GroupMembers extends Model<
   declare userId: string
   declare groupTitle: string
   declare amountContributed: number
-  declare dateOfLastContribution: string | null
+  declare dateOfLastContribution: CreationOptional<string | null>
   declare totalAmountWithdrawnByUser: number
+  declare isAdmin: boolean
+  declare sequence: number
 }
 
 GroupMembers.init(
@@ -60,6 +63,14 @@ GroupMembers.init(
     },
     dateOfLastContribution: {
       type: DataTypes.STRING,
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    sequence: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   {

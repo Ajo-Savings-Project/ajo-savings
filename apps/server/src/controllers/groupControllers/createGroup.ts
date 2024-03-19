@@ -17,6 +17,12 @@ import {
 } from './helpers'
 import cron from 'node-cron'
 
+const handleCreateGroupError = async (groupId: string): Promise<void> => {
+  await Wallets.destroy({ where: { ownerId: groupId } })
+  await Groups.destroy({ where: { id: groupId } })
+  await GroupMembers.destroy({ where: { groupId } })
+}
+
 export const createGroup = async (req: RequestExt, res: Response) => {
   const { _user: user, _userId: userId, ...rest } = req.body
 
@@ -44,12 +50,21 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       groupImage = result.secure_url
     }
 
+    const groupName = _data.groupName
+
+    const existingGroup = await Groups.findOne({ where: { title: groupName } })
+
+    if (existingGroup) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        error: 'Group with this name already exists',
+      })
+    }
+
     const newGroup = {
       id: groupId,
       title: _data.groupName,
       description: _data.purposeAndGoals,
       adminId: userId,
-      groupWalletId: '',
       recurringAmount: _data.recurringAmount,
       groupImage: groupImage,
       amountContributedWithinFrequency: 0,
@@ -64,13 +79,13 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     let nextCashoutDate: Date
 
     switch (_data.frequency) {
-      case 'daily':
+      case 'DAILY':
         nextCashoutDate = add(currentDate, { days: 1 } as Duration)
         break
-      case 'weekly':
+      case 'WEEKLY':
         nextCashoutDate = add(currentDate, { weeks: 1 } as Duration)
         break
-      case 'monthly':
+      case 'MONTHLY':
         nextCashoutDate = add(currentDate, { months: 1 } as Duration)
         break
       default:
@@ -97,34 +112,47 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     })
 
     cronDate.start()
-
-    const groupwallet = await GroupWallet.create({
-      id: v4(),
-      groupId: groupId,
-      balance: 0,
-    })
-
-    newGroup.groupWalletId = groupwallet.id
-
     const createdGroup = await Groups.create(newGroup)
 
-    // associate user to group
-    await GroupMembers.create(
-      createNewMember({
-        userId,
-        groupId,
-        groupTitle: _data.groupName,
-      })
-    )
+    // Combine database children operations into a transaction
+    if (Groups.sequelize) {
+      await Groups.sequelize.transaction(async (transaction) => {
+        await GroupWallet.create(
+          {
+            id: v4(),
+            groupId: newGroup.id,
+            balance: 0,
+          },
+          { transaction }
+        )
 
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-      data: createdGroup,
-      duration: `Next cashout scheduled for: ${formattedDate}`,
-    })
+        // Create new member only if user exists
+        const newMemberData = await createNewMember({
+          userId,
+          groupId: newGroup.id,
+          groupTitle: _data.groupName,
+          options: { isAdmin: true },
+        })
+
+        if (newMemberData) {
+          await GroupMembers.create(newMemberData, { transaction })
+        } else {
+          throw new Error('User not found')
+        }
+
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+          data: createdGroup,
+          duration: `Next cashout scheduled for: ${formattedDate}`,
+        })
+      })
+    } else {
+      // handle error case where Groups.sequelize is undefined
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
+        error: 'Sequelize instance not found',
+      })
+    }
   } catch (error) {
-    await Wallets.destroy({ where: { ownerId: groupId } })
-    await Groups.destroy({ where: { id: groupId } })
-    await GroupMembers.destroy({ where: { groupId } })
+    await handleCreateGroupError(groupId)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }

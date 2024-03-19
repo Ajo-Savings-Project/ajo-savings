@@ -2,88 +2,93 @@ import GroupMembers from '../../models/groupMembers'
 import Groups from '../../models/groups'
 import Users from '../../models/users'
 import { v4 } from 'uuid'
-import nodemailer from 'nodemailer'
+import { createEmail } from '../../utils/createEmailFactory'
+export const getUserWithId = async (userId: string) => {
+  return await Users.findOne({
+    where: { id: userId },
+  })
+}
 
 interface Props {
   userId: string
   groupId: string
   groupTitle: string
-}
-export const createNewMember = (props: Props) => {
-  return {
-    id: v4(),
-    userId: props.userId,
-    groupId: props.groupId,
-    groupTitle: props.groupTitle,
-    amountContributed: 0,
-    totalAmountWithdrawnByUser: 0,
-    dateOfLastContribution: null,
-  }
+  options?: Partial<{
+    isAdmin: boolean
+  }>
 }
 
-async function determineNextBeneficiary(
-  userId: string
-): Promise<string | null> {
-  const nextMember = await GroupMembers.findOne({
+let sequence
+const MAX_SEQUENCE_VALUE = 1000000
+
+export const createNewMember = async (props: Props) => {
+  const user = await getUserWithId(props.userId)
+
+  if (user) {
+    if (props.options?.isAdmin) {
+      sequence = MAX_SEQUENCE_VALUE
+    } else {
+      const members = await GroupMembers.findAll({
+        where: {
+          groupId: props.groupId,
+        },
+      })
+
+      sequence =
+        members.length === 1 && members[0].isAdmin
+          ? 1
+          : members[members.length - 1].sequence + 1
+    }
+
+    return {
+      id: v4(),
+      userId: props.userId,
+      groupId: props.groupId,
+      groupTitle: props.groupTitle,
+      amountContributed: 0,
+      totalAmountWithdrawnByUser: 0,
+      dateOfLastContribution: null,
+      isAdmin: props.options?.isAdmin || false,
+      sequence: sequence,
+    }
+  }
+  return null
+}
+
+export async function triggerNextBeneficiary(userId: string, user: Users) {
+  const nextBeneficiary = await GroupMembers.findOne({
     where: {
       userId,
     },
     order: [['sequence', 'ASC']],
+    include: [
+      {
+        model: Users,
+        as: 'user',
+      },
+    ],
   })
 
-  return nextMember ? nextMember.userId : null
-}
+  if (nextBeneficiary) {
+    console.log(`Notifying ${nextBeneficiary.userId}`)
 
-async function notifyBeneficiary(
-  userId: string | null,
-  user: Users
-): Promise<void> {
-  if (userId) {
-    console.log(`Notifying beneficiary with userId: ${userId}`)
+    // send notification email
+    const path = './cashoutTemplate.html'
 
-    // Create a nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASSWORD,
+    const { sendMail } = await createEmail({
+      to: user.email,
+      subject: 'Cash Out Ready',
+      templatePath: path,
+      templateContext: {
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     })
 
-    // Compose the email content
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: user.email,
-      subject: 'Cash Out Ready',
-      text: `Hi, ${user.firstName} ${user.lastName} \n\nCongratuations! Your cashout is ready \n\n  Please navigate to your account and cashout your funds from your group and get ready for the next contribution if your group will still be active. Thank you and enjoy your funds.`,
-    }
-
-    // Send the email
-    transporter.sendMail(
-      mailOptions,
-      (err: Error | null, info: { response: string }) => {
-        if (err) {
-          console.log(
-            `Failed to send cashout email. Please try again later.`,
-            err
-          )
-        } else {
-          console.log(
-            'Cashout email has been sent to your email if you have an account with us: ' +
-              info.response
-          )
-        }
-      }
-    )
+    await sendMail()
   } else {
-    console.log('No next beneficiary to notify.')
+    console.log('No next beneficiary')
   }
-}
-
-export async function triggerNextBeneficiary(userId: string, user: Users) {
-  console.log('Triggering next beneficiary...')
-  const nextBeneficiary = await determineNextBeneficiary(userId)
-  await notifyBeneficiary(nextBeneficiary, user)
 }
 
 export async function createNextCycle(newGroup: { id: string }) {
@@ -109,16 +114,16 @@ export async function createNextCycle(newGroup: { id: string }) {
 }
 
 export function getCronExpressionFromFrequency(
-  frequency: 'daily' | 'weekly' | 'monthly',
+  frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY',
   currentDate: Date
 ): string {
   let dayOfMonth: number
   switch (frequency) {
-    case 'daily':
+    case 'DAILY':
       return '0 0 * * *'
-    case 'weekly':
+    case 'WEEKLY':
       return '0 0 * * 0'
-    case 'monthly':
+    case 'MONTHLY':
       dayOfMonth = currentDate.getDate()
       return `0 0 ${dayOfMonth} * *`
     default:

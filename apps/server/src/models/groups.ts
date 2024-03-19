@@ -30,7 +30,6 @@ class Groups extends Model<
   declare title: string
   declare description: string
   declare adminId: string
-  declare groupWalletId: string
   declare recurringAmount: number
   declare groupImage: CreationOptional<string>
   declare amountContributedWithinFrequency: number
@@ -64,14 +63,6 @@ Groups.init(
       allowNull: false,
       references: {
         model: 'Users',
-        key: 'id',
-      },
-    },
-    groupWalletId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: 'GroupWallet',
         key: 'id',
       },
     },
@@ -109,13 +100,20 @@ Groups.init(
 
 Groups.belongsTo(Users, {
   foreignKey: 'adminId',
-  as: 'user',
+  as: 'admin',
   targetKey: 'id',
 })
 
-Groups.belongsTo(GroupWallet, {
-  foreignKey: 'groupWalletId',
-  as: 'groupWallet',
-  targetKey: 'id',
+Users.hasMany(Groups, {
+  foreignKey: 'adminId',
+  as: 'admin',
+})
+
+GroupWallet.belongsTo(Groups, {
+  foreignKey: 'groupId',
+})
+
+Groups.hasOne(GroupWallet, {
+  foreignKey: 'groupId',
 })
 export default Groups
