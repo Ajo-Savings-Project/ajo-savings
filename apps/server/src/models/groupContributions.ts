@@ -5,6 +5,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
+import Users from './users'
 
 const TABLE_NAME = 'GroupContributions'
 
@@ -32,7 +33,7 @@ GroupContributions.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: Users,
         key: 'id',
       },
     },

@@ -37,7 +37,7 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Groups',
+        model: Groups,
         key: 'id',
       },
     },
@@ -45,7 +45,7 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: Users,
         key: 'id',
       },
     },

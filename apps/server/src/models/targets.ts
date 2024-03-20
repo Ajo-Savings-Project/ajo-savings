@@ -6,6 +6,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
+import TargetWallets from './targetWallets'
 import Users from './users'
 
 const TABLE_NAME = 'AllTargets'
@@ -103,5 +104,19 @@ Targets.init(
     timestamps: true,
   }
 )
+
+Targets.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'user',
+  targetKey: 'id',
+})
+
+Users.hasMany(Targets)
+
+TargetWallets.belongsTo(Targets)
+
+Targets.hasOne(TargetWallets, {
+  foreignKey: 'targetId',
+})
 
 export default Targets

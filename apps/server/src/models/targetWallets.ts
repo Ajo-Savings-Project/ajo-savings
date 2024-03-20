@@ -16,9 +16,9 @@ class TargetWallets extends Model<
   InferCreationAttributes<TargetWallets>
 > {
   declare id: string
+  declare targetId: string
   declare amountSaved: number
   declare targetAmount: number
-  declare targetId: string
   declare userId: string
 }
 
@@ -29,14 +29,6 @@ TargetWallets.init(
       primaryKey: true,
       allowNull: false,
     },
-    amountSaved: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    targetAmount: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     targetId: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -44,6 +36,14 @@ TargetWallets.init(
         model: Targets,
         key: 'id',
       },
+    },
+    amountSaved: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    targetAmount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,
@@ -61,7 +61,10 @@ TargetWallets.init(
   }
 )
 
-Targets.hasOne(TargetWallets)
+Targets.hasOne(TargetWallets, {
+  foreignKey: 'targetId',
+  onDelete: 'CASCADE',
+})
 TargetWallets.belongsTo(Targets, {
   foreignKey: 'targetId',
   onDelete: 'CASCADE',
