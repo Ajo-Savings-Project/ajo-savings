@@ -13,6 +13,7 @@ class TargetWallets extends Model<
   InferCreationAttributes<TargetWallets>
 > {
   declare id: string
+  declare targetId: string
   declare amountSaved: number
   declare targetAmount: number
 }
@@ -23,6 +24,14 @@ TargetWallets.init(
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+    },
+    targetId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Targets',
+        key: 'id',
+      },
     },
     amountSaved: {
       type: DataTypes.INTEGER,

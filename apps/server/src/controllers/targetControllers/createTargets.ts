@@ -24,24 +24,24 @@ export const createTarget = async (req: RequestExt, res: Response) => {
 
     const { frequency, category, ...rest } = requestData.data
 
-    const wallet = await TargetWallets.create(
+    const target = await Targets.create({
+      ...rest,
+      id: v4(),
+      avatar: '',
+      userId: userId,
+      category: targetCategoryType[category],
+      frequency: targetFrequencyType[frequency],
+    })
+
+    await TargetWallets.create(
       {
         id: v4(),
+        targetId: target.id,
         targetAmount: 0,
         amountSaved: 0,
       },
       { returning: true }
     )
-
-    const target = await Targets.create({
-      ...rest,
-      id: v4(),
-      avatar: '',
-      walletId: wallet.id,
-      userId: userId,
-      category: targetCategoryType[category],
-      frequency: targetFrequencyType[frequency],
-    })
 
     const daysLeft = differenceInDays(
       new Date(rest.withdrawalDate),
