@@ -57,7 +57,9 @@ app.use('/admin/queues', serverAdapter.getRouter())
 app.use(Sentry.Handlers.requestHandler())
 app.use(Sentry.Handlers.tracingHandler())
 
-db.sync()
+db.sync({
+  force: true,
+})
   .then(() => {
     console.log('Database is connected')
   })
