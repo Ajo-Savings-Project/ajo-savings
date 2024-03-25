@@ -23,7 +23,6 @@ export const createTarget = async (req: RequestExt, res: Response) => {
 
     const { frequency, category, ...rest } = requestData.data
 
-    console.log('Attempting to insert target')
     const target = await Targets.create({
       ...rest,
       id: v4(),
@@ -32,7 +31,6 @@ export const createTarget = async (req: RequestExt, res: Response) => {
       category: targetCategoryType[category],
       frequency: targetFrequencyType[frequency],
     })
-    console.log('Target inserted')
 
     const wallet = await TargetWallets.create(
       {
@@ -54,7 +52,6 @@ export const createTarget = async (req: RequestExt, res: Response) => {
       data: { daysLeft, name: rest.name, id: target.id, wallet },
     })
   } catch (error) {
-    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

@@ -9,7 +9,7 @@ import { db } from '../config'
 import TargetWallets from './targetWallets'
 import Users from './users'
 
-const TABLE_NAME = 'AllTargets'
+const TABLE_NAME = 'Targets'
 
 // https://sequelize.org/docs/v6/other
 
