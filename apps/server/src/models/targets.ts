@@ -111,9 +111,15 @@ Targets.belongsTo(Users, {
   targetKey: 'id',
 })
 
-Users.hasMany(Targets)
+Users.hasMany(Targets, {
+  foreignKey: 'userId',
+  as: 'target',
+})
 
-TargetWallets.belongsTo(Targets)
+TargetWallets.belongsTo(Targets, {
+  foreignKey: 'targetId',
+  as: 'target',
+})
 
 Targets.hasOne(TargetWallets, {
   foreignKey: 'targetId',

@@ -54,7 +54,16 @@ Sentry.init({
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
 
+<<<<<<< HEAD
 db.sync({})
+=======
+app.use(Sentry.Handlers.requestHandler())
+app.use(Sentry.Handlers.tracingHandler())
+
+db.sync({
+  force: true,
+})
+>>>>>>> 0073793 (Update database synchronization options)
   .then(() => {
     console.log('Database is connected')
   })
