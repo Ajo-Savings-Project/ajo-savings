@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import _ from 'lodash'
 import { Op } from 'sequelize'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
@@ -84,9 +83,9 @@ export const getGroup = async (req: RequestExt, res: Response) => {
  * @returns {Promise<void>}
  */
 export const joinGroup = async (req: RequestExt, res: Response) => {
-  const { _userId, groupId } = req.body
+  const { _userId, ...rest } = req.body
 
-  const hasGroupId = joinGroupSchema.strict().safeParse({ groupId })
+  const hasGroupId = joinGroupSchema.safeParse(rest)
 
   try {
     if (!hasGroupId.success) {
@@ -96,24 +95,33 @@ export const joinGroup = async (req: RequestExt, res: Response) => {
     }
 
     const group = await Groups.findOne({
-      where: { id: hasGroupId.data.groupId },
+      where: {
+        [Op.and]: [
+          { id: hasGroupId.data.groupId },
+          { title: hasGroupId.data.groupTitle },
+        ],
+      },
     })
 
     if (group) {
       const member = await GroupMembers.findOne({
         where: { userId: _userId, groupId: hasGroupId.data.groupId },
       })
+
       if (!member) {
-        const result = await GroupMembers.create(
-          createNewMember({
-            userId: _userId,
-            groupId: hasGroupId.data.groupId,
-          }),
-          { include: [{ model: Groups, as: 'group' }] }
-        )
-        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-          ..._.pick(result, ['id', 'groupId']),
+        // Create new member only if user exists
+        const newMemberData = await createNewMember({
+          userId: _userId,
+          groupId: hasGroupId.data.groupId,
+          groupTitle: hasGroupId.data.groupTitle,
+          options: { isAdmin: false },
         })
+
+        if (newMemberData) {
+          await GroupMembers.create(newMemberData)
+        } else {
+          throw new Error('User not found')
+        }
       }
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
         message: 'You are already a member of this group',

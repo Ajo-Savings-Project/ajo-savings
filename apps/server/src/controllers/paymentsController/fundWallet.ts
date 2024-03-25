@@ -108,7 +108,7 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
 
     if (isUserInGroup) {
       const groupWallet = await GroupWallet.findOne({
-        where: { ownerId: _groupId },
+        where: { groupId: _groupId },
       })
 
       if (groupWallet) {
