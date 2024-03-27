@@ -9,7 +9,7 @@ import { db } from '../config'
 import TargetWallets from './targetWallets'
 import Users from './users'
 
-const TABLE_NAME = 'AllTargets'
+const TABLE_NAME = 'Targets'
 
 // https://sequelize.org/docs/v6/other
 
@@ -40,7 +40,6 @@ class Targets extends Model<
   declare id: string
   declare userId: string
   declare avatar: string
-  declare walletId: string
   declare name: string
   declare frequency: TargetFrequencyType
   declare category: TargetCategoryType
@@ -66,14 +65,7 @@ Targets.init(
     userId: {
       type: DataTypes.UUID,
       references: {
-        model: Users,
-        key: 'id',
-      },
-    },
-    walletId: {
-      type: DataTypes.UUID,
-      references: {
-        model: TargetWallets,
+        model: 'Users',
         key: 'id',
       },
     },
@@ -113,10 +105,25 @@ Targets.init(
   }
 )
 
-Targets.belongsTo(TargetWallets, {
-  foreignKey: 'walletId',
+Targets.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'user',
+  targetKey: 'id',
+})
+
+Users.hasMany(Targets, {
+  foreignKey: 'userId',
+  as: 'target',
+})
+
+TargetWallets.belongsTo(Targets, {
+  foreignKey: 'targetId',
   as: 'wallet',
-  onDelete: 'CASCADE',
+})
+
+Targets.hasOne(TargetWallets, {
+  foreignKey: 'targetId',
+  as: 'wallet',
 })
 
 export default Targets
