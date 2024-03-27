@@ -13,7 +13,7 @@ export const getUserWalletBalances = async (req: RequestExt, res: Response) => {
     let data = {} as Record<string, unknown>
 
     const personalWallets = await Wallets.findAll({
-      where: { ownerId: userId },
+      where: { userId: userId },
       attributes: ['id', 'balance', 'type'],
     })
 

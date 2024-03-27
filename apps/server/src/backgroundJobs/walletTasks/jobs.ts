@@ -13,7 +13,7 @@ const createWalletsJob = async (data: WalletJobDataI) => {
     async (type) =>
       await Wallets.create({
         id: uuidV4(),
-        ownerId: data.userId,
+        userId: data.userId,
         balance: 0,
         type,
       })
@@ -24,7 +24,7 @@ const createWalletsJob = async (data: WalletJobDataI) => {
 const createSettingsJob = async (data: SettingJobDataI) => {
   return await Settings.create({
     id: uuidV4(),
-    ownerId: data.userId,
+    userId: data.userId,
   })
 }
 

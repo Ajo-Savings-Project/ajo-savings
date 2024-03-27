@@ -39,7 +39,7 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
     const _amount = parsedData.data.amount
 
     const userWallet = await Wallets.findOne({
-      where: { ownerId: _userId, type: _walletType },
+      where: { userId: _userId, type: _walletType },
     })
 
     if (userWallet) {

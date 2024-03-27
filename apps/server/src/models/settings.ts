@@ -13,7 +13,7 @@ class Settings extends Model<
   InferCreationAttributes<Settings>
 > {
   declare id: string
-  declare ownerId: string
+  declare userId: string
   declare emailNotification?: boolean
   declare contributionReminder?: boolean
   declare groupJoinRequest?: boolean
@@ -33,7 +33,7 @@ Settings.init(
       primaryKey: true,
       allowNull: false,
     },
-    ownerId: {
+    userId: {
       type: DataTypes.UUID,
     },
     emailNotification: {

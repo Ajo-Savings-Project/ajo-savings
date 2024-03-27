@@ -6,7 +6,7 @@ const TABLE_NAME = 'Payments'
 
 export class Payment extends Model {
   public id!: string
-  public owner_id!: string
+  public userId!: string
   public reference!: string
   public amount!: number
   public email!: string

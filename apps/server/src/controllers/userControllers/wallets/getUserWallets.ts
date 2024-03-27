@@ -8,7 +8,7 @@ export const getUserWallets = async (req: RequestExt, res: Response) => {
     const { _userId: userId } = req.body
 
     const personalWallets = await Wallets.findAll({
-      where: { ownerId: userId },
+      where: { userId: userId },
       attributes: ['id', 'balance', 'type'],
     })
 
