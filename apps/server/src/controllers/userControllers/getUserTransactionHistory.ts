@@ -35,7 +35,6 @@ export const getTransactionHistory = async (req: RequestExt, res: Response) => {
       ...userTransactions,
     })
   } catch (err) {
-    console.log(err)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
