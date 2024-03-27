@@ -100,13 +100,13 @@ Groups.init(
 
 Groups.belongsTo(Users, {
   foreignKey: 'adminId',
-  as: 'admin',
+  as: 'user',
   targetKey: 'id',
 })
 
 Users.hasMany(Groups, {
   foreignKey: 'adminId',
-  as: 'admin',
+  as: 'user',
 })
 
 GroupWallet.belongsTo(Groups, {
