@@ -22,7 +22,7 @@ class Wallets extends Model<
   InferCreationAttributes<Wallets>
 > {
   declare id: string
-  declare ownerId: string
+  declare userId: string
   declare balance: number
   declare type: WalletType
 }
@@ -34,7 +34,7 @@ Wallets.init(
       primaryKey: true,
       allowNull: false,
     },
-    ownerId: {
+    userId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
@@ -56,7 +56,7 @@ Wallets.init(
 
 // Associations
 Wallets.belongsTo(Users, {
-  foreignKey: 'ownerId',
+  foreignKey: 'userId',
   constraints: false,
   as: 'user',
 })

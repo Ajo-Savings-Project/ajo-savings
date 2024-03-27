@@ -6,7 +6,6 @@ import { RequestExt } from '../../middleware/authorization/authentication'
 import GroupMembers from '../../models/groupMembers'
 import Groups, { FrequencyType } from '../../models/groups'
 import GroupWallet from '../../models/groupWallet'
-import Wallets from '../../models/wallets'
 import { createGroupSchema } from '../../utils/validators'
 import { createNewMember } from './helpers'
 import { Duration, add, format } from 'date-fns'
@@ -18,7 +17,7 @@ import {
 import cron from 'node-cron'
 
 const handleCreateGroupError = async (groupId: string): Promise<void> => {
-  await Wallets.destroy({ where: { ownerId: groupId } })
+  await GroupWallet.destroy({ where: { groupId: groupId } })
   await Groups.destroy({ where: { id: groupId } })
   await GroupMembers.destroy({ where: { groupId } })
 }
@@ -64,6 +63,7 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       id: groupId,
       title: _data.groupName,
       description: _data.purposeAndGoals,
+      userId: userId,
       adminId: userId,
       recurringAmount: _data.recurringAmount,
       groupImage: groupImage,
@@ -126,6 +126,11 @@ export const createGroup = async (req: RequestExt, res: Response) => {
           { transaction }
         )
 
+    await GroupWallet.create({
+      id: v4(),
+      groupId: groupId,
+      balance: 0,
+    })
         // Create new member only if user exists
         const newMemberData = await createNewMember({
           userId,

@@ -29,7 +29,7 @@ export const getUpcomingUserActivities = async (
         },
       ],
       where: {
-        [Op.or]: [{ adminId: userId }, { '$members.userId$': userId }],
+        [Op.or]: [{ userId: userId }, { '$members.userId$': userId }],
       },
     })
 
