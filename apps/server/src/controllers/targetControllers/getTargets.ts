@@ -48,6 +48,7 @@ export const getTargets = async (req: RequestExt, res: Response) => {
       ...targets,
     })
   } catch (error) {
+    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

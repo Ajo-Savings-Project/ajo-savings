@@ -118,11 +118,12 @@ Users.hasMany(Targets, {
 
 TargetWallets.belongsTo(Targets, {
   foreignKey: 'targetId',
-  as: 'target',
+  as: 'wallet',
 })
 
 Targets.hasOne(TargetWallets, {
   foreignKey: 'targetId',
+  as: 'wallet',
 })
 
 export default Targets
