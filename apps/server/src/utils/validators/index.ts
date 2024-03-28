@@ -7,6 +7,7 @@ import {
 } from '../../models/transactions'
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
+import { frequencyType } from '../../models/groups'
 
 export const loginSchema = z.object({
   email: z.string().email(),
@@ -98,6 +99,7 @@ export const createGroupSchema = z.object({
   }),
   // frequency: z.union([...Object.values(frequency).map((v)=> z.literal(v))]),
   frequency: z.union([
+
     z.literal('DAILY'),
     z.literal('WEEKLY'),
     z.literal('MONTHLY'),
