@@ -3,6 +3,7 @@ import {
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
+  CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
 import Groups from './groups'
@@ -17,9 +18,12 @@ class GroupMembers extends Model<
   declare id: string
   declare groupId: string
   declare userId: string
+  declare groupTitle: string
   declare amountContributed: number
-  declare dateOfLastContribution: string | null
+  declare dateOfLastContribution: CreationOptional<string | null>
   declare totalAmountWithdrawnByUser: number
+  declare isAdmin: boolean
+  declare sequence: number
 }
 
 GroupMembers.init(
@@ -33,7 +37,7 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Groups,
+        model: 'Groups',
         key: 'id',
       },
     },
@@ -41,9 +45,13 @@ GroupMembers.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Users,
+        model: 'Users',
         key: 'id',
       },
+    },
+    groupTitle: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     amountContributed: {
       type: DataTypes.INTEGER,
@@ -55,6 +63,14 @@ GroupMembers.init(
     },
     dateOfLastContribution: {
       type: DataTypes.STRING,
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    sequence: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   {
@@ -74,6 +90,6 @@ GroupMembers.belongsTo(Users, {
   as: 'user',
 })
 
-Groups.hasMany(GroupMembers, { foreignKey: 'groupId', as: 'members' }) // One-to-many relationship
+Groups.hasMany(GroupMembers, { foreignKey: 'userId', as: 'members' }) // One-to-many relationship
 
 export default GroupMembers

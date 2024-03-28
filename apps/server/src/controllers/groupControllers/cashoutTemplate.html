@@ -48,24 +48,15 @@
   <body>
     <div class="container">
       <h2>Ajó Savings</h2>
-      <h1>Forgot your password?</h1>
+      <h1>Cash Out Ready</h1>
       <p>
-        Looks like you'd like to reset your password for the Ajó savings account
-        <span class="team">{{firstName}}</span> . Don't worry, you can make a
-        new one by clicking the link below.
+        Hi, {{user.firstName}} {{user.lastName}} <br />
+        Congratuations! Your cashout is ready. <br />
+        Please navigate to your account and cashout your funds from your group
+        and get ready for the next contribution if your group will still be
+        active. Thank you and enjoy your funds.
       </p>
 
-      <p>
-        <a href="{{link}}">Click here</a>&nbsp;to reset your password or copy
-        this and paste it in your browser
-        <br />
-        {{link}}
-      </p>
-
-      <p>
-        This link will expire in 30mins. If you didn't ask us to reset your
-        password, just ignore this email. Your account is safe with us.
-      </p>
       <p class="signature">Thank You<br /><span class="team">TEAM AJÓ</span></p>
     </div>
   </body>

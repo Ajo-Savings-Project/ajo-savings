@@ -122,7 +122,6 @@ export const registerUser = async (req: Request, res: Response) => {
       message: 'This account already exist',
     })
   } catch (error) {
-    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
@@ -176,7 +175,6 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
       },
     })
   } catch (error) {
-    console.error(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
       error: 'Verification failed',
     })
@@ -195,7 +193,6 @@ export const resendVerifyUserEmail = async (req: RequestExt, res: Response) => {
       message: 'User already verified.',
     })
   } catch (error) {
-    console.error(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

@@ -53,10 +53,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       })
     }
   } catch (error) {
-    console.log('error', error)
-
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).send({
-      conde: JWT_INVALID_STATUS_CODE,
+      code: JWT_INVALID_STATUS_CODE,
       message: 'Something has gone wrong.',
     })
   }

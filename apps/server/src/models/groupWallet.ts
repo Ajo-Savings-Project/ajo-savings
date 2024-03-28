@@ -13,7 +13,7 @@ class GroupWallet extends Model<
   InferCreationAttributes<GroupWallet>
 > {
   declare id: string
-  declare ownerId: string
+  declare groupId: string
   declare balance: number
 }
 
@@ -24,9 +24,13 @@ GroupWallet.init(
       primaryKey: true,
       allowNull: false,
     },
-    ownerId: {
+    groupId: {
       type: DataTypes.UUID,
       allowNull: false,
+      references: {
+        model: 'Groups',
+        key: 'id',
+      },
     },
     balance: {
       type: DataTypes.INTEGER,

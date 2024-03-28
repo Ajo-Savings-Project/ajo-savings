@@ -11,7 +11,7 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
     const validationResult = editProfileSchema.safeParse(rest)
 
     if (!validationResult.success) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
         message: 'Validation error',
         issues: validationResult.error.issues,
       })
@@ -62,9 +62,6 @@ export const updateKycProfile = async (req: RequestExt, res: Response) => {
       user: modifiedUserData,
     })
   } catch (error) {
-    console.log(error)
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER).json({
-      message: `Something went wrong, our team has been notified`,
-    })
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

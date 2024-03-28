@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "8f615bb2-2f65-4965-82a2-0392bad4a49d",
+		"_postman_id": "de80835f-7bc9-4c4a-85c2-0eae419b44ee",
 		"name": "Ajo Savings 2.0",
 		"description": "API documentation for Ajo Savings",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10773940",
-		"_collection_link": "https://gwayva.postman.co/workspace/Ajo-Savings~a9348fb5-ef27-430c-906f-aba6d85270f4/collection/10773940-8f615bb2-2f65-4965-82a2-0392bad4a49d?action=share&source=collection_link&creator=10773940"
+		"_exporter_id": "27253397"
 	},
 	"item": [
 		{
@@ -69,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"crystal0956@yopmail.com\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"creepycreepes@yopmail.com\",\n    \"password\": \"abcdefg\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -874,15 +873,6 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{base_url}}/users/wallets",
 									"host": [
@@ -1655,13 +1645,13 @@
 					},
 					"response": [
 						{
-							"name": "joinGroup",
+							"name": "notFound",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"groupId\": \"a52fc752-d44b-4f97-abfc-080deca11abc\"\n}",
+									"raw": "{\n    \"groupId\": \"84d9b89d-d355-481f-97ea-2eefcc25c8ef\",\n    \"groupTitle\": \"dok\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1669,15 +1659,91 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5200/api/v1/groups/joinGroup",
-									"protocol": "http",
+									"raw": "{{base_url}}/groups/joinGroup",
 									"host": [
-										"localhost"
+										"{{base_url}}"
 									],
-									"port": "5200",
 									"path": [
-										"api",
-										"v1",
+										"groups",
+										"joinGroup"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer-when-downgrade"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d-suTuOICmI5G71YrY2lT70KKbqY4\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 19 Mar 2024 21:08:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Group not found\"\n}"
+						},
+						{
+							"name": "joinGroup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"groupId\": \"84d9b89d-d355-481f-97ea-2eefcc25c8ef\",\n    \"groupTitle\": \"G2uj\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/groups/joinGroup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
 										"groups",
 										"joinGroup"
 									],
@@ -1724,7 +1790,7 @@
 								},
 								{
 									"key": "Date",
-									"value": "Sun, 25 Feb 2024 14:53:41 GMT"
+									"value": "Tue, 19 Mar 2024 21:12:25 GMT"
 								},
 								{
 									"key": "Connection",
@@ -1744,7 +1810,10 @@
 					"name": "New Request",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1755,7 +1824,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"groupName\":\"GHJ\",\n    \"purposeAndGoals\":\"lol test\",\n    \"recurringAmount\": 80000,\n    \"frequency\": \"monthly\",\n    \"maxNumberOfParticipants\": 30,\n    \"duration\": \"\"\n}",
+							"raw": "{\n    \"groupName\":\"GHJ\",\n    \"purposeAndGoals\":\"lol test\",\n    \"recurringAmount\": 80000,\n    \"frequency\": \"MONTHLY\",\n    \"maxNumberOfParticipants\": 30,\n    \"automaticRestartCycle\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1846,6 +1915,79 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"23964427-01f4-4cdb-b589-a05ddec5e762\",\n        \"title\": \"GHJ\",\n        \"description\": \"lol test\",\n        \"ownerId\": \"275e7b4b-246a-4688-96e6-b44c1db60fc7\",\n        \"recurringAmount\": 80000,\n        \"groupImage\": \"https://picsum.photos/200/300\",\n        \"amountContributedWithinFrequency\": 0,\n        \"totalAmountWithdrawn\": 0,\n        \"availableNumberOfParticipants\": 1,\n        \"maxNumberOfParticipants\": 30,\n        \"frequency\": \"monthly\",\n        \"duration\": \"\",\n        \"updatedAt\": \"2024-02-27T16:08:03.301Z\",\n        \"createdAt\": \"2024-02-27T16:08:03.301Z\"\n    }\n}"
+						},
+						{
+							"name": "createGroup Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"groupName\":\"GHJ\",\n    \"purposeAndGoals\":\"lol test\",\n    \"recurringAmount\": 80000,\n    \"frequency\": \"MONTHLY\",\n    \"maxNumberOfParticipants\": 30,\n    \"automaticRestartCycle\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/groups/createGroup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"groups",
+										"createGroup"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer-when-downgrade"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "520"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"208-pyO/jhi4z4FHFc73Z7E+lGemcyo\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 19 Mar 2024 12:38:21 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": \"c4184d58-1ee3-410c-ad6e-c91d27eaba45\",\n        \"title\": \"GHJ\",\n        \"description\": \"lol test\",\n        \"adminId\": \"bf180afa-c773-4b17-a843-bf28697d5afb\",\n        \"recurringAmount\": 80000,\n        \"groupImage\": \"https://picsum.photos/200/300\",\n        \"amountContributedWithinFrequency\": 0,\n        \"totalAmountWithdrawn\": 0,\n        \"numberOfPresentParticipants\": 1,\n        \"maxNumberOfParticipants\": 30,\n        \"frequency\": \"MONTHLY\",\n        \"updatedAt\": \"2024-03-19T12:38:21.267Z\",\n        \"createdAt\": \"2024-03-19T12:38:21.267Z\",\n        \"UserId\": null\n    },\n    \"duration\": \"Next cashout scheduled for: 2024-04-19\"\n}"
 						}
 					]
 				}
@@ -1916,15 +2058,6 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{base_url}}/targets/getTarget/850a6357-6f47-4a4a-9d94-742020c69d6f",
 									"host": [
@@ -2021,15 +2154,6 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{base_url}}/targets/getTargets",
 									"host": [
