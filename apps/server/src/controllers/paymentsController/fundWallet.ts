@@ -10,9 +10,10 @@ import {
   transactionTransferType,
   transactionWalletType,
 } from '../../models/transactions'
-import Wallets from '../../models/wallets'
+import Wallets from '../../models/userWallets'
 import { fundWalletSchema } from '../../utils/validators'
 import { createTransaction } from './helpers'
+import Transactions from '../../models/transactions'
 
 /**
  * TODO: More Refactor here
@@ -20,26 +21,25 @@ import { createTransaction } from './helpers'
  *
  */
 export const fundWallet = async (req: RequestExt, res: Response) => {
+  const { _userId, amount, transactionType } = req.body
+
+  const parsedData = fundWalletSchema
+    .omit({ groupId: true, targetId: true })
+    .strict()
+    .safeParse({ amount, transactionType })
+
   try {
-    const { _userId, amount, walletType, transactionType } = req.body
-
-    const parsedData = fundWalletSchema
-      .omit({ groupId: true })
-      .strict()
-      .safeParse({ amount, walletType, transactionType })
-
     if (!parsedData.success) {
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
         message: parsedData.error.issues,
       })
     }
 
-    const _walletType = parsedData.data.walletType
     const _transactionType = parsedData.data.transactionType
     const _amount = parsedData.data.amount
 
     const userWallet = await Wallets.findOne({
-      where: { ownerId: _userId, type: _walletType },
+      where: { userId: _userId },
     })
 
     if (userWallet) {
@@ -57,21 +57,19 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
         copyBalance = userWallet.balance + _amount
       }
 
-      const transaction = await userWallet.update(
+      const updatedWallet = await userWallet.update(
         { balance: copyBalance },
         { returning: true }
       )
 
       await createTransaction({
-        senderId: _userId,
-        receiverId: transaction.id,
+        senderWalletId: _userId,
+        walletId: updatedWallet.id,
         action: transactionActionType[_transactionType],
-        previousBalance,
-        balance: transaction.balance,
         amount: _amount,
         status: transactionStatusType.PENDING,
         transferType: transactionTransferType.INTERNAL_TRANSFERS,
-        walletType: _walletType,
+        walletType: transactionWalletType.GLOBAL,
       })
 
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)
@@ -79,17 +77,18 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
 
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
   } catch (error) {
-    // reverse the error if any error occurs
+    // reverse the transaction if any error occurs
+    await Transactions.destroy({ where: { walletId: _userId } })
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
 
 export const fundGroupWallet = async (req: RequestExt, res: Response) => {
   try {
-    const { _userId, amount, groupId } = req.body
+    const { _userId, _user, amount, groupId } = req.body
 
     const parsedData = fundWalletSchema
-      .omit({ transactionType: true, walletType: true })
+      .omit({ transactionType: true, walletType: true, targetId: true })
       .strict()
       .safeParse({ amount, groupId })
 
@@ -111,26 +110,53 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
         where: { groupId: _groupId },
       })
 
-      if (groupWallet) {
-        const previousBalance = groupWallet.balance
+      const userWallet = await Wallets.findOne({
+        where: { userId: _userId },
+      })
 
-        const wallet = await groupWallet.update(
+      if (groupWallet && userWallet) {
+        if (userWallet.balance < _amount) {
+          return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
+            message: 'Insufficient balance',
+          })
+        }
+
+        const newGroupWallet = await groupWallet.update(
           {
             balance: (groupWallet.balance += _amount),
           },
           { returning: true }
         )
 
+        const newUserWallet = await userWallet.update(
+          {
+            balance: (userWallet.balance -= _amount),
+          },
+          { returning: true }
+        )
+
+        //credit transaction
         await createTransaction({
-          senderId: _userId,
-          receiverId: _groupId,
+          senderWalletId: newUserWallet.id,
+          senderName: `${_user.firstName} ${_user.lastName}`,
           action: transactionActionType.CREDIT,
-          previousBalance,
-          balance: wallet.balance,
+          walletId: newGroupWallet.id,
           amount: _amount,
-          status: transactionStatusType.PENDING,
+          status: transactionStatusType.SUCCESSFUL,
           transferType: transactionTransferType.GROUP_TRANSACTIONS,
           walletType: transactionWalletType.GROUP,
+        })
+
+        //debit transaction
+        await createTransaction({
+          receiverWalletId: newGroupWallet.id,
+          receiverName: isUserInGroup.groupTitle,
+          action: transactionActionType.DEBIT,
+          walletId: newUserWallet.id,
+          amount: _amount,
+          status: transactionStatusType.SUCCESSFUL,
+          transferType: transactionTransferType.GROUP_TRANSACTIONS,
+          walletType: transactionWalletType.GLOBAL,
         })
 
         return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res)

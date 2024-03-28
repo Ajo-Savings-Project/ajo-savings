@@ -6,12 +6,14 @@ import {
   Model,
 } from 'sequelize'
 import { db } from '../config'
-import Groups from './groups'
-import { walletType } from './wallets'
 
 const TABLE_NAME = 'Transactions'
 
-export const transactionWalletType = { ...walletType, GROUP: 'GROUP' } as const
+export const transactionWalletType = {
+  GLOBAL: 'GLOBAL',
+  SAVINGS: 'SAVINGS',
+  GROUP: 'GROUP',
+} as const
 export type TransactionWalletType =
   (typeof transactionWalletType)[keyof typeof transactionWalletType]
 
@@ -33,13 +35,13 @@ export type TransactionStatusType =
 export const transactionTransferType = {
   //Transactions between global wallet and external source/destination
   GLOBAL_TRANSACTIONS: 'GLOBAL_TRANSACTIONS',
-  //Transactions between personal savings wallet and all goals wallets.
-  SAVINGS_TRANSACTIONS: 'SAVINGS_TRANSACTIONS',
-  //Transactions between personal group wallet and all groups wallets.
+  //Transactions between global wallet and all goals wallets.
+  SAVING_GOALS_TRANSACTIONS: 'SAVINGS_GOALS',
+  //Transactions between global wallet and all groups wallets.
   GROUP_TRANSACTIONS: 'GROUP_TRANSACTIONS',
   // Transactions between global wallet and other personal wallets(savings, group etc.)
   INTERNAL_TRANSFERS: 'INTERNAL_TRANSFERS',
-  // Transactions between global wallet and other personal wallets(savings, group etc.)
+  // Transactions between users
   PAY_STACK: 'PAY_STACK',
 } as const
 export type TransactionTransferType =
@@ -50,17 +52,18 @@ class Transactions extends Model<
   InferCreationAttributes<Transactions>
 > {
   declare id: string
-  declare transactionId: string
+  declare walletId: string
   declare walletType: TransactionWalletType
   declare transferType: TransactionTransferType
-  declare balance: number
   declare amount: number
-  declare previousBalance: number
   declare status: TransactionStatusType
   declare description: CreationOptional<string>
   declare action: TransactionActionType
-  declare receiverId: CreationOptional<string>
-  declare senderId: CreationOptional<string>
+  declare receiverWalletId: CreationOptional<string>
+  declare senderWalletId: CreationOptional<string>
+  declare receiverName: CreationOptional<string>
+  declare senderName: CreationOptional<string>
+  declare createdAt: Date
 }
 
 Transactions.init(
@@ -70,48 +73,52 @@ Transactions.init(
       primaryKey: true,
       allowNull: false,
     },
-    amount: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    balance: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    previousBalance: {
-      type: DataTypes.INTEGER,
+    walletId: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     walletType: {
       type: DataTypes.ENUM(...Object.values(transactionWalletType)),
       allowNull: false,
     },
-    transactionId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     transferType: {
       type: DataTypes.ENUM(...Object.values(transactionTransferType)),
+      allowNull: false,
+    },
+    amount: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     status: {
       type: DataTypes.ENUM(...Object.values(transactionStatusType)),
       allowNull: false,
     },
-    action: {
-      type: DataTypes.ENUM(...Object.values(transactionActionType)),
-      allowNull: false,
-    },
     description: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    receiverId: {
+    action: {
+      type: DataTypes.ENUM(...Object.values(transactionActionType)),
+      allowNull: false,
+    },
+    receiverWalletId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    senderId: {
+    senderWalletId: {
       type: DataTypes.UUID,
+      allowNull: false,
+    },
+    receiverName: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    senderName: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
@@ -121,12 +128,5 @@ Transactions.init(
     modelName: TABLE_NAME,
   }
 )
-
-Groups.hasMany(Transactions, {
-  foreignKey: 'receiverId',
-  as: 'transactions',
-  constraints: false,
-  onDelete: 'CASCADE',
-})
 
 export default Transactions
