@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
 import { Response } from 'express'
-import _ from 'lodash'
 import { v4 } from 'uuid'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
@@ -10,13 +9,24 @@ import GroupWallet from '../../models/groupWallet'
 import Wallets from '../../models/wallets'
 import { createGroupSchema } from '../../utils/validators'
 import { createNewMember } from './helpers'
+import { Duration, add, format } from 'date-fns'
+import {
+  createNextCycle,
+  triggerNextBeneficiary,
+  getCronExpressionFromFrequency,
+} from './helpers'
+import cron from 'node-cron'
+
+const handleCreateGroupError = async (groupId: string): Promise<void> => {
+  await Wallets.destroy({ where: { ownerId: groupId } })
+  await Groups.destroy({ where: { id: groupId } })
+  await GroupMembers.destroy({ where: { groupId } })
+}
 
 export const createGroup = async (req: RequestExt, res: Response) => {
-  const { _userId: userId, ...rest } = req.body
+  const { _user: user, _userId: userId, ...rest } = req.body
 
-  const requestData = createGroupSchema
-    .strict()
-    .safeParse(_.omit(rest, ['_user']))
+  const requestData = createGroupSchema.strict().safeParse(rest)
 
   if (!requestData.success) {
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
@@ -40,44 +50,109 @@ export const createGroup = async (req: RequestExt, res: Response) => {
       groupImage = result.secure_url
     }
 
+    const groupName = _data.groupName
+
+    const existingGroup = await Groups.findOne({ where: { title: groupName } })
+
+    if (existingGroup) {
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+        error: 'Group with this name already exists',
+      })
+    }
+
     const newGroup = {
       id: groupId,
       title: _data.groupName,
       description: _data.purposeAndGoals,
-      ownerId: userId,
+      adminId: userId,
       recurringAmount: _data.recurringAmount,
       groupImage: groupImage,
       amountContributedWithinFrequency: 0,
       totalAmountWithdrawn: 0,
-      availableNumberOfParticipants: 1,
+      numberOfPresentParticipants: 1,
       maxNumberOfParticipants: _data.maxNumberOfParticipants,
       frequency: _data.frequency as FrequencyType,
-      duration: _data.duration,
+      automaticRestartCycle: _data.automaticRestartCycle,
     }
 
+    const currentDate = new Date()
+    let nextCashoutDate: Date
+
+    switch (_data.frequency) {
+      case 'DAILY':
+        nextCashoutDate = add(currentDate, { days: 1 } as Duration)
+        break
+      case 'WEEKLY':
+        nextCashoutDate = add(currentDate, { weeks: 1 } as Duration)
+        break
+      case 'MONTHLY':
+        nextCashoutDate = add(currentDate, { months: 1 } as Duration)
+        break
+      default:
+        throw new Error('Invalid frequency')
+    }
+
+    const formattedDate = format(nextCashoutDate, 'yyyy-MM-dd')
+
+    const automaticRestartCycleEnabled = newGroup.automaticRestartCycle || false
+
+    const cronExpression = getCronExpressionFromFrequency(
+      _data.frequency,
+      new Date()
+    )
+    const cronDate = cron.schedule(cronExpression, async () => {
+      try {
+        await triggerNextBeneficiary(userId, user)
+        if (automaticRestartCycleEnabled) {
+          await createNextCycle(newGroup)
+        }
+      } catch (error) {
+        console.error('Error during contribution cycle:', error)
+      }
+    })
+
+    cronDate.start()
     const createdGroup = await Groups.create(newGroup)
 
-    // associate user to group
-    await GroupMembers.create(
-      createNewMember({
-        userId,
-        groupId,
+    // Combine database children operations into a transaction
+    if (Groups.sequelize) {
+      await Groups.sequelize.transaction(async (transaction) => {
+        await GroupWallet.create(
+          {
+            id: v4(),
+            groupId: newGroup.id,
+            balance: 0,
+          },
+          { transaction }
+        )
+
+        // Create new member only if user exists
+        const newMemberData = await createNewMember({
+          userId,
+          groupId: newGroup.id,
+          groupTitle: _data.groupName,
+          options: { isAdmin: true },
+        })
+
+        if (newMemberData) {
+          await GroupMembers.create(newMemberData, { transaction })
+        } else {
+          throw new Error('User not found')
+        }
+
+        return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
+          data: createdGroup,
+          duration: `Next cashout scheduled for: ${formattedDate}`,
+        })
       })
-    )
-
-    await GroupWallet.create({
-      id: v4(),
-      ownerId: groupId,
-      balance: 0,
-    })
-
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-      data: createdGroup,
-    })
+    } else {
+      // handle error case where Groups.sequelize is undefined
+      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, {
+        error: 'Sequelize instance not found',
+      })
+    }
   } catch (error) {
-    await Wallets.destroy({ where: { ownerId: groupId } })
-    await Groups.destroy({ where: { id: groupId } })
-    await GroupMembers.destroy({ where: { groupId } })
+    await handleCreateGroupError(groupId)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
   }
 }
