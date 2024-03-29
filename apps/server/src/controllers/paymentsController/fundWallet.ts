@@ -80,7 +80,6 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
   } catch (error) {
     // reverse the error if any error occurs
-    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
@@ -109,7 +108,7 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
 
     if (isUserInGroup) {
       const groupWallet = await GroupWallet.findOne({
-        where: { ownerId: _groupId },
+        where: { groupId: _groupId },
       })
 
       if (groupWallet) {
