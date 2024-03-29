@@ -1,0 +1,44 @@
+.container {
+  margin-top: 20px;
+
+  .member {
+    padding-left: 20px;
+  }
+
+  &Table {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 5px;
+    overflow-x: auto;
+
+    .head,
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      border-bottom: 1px solid #ccc;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    .row {
+      background: white;
+      .serialNumber,
+      .name,
+      .performance {
+        align-self: flex-start;
+      }
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .head,
+    .row {
+      gap: 60px;
+      padding: 10px 10px;
+    }
+  }
+}
