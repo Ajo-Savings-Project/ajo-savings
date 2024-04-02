@@ -146,6 +146,7 @@ const SetTarget: React.FC<SetTargetProps> = ({
             <div className={styles.setTargetContainerInputCategory}>
               <Input
                 label={'Category'}
+                placeholder="Category"
                 type="search"
                 onChange={handleCategoryChange}
                 value={categoryInput}

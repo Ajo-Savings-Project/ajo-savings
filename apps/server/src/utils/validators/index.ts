@@ -110,7 +110,7 @@ export const createGroupSchema = z.object({
         'The group image url path is required and must be at least 2 characters long',
     })
     .optional(),
-  automaticRestartCycle: z.boolean(),
+  automaticRestartCycle: z.boolean().optional(),
 })
 
 export const joinGroupSchema = z.object({

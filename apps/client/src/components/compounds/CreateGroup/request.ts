@@ -28,11 +28,9 @@ export const useCreateGroupMutation = () => {
     mutationFn: async (data: z.infer<typeof CreateGroupSchema>) => {
       const res = await request.post('/groups/createGroup', {
         ...data,
-        // Todo: Backend has not removed dration from the request body
         recurringAmount: Number(data.recurringAmount),
         maxNumberOfParticipants: Number(data.maxNumberOfParticipants),
-
-        duration: '',
+        automaticRestartCycle: false,
       })
       const result = CreateGroupResponseSchema.safeParse(res.data)
       if (result.success) return result
