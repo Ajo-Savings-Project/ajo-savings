@@ -6,6 +6,7 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+import Transactions from './transactions'
 
 const TABLE_NAME = 'Wallet'
 
@@ -17,24 +18,24 @@ export const walletType = {
 } as const
 export type WalletType = (typeof walletType)[keyof typeof walletType]
 
-class Wallets extends Model<
-  InferAttributes<Wallets>,
-  InferCreationAttributes<Wallets>
+class UserWallet extends Model<
+  InferAttributes<UserWallet>,
+  InferCreationAttributes<UserWallet>
 > {
   declare id: string
-  declare ownerId: string
+  declare userId: string
   declare balance: number
   declare type: WalletType
 }
 
-Wallets.init(
+UserWallet.init(
   {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
     },
-    ownerId: {
+    userId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
@@ -55,10 +56,32 @@ Wallets.init(
 )
 
 // Associations
-Wallets.belongsTo(Users, {
-  foreignKey: 'ownerId',
+UserWallet.belongsTo(Users, {
+  foreignKey: 'userId',
   constraints: false,
-  as: 'user',
+})
+Users.hasOne(UserWallet, {
+  foreignKey: 'userId',
 })
 
-export default Wallets
+UserWallet.hasMany(Transactions, {
+  foreignKey: 'receiverWalletId',
+  as: 'reciever',
+  onDelete: 'CASCADE',
+})
+UserWallet.hasMany(Transactions, {
+  foreignKey: 'senderWalletId',
+  as: 'sender',
+  onDelete: 'CASCADE',
+})
+UserWallet.hasMany(Transactions, {
+  foreignKey: 'walletId',
+  as: 'owner',
+  onDelete: 'CASCADE',
+})
+
+Transactions.belongsTo(UserWallet, {
+  foreignKey: 'walletId',
+})
+
+export default UserWallet

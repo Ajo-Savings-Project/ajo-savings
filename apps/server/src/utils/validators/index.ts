@@ -1,10 +1,7 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
 import { targetCategoryType, targetFrequencyType } from '../../models/targets'
-import {
-  transactionActionType,
-  transactionWalletType,
-} from '../../models/transactions'
+import { transactionActionType } from '../../models/transactions'
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
 
@@ -124,12 +121,8 @@ export const fundWalletSchema = z.object({
   amount: z.number().refine((value) => value > 0, {
     message: 'amount must be greater than zero',
   }),
-  walletType: z.union([
-    z.literal(transactionWalletType.GLOBAL),
-    z.literal(transactionWalletType.SAVINGS),
-    z.literal(transactionWalletType.GROUP),
-  ]),
   groupId: z.string(),
+  targetId: z.string(),
   transactionType: z.union([
     z.literal(transactionActionType.CREDIT),
     z.literal(transactionActionType.DEBIT),

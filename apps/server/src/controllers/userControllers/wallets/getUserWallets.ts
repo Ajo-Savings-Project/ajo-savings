@@ -1,26 +1,20 @@
 import { Response } from 'express'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../../constants'
 import { RequestExt } from '../../../middleware/authorization/authentication'
-import Wallets from '../../../models/wallets'
+import UserWallet from '../../../models/userWallets'
 
 export const getUserWallets = async (req: RequestExt, res: Response) => {
   try {
     const { _userId: userId } = req.body
 
-    const personalWallets = await Wallets.findAll({
-      where: { ownerId: userId },
+    const personalWallet = await UserWallet.findAll({
+      where: { userId: userId },
       attributes: ['id', 'balance', 'type'],
     })
 
-    if (personalWallets) {
+    if (personalWallet) {
       return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.SUCCESS](res, {
-        data: personalWallets.reduce(
-          (acc, wallet) => {
-            acc[wallet.type] = wallet
-            return acc
-          },
-          {} as Record<string, unknown>
-        ),
+        data: personalWallet,
       })
     }
 
