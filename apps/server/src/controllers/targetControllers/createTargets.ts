@@ -1,10 +1,7 @@
 import { differenceInDays } from 'date-fns'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import { Response } from 'express'
-import Targets, {
-  targetCategoryType,
-  targetFrequencyType,
-} from '../../models/targets'
+import Targets, { targetFrequencyType } from '../../models/targets'
 import { v4 } from 'uuid'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import TargetWallets from '../../models/targetWallets'
@@ -29,7 +26,7 @@ export const createTarget = async (req: RequestExt, res: Response) => {
       id: v4(),
       avatar: '',
       userId: userId,
-      category: targetCategoryType[category],
+      category: category,
       frequency: targetFrequencyType[frequency],
     })
 

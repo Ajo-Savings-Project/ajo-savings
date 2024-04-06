@@ -42,7 +42,7 @@ class Targets extends Model<
   declare avatar: string
   declare name: string
   declare frequency: TargetFrequencyType
-  declare category: TargetCategoryType
+  declare category: string
   declare startDate: string
   declare withdrawalDate: string
   declare daysLeft?: string
@@ -78,7 +78,7 @@ Targets.init(
       allowNull: false,
     },
     category: {
-      type: DataTypes.ENUM(...Object.values(targetCategoryType)),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     startDate: {

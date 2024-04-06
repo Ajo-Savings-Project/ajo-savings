@@ -1,7 +1,15 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
+<<<<<<< HEAD
 import { targetCategoryType, targetFrequencyType } from '../../models/targets'
 import { transactionActionType } from '../../models/transactions'
+=======
+import { targetFrequencyType } from '../../models/targets'
+import {
+  transactionActionType,
+  transactionWalletType,
+} from '../../models/transactions'
+>>>>>>> 4e3889c (changed the category field to accept any string coming from the FE and not only the expected constants set previously)
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
 
@@ -138,14 +146,7 @@ export const createTargetSchema = z.object({
     z.literal(targetFrequencyType.WEEKLY),
     z.literal(targetFrequencyType.DAILY),
   ]),
-  category: z.union([
-    z.literal(targetCategoryType.TRAVEL),
-    z.literal(targetCategoryType.DREAM_CAR),
-    z.literal(targetCategoryType.GADGETS),
-    z.literal(targetCategoryType.RENT),
-    z.literal(targetCategoryType.OTHER),
-    z.literal(targetCategoryType.DREAM_HOME),
-  ]),
+  category: z.string(),
   startDate: z.string(),
   withdrawalDate: z.string(),
 })
