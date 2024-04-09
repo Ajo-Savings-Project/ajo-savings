@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import Targets from '../../models/targets'
-import TargetWallets from '../../models/targetWallets'
+import TargetWallet from '../../models/targetWallet'
 import { withPaginate } from '../../utils/hocs/withPaginate'
 
 export const getTargets = async (req: RequestExt, res: Response) => {
@@ -15,7 +15,7 @@ export const getTargets = async (req: RequestExt, res: Response) => {
         where: { userId, id: targetId },
         include: [
           {
-            model: TargetWallets,
+            model: TargetWallet,
             as: 'wallet',
             attributes: ['id', 'amountSaved', 'targetAmount'],
           },
@@ -37,7 +37,7 @@ export const getTargets = async (req: RequestExt, res: Response) => {
       where: { userId },
       include: [
         {
-          model: TargetWallets,
+          model: TargetWallet,
           as: 'wallet',
           attributes: ['id', 'amountSaved', 'targetAmount'],
         },

@@ -31,11 +31,9 @@ GroupMembers.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     groupId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Groups,
         key: 'id',
@@ -43,7 +41,6 @@ GroupMembers.init(
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Users,
         key: 'id',
@@ -51,26 +48,21 @@ GroupMembers.init(
     },
     groupTitle: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     amountContributed: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     totalAmountWithdrawnByUser: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     dateOfLastContribution: {
       type: DataTypes.STRING,
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
     },
     sequence: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
   },
   {
@@ -85,10 +77,18 @@ GroupMembers.belongsTo(Users, {
   as: 'user',
 })
 
+Users.hasMany(GroupMembers, {
+  foreignKey: 'userId',
+  as: 'users',
+})
+
 GroupMembers.belongsTo(Groups, {
   foreignKey: 'groupId',
+  as: 'groupMember',
 })
+
 Groups.hasMany(GroupMembers, {
   foreignKey: 'groupId',
+  as: 'groupMembers',
 })
 export default GroupMembers

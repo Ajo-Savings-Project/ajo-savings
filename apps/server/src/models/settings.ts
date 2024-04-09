@@ -13,7 +13,7 @@ class Settings extends Model<
   InferCreationAttributes<Settings>
 > {
   declare id: string
-  declare ownerId: string
+  declare userId: string
   declare emailNotification?: boolean
   declare contributionReminder?: boolean
   declare groupJoinRequest?: boolean
@@ -31,60 +31,49 @@ Settings.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
-    ownerId: {
+    userId: {
       type: DataTypes.UUID,
     },
     emailNotification: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     contributionReminder: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     groupJoinRequest: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     twoFactorAuthentication: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     passwordUpdate: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
 
     profileVisibility: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     emailPrivacy: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
     savingsGroupUpdate: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
     personalSavingAlert: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true,
     },
     deactivateAccount: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
   },

@@ -44,23 +44,19 @@ Groups.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     groupImage: {
       type: DataTypes.STRING,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
       field: 'Content of the post',
-      allowNull: false,
     },
     adminId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Users,
         key: 'id',
@@ -68,27 +64,21 @@ Groups.init(
     },
     amountContributedWithinFrequency: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     recurringAmount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     totalAmountWithdrawn: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     maxNumberOfParticipants: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     numberOfPresentParticipants: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     frequency: {
       type: DataTypes.ENUM(...Object.values(frequencyType)),
-      allowNull: false,
     },
   },
   {
@@ -116,4 +106,5 @@ GroupWallet.belongsTo(Groups, {
 Groups.hasOne(GroupWallet, {
   foreignKey: 'groupId',
 })
+
 export default Groups

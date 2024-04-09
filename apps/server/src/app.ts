@@ -54,20 +54,9 @@ Sentry.init({
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/admin/queues', serverAdapter.getRouter())
 
-<<<<<<< HEAD
-db.sync({})
-=======
-app.use(Sentry.Handlers.requestHandler())
-app.use(Sentry.Handlers.tracingHandler())
-
-<<<<<<< HEAD
 db.sync({
-  force: true,
+  // force: true,
 })
->>>>>>> 0073793 (Update database synchronization options)
-=======
-db.sync()
->>>>>>> 6091b72 (Refactor database sync and update table name in targets.ts)
   .then(() => {
     console.log('Database is connected')
   })

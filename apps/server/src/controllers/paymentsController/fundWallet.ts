@@ -10,7 +10,7 @@ import {
   transactionTransferType,
   transactionWalletType,
 } from '../../models/transactions'
-import Wallets from '../../models/userWallets'
+import UserWallet from '../../models/userWallet'
 import { fundWalletSchema } from '../../utils/validators'
 import { createTransaction } from './helpers'
 import { db } from '../../config'
@@ -21,7 +21,7 @@ import { db } from '../../config'
  *
  */
 export const fundWallet = async (req: RequestExt, res: Response) => {
-  const { _userId, amount, transactionType } = req.body
+  const { _user, _userId, amount, transactionType } = req.body
 
   const parsedData = fundWalletSchema
     .omit({ groupId: true, targetId: true })
@@ -38,7 +38,7 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
     const _transactionType = parsedData.data.transactionType
     const _amount = parsedData.data.amount
 
-    const userWallet = await Wallets.findOne({
+    const userWallet = await UserWallet.findOne({
       where: { userId: _userId },
     })
 
@@ -69,13 +69,14 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
         if (updatedWallet) {
           await createTransaction({
             senderWalletId: _userId,
-            walletId: updatedWallet.id,
+            senderName: `${_user.firstName} ${_user.lastName}`,
+            userWalletId: updatedWallet.id,
             action: transactionActionType[_transactionType],
             amount: _amount,
             status: transactionStatusType.PENDING,
             transferType: transactionTransferType.INTERNAL_TRANSFERS,
             walletType: transactionWalletType.GLOBAL,
-            transaction, // pass transacction object
+            transaction, // pass transaction object
           })
 
           //commit transaction to save changes if everything goes well
@@ -90,6 +91,7 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
     }
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.NOT_FOUND](res)
   } catch (error) {
+    console.log(error)
     return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }
@@ -121,11 +123,12 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
         where: { groupId: _groupId },
       })
 
-      const userWallet = await Wallets.findOne({
+      const userWallet = await UserWallet.findOne({
         where: { userId: _userId },
       })
 
       if (groupWallet && userWallet) {
+        console.log('one')
         if (userWallet.balance < _amount) {
           return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.CONFLICT](res, {
             message: 'Insufficient balance',
@@ -154,7 +157,7 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
             senderWalletId: newUserWallet.id,
             senderName: `${_user.firstName} ${_user.lastName}`,
             action: transactionActionType.CREDIT,
-            walletId: newGroupWallet.id,
+            groupWalletId: newGroupWallet.id,
             amount: _amount,
             status: transactionStatusType.SUCCESSFUL,
             transferType: transactionTransferType.GROUP_TRANSACTIONS,
@@ -167,7 +170,7 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
             receiverWalletId: newGroupWallet.id,
             receiverName: isUserInGroup.groupTitle,
             action: transactionActionType.DEBIT,
-            walletId: newUserWallet.id,
+            userWalletId: newUserWallet.id,
             amount: _amount,
             status: transactionStatusType.SUCCESSFUL,
             transferType: transactionTransferType.GROUP_TRANSACTIONS,

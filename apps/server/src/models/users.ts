@@ -54,7 +54,7 @@ class Users extends Model<
   declare proofOfAddressDoc: CreationOptional<string>
   declare emailIsVerified: CreationOptional<boolean>
   declare kycComplete: CreationOptional<boolean>
-  declare authMethod: CreationOptional<AuthMethodType>
+  declare authMethod: AuthMethodType
 }
 
 Users.init(
@@ -62,42 +62,33 @@ Users.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     lastName: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     profilePic: {
       type: DataTypes.STRING,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     authMethod: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     emailIsVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
     },
     kycComplete: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(role)),
-      allowNull: false,
     },
     phone: {
       type: DataTypes.STRING,

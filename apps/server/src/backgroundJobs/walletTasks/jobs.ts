@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import Settings from '../../models/settings'
-import UserWallet, { walletType } from '../../models/userWallets'
+import UserWallet, { walletType } from '../../models/userWallet'
 
 export interface WalletJobDataI {
   userId: string
@@ -20,7 +20,7 @@ const createWalletsJob = async (data: WalletJobDataI) => {
 const createSettingsJob = async (data: SettingJobDataI) => {
   return await Settings.create({
     id: uuidV4(),
-    ownerId: data.userId,
+    userId: data.userId,
   })
 }
 

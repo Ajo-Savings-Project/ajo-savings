@@ -9,11 +9,11 @@ import Targets from './targets'
 import Users from './users'
 import Transactions from './transactions'
 
-const TABLE_NAME = 'Target Wallet'
+const TABLE_NAME = 'TargetWallet'
 
-class TargetWallets extends Model<
-  InferAttributes<TargetWallets>,
-  InferCreationAttributes<TargetWallets>
+class TargetWallet extends Model<
+  InferAttributes<TargetWallet>,
+  InferCreationAttributes<TargetWallet>
 > {
   declare id: string
   declare targetId: string
@@ -22,16 +22,14 @@ class TargetWallets extends Model<
   declare userId: string
 }
 
-TargetWallets.init(
+TargetWallet.init(
   {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     targetId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Targets,
         key: 'id',
@@ -39,15 +37,12 @@ TargetWallets.init(
     },
     amountSaved: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     targetAmount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Users,
         key: 'id',
@@ -61,33 +56,24 @@ TargetWallets.init(
   }
 )
 
-Targets.hasOne(TargetWallets, {
-  foreignKey: 'targetId',
-  onDelete: 'CASCADE',
-})
-TargetWallets.belongsTo(Targets, {
-  foreignKey: 'targetId',
-  onDelete: 'CASCADE',
-})
-
-TargetWallets.hasMany(Transactions, {
-  foreignKey: 'receiverWalletId',
-  as: 'reciever',
-  onDelete: 'CASCADE',
-})
-TargetWallets.hasMany(Transactions, {
-  foreignKey: 'senderWalletId',
-  as: 'sender',
-  onDelete: 'CASCADE',
-})
-TargetWallets.hasMany(Transactions, {
-  foreignKey: 'walletId',
-  as: 'owner',
+// TargetWallet.hasMany(Transactions, {
+//   foreignKey: 'receiverWalletId',
+//   as: 'recievers',
+//   onDelete: 'CASCADE',
+// })
+// TargetWallet.hasMany(Transactions, {
+//   foreignKey: 'senderWalletId',
+//   as: 'senders',
+//   onDelete: 'CASCADE',
+// })
+TargetWallet.hasMany(Transactions, {
+  foreignKey: 'targetWalletId',
+  as: 'transactions',
   onDelete: 'CASCADE',
 })
 
-Transactions.belongsTo(TargetWallets, {
+Transactions.belongsTo(TargetWallet, {
   foreignKey: 'walletId',
 })
 
-export default TargetWallets
+export default TargetWallet

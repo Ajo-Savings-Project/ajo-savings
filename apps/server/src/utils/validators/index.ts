@@ -1,15 +1,7 @@
 import z from 'zod'
 import { REFRESH_TOKEN } from '../../constants'
-<<<<<<< HEAD
-import { targetCategoryType, targetFrequencyType } from '../../models/targets'
-import { transactionActionType } from '../../models/transactions'
-=======
 import { targetFrequencyType } from '../../models/targets'
-import {
-  transactionActionType,
-  transactionWalletType,
-} from '../../models/transactions'
->>>>>>> 4e3889c (changed the category field to accept any string coming from the FE and not only the expected constants set previously)
+import { transactionActionType } from '../../models/transactions'
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
 

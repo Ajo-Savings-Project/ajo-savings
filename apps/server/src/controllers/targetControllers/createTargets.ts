@@ -4,7 +4,7 @@ import { Response } from 'express'
 import Targets, { targetFrequencyType } from '../../models/targets'
 import { v4 } from 'uuid'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
-import TargetWallets from '../../models/targetWallets'
+import TargetWallet from '../../models/targetWallet'
 import { createTargetSchema } from '../../utils/validators'
 
 export const createTarget = async (req: RequestExt, res: Response) => {
@@ -20,17 +20,18 @@ export const createTarget = async (req: RequestExt, res: Response) => {
 
   try {
     const { frequency, category, ...rest } = requestData.data
+    const newCategory = category.trim().toLowerCase()
 
     const target = await Targets.create({
       ...rest,
       id: v4(),
       avatar: '',
       userId: userId,
-      category: category,
+      category: newCategory,
       frequency: targetFrequencyType[frequency],
     })
 
-    const wallet = await TargetWallets.create(
+    const wallet = await TargetWallet.create(
       {
         id: v4(),
         targetAmount: 0,

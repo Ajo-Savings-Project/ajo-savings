@@ -8,7 +8,7 @@ import { db } from '../config'
 import Users from './users'
 import Transactions from './transactions'
 
-const TABLE_NAME = 'Wallet'
+const TABLE_NAME = 'UserWallet'
 
 // https://sequelize.org/docs/v6/other
 
@@ -33,19 +33,15 @@ UserWallet.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
     },
     balance: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     type: {
       type: DataTypes.ENUM(...Object.values(walletType)),
-      allowNull: false,
     },
   },
   {
@@ -64,24 +60,25 @@ Users.hasOne(UserWallet, {
   foreignKey: 'userId',
 })
 
-UserWallet.hasMany(Transactions, {
-  foreignKey: 'receiverWalletId',
-  as: 'reciever',
-  onDelete: 'CASCADE',
-})
-UserWallet.hasMany(Transactions, {
-  foreignKey: 'senderWalletId',
-  as: 'sender',
-  onDelete: 'CASCADE',
-})
-UserWallet.hasMany(Transactions, {
-  foreignKey: 'walletId',
-  as: 'owner',
-  onDelete: 'CASCADE',
-})
+// UserWallet.hasMany(Transactions, {
+//   foreignKey: 'receiverWalletId',
+//   as: 'recievers',
+//   onDelete: 'CASCADE',
+// })
+// UserWallet.hasMany(Transactions, {
+//   foreignKey: 'senderWalletId',
+//   as: 'senders',
+//   onDelete: 'CASCADE',
+// })
 
 Transactions.belongsTo(UserWallet, {
-  foreignKey: 'walletId',
+  foreignKey: 'userWalletId',
+})
+
+UserWallet.hasMany(Transactions, {
+  foreignKey: 'userWalletId',
+  as: 'transactions',
+  onDelete: 'CASCADE',
 })
 
 export default UserWallet

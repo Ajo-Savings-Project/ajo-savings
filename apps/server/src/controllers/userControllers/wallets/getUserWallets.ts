@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../../constants'
 import { RequestExt } from '../../../middleware/authorization/authentication'
-import UserWallet from '../../../models/userWallets'
+import UserWallet from '../../../models/userWallet'
 
 export const getUserWallets = async (req: RequestExt, res: Response) => {
   try {

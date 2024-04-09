@@ -27,11 +27,9 @@ GroupContributions.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Users,
         key: 'id',
@@ -39,7 +37,6 @@ GroupContributions.init(
     },
     groupId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: 'Groups',
         key: 'id',
@@ -47,15 +44,13 @@ GroupContributions.init(
     },
     transactionId: {
       type: DataTypes.STRING,
-      allowNull: false,
       references: {
         model: 'Transactions',
         key: 'id',
       },
     },
     amount: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
+      type: DataTypes.INTEGER,
     },
   },
   {

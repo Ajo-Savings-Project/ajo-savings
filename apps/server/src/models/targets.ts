@@ -6,7 +6,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
-import TargetWallets from './targetWallets'
+import TargetWallets from './targetWallet'
 import Users from './users'
 
 const TABLE_NAME = 'Targets'
@@ -56,7 +56,6 @@ Targets.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     avatar: {
       type: DataTypes.STRING,
@@ -71,24 +70,19 @@ Targets.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     frequency: {
       type: DataTypes.ENUM(...Object.values(targetFrequencyType)),
-      allowNull: false,
     },
     category: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.DATE,
     },
     withdrawalDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.DATE,
     },
     daysLeft: {
@@ -119,11 +113,13 @@ Users.hasMany(Targets, {
 TargetWallets.belongsTo(Targets, {
   foreignKey: 'targetId',
   as: 'wallet',
+  onDelete: 'CASCADE',
 })
 
 Targets.hasOne(TargetWallets, {
   foreignKey: 'targetId',
   as: 'wallet',
+  onDelete: 'CASCADE',
 })
 
 export default Targets
