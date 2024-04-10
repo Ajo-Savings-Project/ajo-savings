@@ -5,6 +5,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
+import Users from './users'
 
 const TABLE_NAME = 'Settings'
 
@@ -34,6 +35,10 @@ Settings.init(
     },
     userId: {
       type: DataTypes.UUID,
+      references: {
+        model: Users,
+        key: 'id',
+      },
     },
     emailNotification: {
       type: DataTypes.BOOLEAN,

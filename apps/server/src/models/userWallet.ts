@@ -6,7 +6,6 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
-import Transactions from './transactions'
 
 const TABLE_NAME = 'UserWallet'
 
@@ -36,6 +35,10 @@ UserWallet.init(
     },
     userId: {
       type: DataTypes.UUID,
+      references: {
+        model: Users,
+        key: 'id',
+      },
     },
     balance: {
       type: DataTypes.INTEGER,
@@ -50,35 +53,5 @@ UserWallet.init(
     timestamps: true,
   }
 )
-
-// Associations
-UserWallet.belongsTo(Users, {
-  foreignKey: 'userId',
-  constraints: false,
-})
-Users.hasOne(UserWallet, {
-  foreignKey: 'userId',
-})
-
-// UserWallet.hasMany(Transactions, {
-//   foreignKey: 'receiverWalletId',
-//   as: 'recievers',
-//   onDelete: 'CASCADE',
-// })
-// UserWallet.hasMany(Transactions, {
-//   foreignKey: 'senderWalletId',
-//   as: 'senders',
-//   onDelete: 'CASCADE',
-// })
-
-Transactions.belongsTo(UserWallet, {
-  foreignKey: 'userWalletId',
-})
-
-UserWallet.hasMany(Transactions, {
-  foreignKey: 'userWalletId',
-  as: 'transactions',
-  onDelete: 'CASCADE',
-})
 
 export default UserWallet

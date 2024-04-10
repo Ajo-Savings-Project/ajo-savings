@@ -7,7 +7,6 @@ import {
 import { db } from '../config'
 import Targets from './targets'
 import Users from './users'
-import Transactions from './transactions'
 
 const TABLE_NAME = 'TargetWallet'
 
@@ -55,25 +54,5 @@ TargetWallet.init(
     timestamps: true,
   }
 )
-
-// TargetWallet.hasMany(Transactions, {
-//   foreignKey: 'receiverWalletId',
-//   as: 'recievers',
-//   onDelete: 'CASCADE',
-// })
-// TargetWallet.hasMany(Transactions, {
-//   foreignKey: 'senderWalletId',
-//   as: 'senders',
-//   onDelete: 'CASCADE',
-// })
-TargetWallet.hasMany(Transactions, {
-  foreignKey: 'targetWalletId',
-  as: 'transactions',
-  onDelete: 'CASCADE',
-})
-
-Transactions.belongsTo(TargetWallet, {
-  foreignKey: 'walletId',
-})
 
 export default TargetWallet

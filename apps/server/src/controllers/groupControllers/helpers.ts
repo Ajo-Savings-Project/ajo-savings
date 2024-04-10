@@ -45,7 +45,7 @@ export const createNewMember = async (props: Props) => {
       userId: props.userId,
       groupId: props.groupId,
       groupTitle: props.groupTitle,
-      amountContributed: 0,
+      totalAmountContributed: 0,
       totalAmountWithdrawnByUser: 0,
       dateOfLastContribution: null,
       isAdmin: props.options?.isAdmin || false,

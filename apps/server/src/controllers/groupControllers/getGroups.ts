@@ -60,7 +60,7 @@ export const getGroup = async (req: RequestExt, res: Response) => {
     include: [
       {
         model: Groups,
-        as: 'groupMember',
+        as: 'group',
         include: [{ model: Users, as: 'user', attributes: userAttributes }],
       },
     ],

@@ -6,7 +6,6 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Groups from './groups'
-import Transactions from './transactions'
 import { transactionWalletType, TransactionWalletType } from './transactions'
 
 const TABLE_NAME = 'GroupWallet'
@@ -47,25 +46,5 @@ GroupWallet.init(
     timestamps: true,
   }
 )
-
-// GroupWallet.hasMany(Transactions, {
-//   foreignKey: 'receiverWalletId',
-//   as: 'recievers',
-//   onDelete: 'CASCADE',
-// })
-// GroupWallet.hasMany(Transactions, {
-//   foreignKey: 'senderWalletId',
-//   as: 'senders',
-//   onDelete: 'CASCADE',
-// })
-GroupWallet.hasMany(Transactions, {
-  foreignKey: 'groupWalletId',
-  as: 'transactions',
-  onDelete: 'CASCADE',
-})
-
-Transactions.belongsTo(GroupWallet, {
-  foreignKey: 'walletId',
-})
 
 export default GroupWallet

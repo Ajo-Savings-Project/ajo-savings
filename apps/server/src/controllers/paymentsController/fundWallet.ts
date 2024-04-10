@@ -68,8 +68,8 @@ export const fundWallet = async (req: RequestExt, res: Response) => {
 
         if (updatedWallet) {
           await createTransaction({
-            senderWalletId: _userId,
-            senderName: `${_user.firstName} ${_user.lastName}`,
+            receiverWalletId: _userId,
+            receiverName: `${_user.firstName} ${_user.lastName}`,
             userWalletId: updatedWallet.id,
             action: transactionActionType[_transactionType],
             amount: _amount,
@@ -154,8 +154,8 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
 
           //credit transaction
           await createTransaction({
-            senderWalletId: newUserWallet.id,
-            senderName: `${_user.firstName} ${_user.lastName}`,
+            receiverWalletId: newGroupWallet.id,
+            receiverName: `${_user.firstName} ${_user.lastName}`,
             action: transactionActionType.CREDIT,
             groupWalletId: newGroupWallet.id,
             amount: _amount,
@@ -167,8 +167,8 @@ export const fundGroupWallet = async (req: RequestExt, res: Response) => {
 
           //debit transaction
           await createTransaction({
-            receiverWalletId: newGroupWallet.id,
-            receiverName: isUserInGroup.groupTitle,
+            senderWalletId: newUserWallet.id,
+            senderName: isUserInGroup.groupTitle,
             action: transactionActionType.DEBIT,
             userWalletId: newUserWallet.id,
             amount: _amount,

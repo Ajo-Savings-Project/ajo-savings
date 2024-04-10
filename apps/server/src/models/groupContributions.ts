@@ -6,6 +6,8 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Users from './users'
+import Groups from './groups'
+import Transactions from './transactions'
 
 const TABLE_NAME = 'GroupContributions'
 
@@ -38,14 +40,14 @@ GroupContributions.init(
     groupId: {
       type: DataTypes.UUID,
       references: {
-        model: 'Groups',
+        model: Groups,
         key: 'id',
       },
     },
     transactionId: {
       type: DataTypes.STRING,
       references: {
-        model: 'Transactions',
+        model: Transactions,
         key: 'id',
       },
     },

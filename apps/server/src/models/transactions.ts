@@ -7,7 +7,7 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import UserWallet from './userWallet'
-import GroupWallet from './groupWallet'
+// import GroupWallet from './groupWallet'
 import TargetWallet from './targetWallet'
 
 const TABLE_NAME = 'Transactions'
@@ -86,10 +86,10 @@ Transactions.init(
     },
     groupWalletId: {
       type: DataTypes.UUID,
-      references: {
-        model: GroupWallet,
-        key: 'id',
-      },
+      // references: {
+      //   model: GroupWallet,
+      //   key: 'id',
+      // },
     },
     targetWalletId: {
       type: DataTypes.UUID,

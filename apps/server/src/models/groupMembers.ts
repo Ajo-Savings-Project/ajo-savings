@@ -19,7 +19,7 @@ class GroupMembers extends Model<
   declare groupId: string
   declare userId: string
   declare groupTitle: string
-  declare amountContributed: number
+  declare totalAmountContributed: number
   declare dateOfLastContribution: CreationOptional<string | null>
   declare totalAmountWithdrawnByUser: number
   declare isAdmin: boolean
@@ -49,7 +49,7 @@ GroupMembers.init(
     groupTitle: {
       type: DataTypes.STRING,
     },
-    amountContributed: {
+    totalAmountContributed: {
       type: DataTypes.INTEGER,
     },
     totalAmountWithdrawnByUser: {
@@ -72,23 +72,4 @@ GroupMembers.init(
   }
 )
 
-GroupMembers.belongsTo(Users, {
-  foreignKey: 'userId',
-  as: 'user',
-})
-
-Users.hasMany(GroupMembers, {
-  foreignKey: 'userId',
-  as: 'users',
-})
-
-GroupMembers.belongsTo(Groups, {
-  foreignKey: 'groupId',
-  as: 'groupMember',
-})
-
-Groups.hasMany(GroupMembers, {
-  foreignKey: 'groupId',
-  as: 'groupMembers',
-})
 export default GroupMembers
