@@ -1,0 +1,59 @@
+.Container {
+  // background: blue;
+  &GoalsHeader {
+    display: grid;
+    gap: 1rem;
+    &One {
+      display: flex;
+      gap: 1rem;
+      justify-content: left;
+      align-items: center;
+    }
+
+    &Two {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  &MainContent {
+    margin-top: 2.5rem;
+    padding: 2rem 1rem;
+    background: #088ab2;
+    display: grid;
+    gap: 3rem;
+    border-radius: 1rem;
+
+    &Up {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+
+      & > * {
+        display: grid;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      & > * > * {
+        color: #fff;
+        display: grid;
+      }
+    }
+
+    &Down {
+      display: flex;
+      // align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    :nth-child(4) {
+      display: grid;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
