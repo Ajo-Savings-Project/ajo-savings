@@ -6,7 +6,6 @@ import {
   CreationOptional,
 } from 'sequelize'
 import { db } from '../config'
-import GroupWallet from './groupWallet'
 import Users from './users'
 
 const TABLE_NAME = 'Groups'
@@ -44,51 +43,41 @@ Groups.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     groupImage: {
       type: DataTypes.STRING,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
       field: 'Content of the post',
-      allowNull: false,
     },
     adminId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
-        model: 'Users',
+        model: Users,
         key: 'id',
       },
     },
     amountContributedWithinFrequency: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     recurringAmount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     totalAmountWithdrawn: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     maxNumberOfParticipants: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     numberOfPresentParticipants: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     frequency: {
       type: DataTypes.ENUM(...Object.values(frequencyType)),
-      allowNull: false,
     },
   },
   {
@@ -98,22 +87,4 @@ Groups.init(
   }
 )
 
-Groups.belongsTo(Users, {
-  foreignKey: 'adminId',
-  as: 'admin',
-  targetKey: 'id',
-})
-
-Users.hasMany(Groups, {
-  foreignKey: 'adminId',
-  as: 'admin',
-})
-
-GroupWallet.belongsTo(Groups, {
-  foreignKey: 'groupId',
-})
-
-Groups.hasOne(GroupWallet, {
-  foreignKey: 'groupId',
-})
 export default Groups

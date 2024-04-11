@@ -6,7 +6,6 @@ import {
 } from 'sequelize'
 import { db } from '../config'
 import Groups from './groups'
-import Transactions from './transactions'
 import { transactionWalletType, TransactionWalletType } from './transactions'
 
 const TABLE_NAME = 'GroupWallet'
@@ -26,11 +25,9 @@ GroupWallet.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     groupId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
         model: Groups,
         key: 'id',
@@ -38,11 +35,9 @@ GroupWallet.init(
     },
     balance: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     type: {
       type: DataTypes.ENUM(...Object.values(transactionWalletType)),
-      allowNull: false,
     },
   },
   {
@@ -51,25 +46,5 @@ GroupWallet.init(
     timestamps: true,
   }
 )
-
-GroupWallet.hasMany(Transactions, {
-  foreignKey: 'receiverWalletId',
-  as: 'reciever',
-  onDelete: 'CASCADE',
-})
-GroupWallet.hasMany(Transactions, {
-  foreignKey: 'senderWalletId',
-  as: 'sender',
-  onDelete: 'CASCADE',
-})
-GroupWallet.hasMany(Transactions, {
-  foreignKey: 'walletId',
-  as: 'owner',
-  onDelete: 'CASCADE',
-})
-
-Transactions.belongsTo(GroupWallet, {
-  foreignKey: 'walletId',
-})
 
 export default GroupWallet

@@ -4,7 +4,7 @@ import { RequestExt } from '../../../middleware/authorization/authentication'
 import GroupMembers from '../../../models/groupMembers'
 import Groups from '../../../models/groups'
 import GroupWallet from '../../../models/groupWallet'
-import UserWallet from '../../../models/userWallets'
+import UserWallet from '../../../models/userWallet'
 
 export const getUserWalletBalances = async (req: RequestExt, res: Response) => {
   try {

@@ -1,39 +1,37 @@
 import { differenceInDays } from 'date-fns'
 import { RequestExt } from '../../middleware/authorization/authentication'
 import { Response } from 'express'
-import Targets, {
-  targetCategoryType,
-  targetFrequencyType,
-} from '../../models/targets'
+import Targets, { targetFrequencyType } from '../../models/targets'
 import { v4 } from 'uuid'
 import { HTTP_STATUS_CODE, HTTP_STATUS_HELPER } from '../../constants'
-import TargetWallets from '../../models/targetWallets'
+import TargetWallet from '../../models/targetWallet'
 import { createTargetSchema } from '../../utils/validators'
 
 export const createTarget = async (req: RequestExt, res: Response) => {
-  const { _userId: userId } = req.body
+  const { _userId: userId, ...rest } = req.body
+
+  const requestData = createTargetSchema.safeParse(rest)
+
+  if (!requestData.success) {
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
+      message: requestData.error.issues,
+    })
+  }
 
   try {
-    const requestData = createTargetSchema.safeParse(req.body)
-
-    if (!requestData.success) {
-      return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.BAD_REQUEST](res, {
-        message: requestData.error.issues,
-      })
-    }
-
     const { frequency, category, ...rest } = requestData.data
+    const newCategory = category.trim().toLowerCase()
 
     const target = await Targets.create({
       ...rest,
       id: v4(),
       avatar: '',
       userId: userId,
-      category: targetCategoryType[category],
+      category: newCategory,
       frequency: targetFrequencyType[frequency],
     })
 
-    const wallet = await TargetWallets.create(
+    const wallet = await TargetWallet.create(
       {
         id: v4(),
         targetAmount: 0,

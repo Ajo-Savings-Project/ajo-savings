@@ -6,6 +6,9 @@ import {
   Model,
 } from 'sequelize'
 import { db } from '../config'
+import UserWallet from './userWallet'
+// import GroupWallet from './groupWallet'
+import TargetWallet from './targetWallet'
 
 const TABLE_NAME = 'Transactions'
 
@@ -52,7 +55,9 @@ class Transactions extends Model<
   InferCreationAttributes<Transactions>
 > {
   declare id: string
-  declare walletId: string
+  declare userWalletId: CreationOptional<string>
+  declare groupWalletId: CreationOptional<string>
+  declare targetWalletId: CreationOptional<string>
   declare walletType: TransactionWalletType
   declare transferType: TransactionTransferType
   declare amount: number
@@ -69,57 +74,62 @@ class Transactions extends Model<
 Transactions.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       primaryKey: true,
-      allowNull: false,
     },
-    walletId: {
+    userWalletId: {
       type: DataTypes.UUID,
-      allowNull: false,
+      references: {
+        model: UserWallet,
+        key: 'id',
+      },
+    },
+    groupWalletId: {
+      type: DataTypes.UUID,
+      // references: {
+      //   model: GroupWallet,
+      //   key: 'id',
+      // },
+    },
+    targetWalletId: {
+      type: DataTypes.UUID,
+      references: {
+        model: TargetWallet,
+        key: 'id',
+      },
     },
     walletType: {
       type: DataTypes.ENUM(...Object.values(transactionWalletType)),
-      allowNull: false,
     },
     transferType: {
       type: DataTypes.ENUM(...Object.values(transactionTransferType)),
-      allowNull: false,
     },
     amount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     status: {
       type: DataTypes.ENUM(...Object.values(transactionStatusType)),
-      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     action: {
       type: DataTypes.ENUM(...Object.values(transactionActionType)),
-      allowNull: false,
     },
     receiverWalletId: {
       type: DataTypes.UUID,
-      allowNull: false,
     },
     senderWalletId: {
       type: DataTypes.UUID,
-      allowNull: false,
     },
     receiverName: {
-      type: DataTypes.UUID,
-      allowNull: false,
+      type: DataTypes.STRING,
     },
     senderName: {
-      type: DataTypes.UUID,
-      allowNull: false,
+      type: DataTypes.STRING,
     },
     createdAt: {
       type: DataTypes.DATE,
-      allowNull: false,
     },
   },
   {

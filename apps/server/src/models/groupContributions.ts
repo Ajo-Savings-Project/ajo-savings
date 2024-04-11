@@ -5,6 +5,9 @@ import {
   InferCreationAttributes,
 } from 'sequelize'
 import { db } from '../config'
+import Users from './users'
+import Groups from './groups'
+import Transactions from './transactions'
 
 const TABLE_NAME = 'GroupContributions'
 
@@ -26,35 +29,30 @@ GroupContributions.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
-        model: 'Users',
+        model: Users,
         key: 'id',
       },
     },
     groupId: {
       type: DataTypes.UUID,
-      allowNull: false,
       references: {
-        model: 'Groups',
+        model: Groups,
         key: 'id',
       },
     },
     transactionId: {
       type: DataTypes.STRING,
-      allowNull: false,
       references: {
-        model: 'Transactions',
+        model: Transactions,
         key: 'id',
       },
     },
     amount: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
+      type: DataTypes.INTEGER,
     },
   },
   {

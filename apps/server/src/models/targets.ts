@@ -8,7 +8,7 @@ import {
 import { db } from '../config'
 import Users from './users'
 
-const TABLE_NAME = 'AllTargets'
+const TABLE_NAME = 'Targets'
 
 // https://sequelize.org/docs/v6/other
 
@@ -41,7 +41,7 @@ class Targets extends Model<
   declare avatar: string
   declare name: string
   declare frequency: TargetFrequencyType
-  declare category: TargetCategoryType
+  declare category: string
   declare startDate: string
   declare withdrawalDate: string
   declare daysLeft?: string
@@ -55,7 +55,6 @@ Targets.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      allowNull: false,
     },
     avatar: {
       type: DataTypes.STRING,
@@ -70,24 +69,19 @@ Targets.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     frequency: {
       type: DataTypes.ENUM(...Object.values(targetFrequencyType)),
-      allowNull: false,
     },
     category: {
-      type: DataTypes.ENUM(...Object.values(targetCategoryType)),
-      allowNull: false,
+      type: DataTypes.STRING,
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.DATE,
     },
     withdrawalDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.DATE,
     },
     daysLeft: {

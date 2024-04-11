@@ -1,4 +1,3 @@
-// import { v4 } from 'uuid'
 import Transactions, {
   TransactionActionType,
   TransactionStatusType,
@@ -15,7 +14,9 @@ interface TransactionI {
   senderName?: string
   receiverName?: string
   walletType: TransactionWalletType
-  walletId: string
+  userWalletId?: string
+  groupWalletId?: string
+  targetWalletId?: string
   amount: number
   action: TransactionActionType
   status: TransactionStatusType
@@ -26,7 +27,9 @@ interface TransactionI {
 export const createTransaction = async ({
   walletType,
   amount,
-  walletId,
+  userWalletId,
+  groupWalletId,
+  targetWalletId,
   action,
   status,
   transferType,
@@ -39,7 +42,9 @@ export const createTransaction = async ({
   if ((senderWalletId && senderName) || (receiverWalletId && receiverName)) {
     const transactionData = {
       id: generateTransactionString(),
-      walletId,
+      userWalletId,
+      groupWalletId,
+      targetWalletId,
       walletType: transactionWalletType[walletType],
       transferType,
       amount,

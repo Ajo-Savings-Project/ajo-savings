@@ -23,19 +23,15 @@ TempTokens.init(
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
-      allowNull: false,
     },
     secret: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     token: {
       type: DataTypes.STRING(3000),
-      allowNull: false,
     },
     used: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
     },
   },
   {

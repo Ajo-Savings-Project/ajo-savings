@@ -6,7 +6,7 @@ const TABLE_NAME = 'Payments'
 
 export class Payment extends Model {
   public id!: string
-  public owner_id!: string
+  public userId!: string
   public reference!: string
   public amount!: number
   public email!: string
@@ -15,29 +15,26 @@ export class Payment extends Model {
 
 Payment.init(
   {
-    reference: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
     },
-    admin_id: {
+    userId: {
       type: DataTypes.UUID,
       references: {
         model: Users,
         key: 'id',
       },
     },
+    reference: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     amount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     fullName: {
       type: DataTypes.STRING,
