@@ -23,7 +23,7 @@ const listItems: Array<ListItemsI> = [
     items: [
       {
         icon: <DashboardIcon />,
-        name: 'dashboard',
+        name: 'dashboard ',
         link: routes.dashboard.root.path,
       },
       {

@@ -154,6 +154,6 @@ export const createGroup = async (req: RequestExt, res: Response) => {
     }
   } catch (error) {
     await handleCreateGroupError(groupId)
-    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res, error)
+    return HTTP_STATUS_HELPER[HTTP_STATUS_CODE.INTERNAL_SERVER](res)
   }
 }

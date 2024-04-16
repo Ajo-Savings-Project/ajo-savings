@@ -12,12 +12,20 @@ import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import ModalCard from '../Modal/ModalCard'
-import { SetTargetSchema } from './request'
 import styles from './setTarget.module.scss'
+import { SetTargetSchema, useCreateTargetMutation } from './request'
 
 interface SetTargetProps {
   onClose: () => void
 }
+const defaultCategories = [
+  'TRAVEL',
+  'DREAM_HOME',
+  'DREAM_CAR',
+  'RENT',
+  'GADGETS',
+  'OTHER',
+]
 
 const initialFormValues = {
   target: '',
@@ -25,6 +33,7 @@ const initialFormValues = {
   frequency: '',
   startDate: '',
   withdrawalDate: '',
+  category: '',
 }
 type SetTargetSchemaType = z.infer<typeof SetTargetSchema>
 
@@ -35,15 +44,37 @@ const SetTarget: React.FC<SetTargetProps> = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<SetTargetSchemaType>({
     resolver: zodResolver(SetTargetSchema),
     defaultValues: initialFormValues,
   })
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
+  const apiSetTarget = useCreateTargetMutation()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [categoryInput, setCategoryInput] = useState('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userInput = e.target.value
+    setCategoryInput(userInput)
+    if (!userInput.trim()) {
+      setSuggestions([])
+    } else {
+      const filteredSuggestions = defaultCategories.filter((category) =>
+        category.toLowerCase().includes(userInput.toLowerCase())
+      )
+      setSuggestions(filteredSuggestions)
+    }
+  }
   const handleSetTargetRegister = async (values: SetTargetSchemaType) => {
+    setValue('category', categoryInput, { shouldValidate: true })
+
+    await apiSetTarget.mutateAsync({ ...values })
     console.log('SetTarget form values:', values)
+
     if (Object.keys(errors).length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       setIsModalOpen(true)
@@ -86,7 +117,7 @@ const SetTarget: React.FC<SetTargetProps> = ({
               label={'Target'}
               placeholder={'Type here'}
               type={'text'}
-              {...register('target')}
+              {...register('name')}
             />
             <Controller
               render={({ field }) => (
@@ -100,17 +131,45 @@ const SetTarget: React.FC<SetTargetProps> = ({
               control={control}
               name="targetAmount"
             />
-            <div className={styles.setTargetContainerInputFrequency}>
-              <Select
-                label={'Frequency'}
-                placeholder={'Pick your frequency'}
-                options={[
-                  { label: 'Daily', value: 'Daily' },
-                  { label: 'Weekly', value: 'Weekly' },
-                  { label: 'Monthly', value: 'Monthly' },
-                ]}
-                {...register('frequency')}
+            <Select
+              className={styles.setTargetContainerInputFrequency}
+              label={'Frequency'}
+              placeholder={'Pick your frequency'}
+              options={[
+                { label: 'Daily', value: 'DAILY' },
+                { label: 'Weekly', value: 'WEEKLY' },
+                { label: 'Monthly', value: 'MONTHLY' },
+                { label: 'Annually', value: 'ANNUALLY' },
+              ]}
+              {...register('frequency')}
+            />
+            <div className={styles.setTargetContainerInputCategory}>
+              <Input
+                label={'Category'}
+                placeholder="Category"
+                type="search"
+                onChange={handleCategoryChange}
+                value={categoryInput}
+                autoComplete="off"
               />
+              {categoryInput && suggestions.length > 0 && (
+                <ul>
+                  {suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setCategoryInput(suggestion)
+                        setValue('category', suggestion, {
+                          shouldValidate: true,
+                        })
+                        setSuggestions([])
+                      }}
+                    >
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <Input
               label={'Start Date'}
@@ -119,7 +178,6 @@ const SetTarget: React.FC<SetTargetProps> = ({
             />
             <Input
               label={'Withdrawal Date'}
-              placeholder={'Pick your date'}
               type={'date'}
               {...register('withdrawalDate')}
             />

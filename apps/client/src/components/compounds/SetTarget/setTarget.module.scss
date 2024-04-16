@@ -3,7 +3,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   &Text {
     text-align: center;
     padding-top: 0.2rem;
@@ -12,13 +11,37 @@
       width: 20rem;
     }
   }
-
   &Input {
     width: 100%;
     margin-top: 1rem;
-
     label {
       margin-top: 1.5rem;
+    }
+    &Category {
+      position: relative;
+      ul {
+        list-style-type: none;
+        margin: 0;
+        position: absolute;
+        z-index: 10;
+        width: 100%;
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid var(--gray-300);
+        top: 6.7rem;
+        li {
+          padding: 8px 6px;
+          cursor: pointer;
+          border-bottom: 1px solid var(--gray-300);
+          &:hover {
+            background-color: #06aed4;
+            color: #f8fafc;
+          }
+        }
+        li:last-child {
+          border: none;
+        }
+      }
     }
     Button {
       margin-top: 1.5rem;

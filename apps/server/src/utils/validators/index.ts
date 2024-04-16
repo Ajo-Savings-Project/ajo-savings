@@ -4,6 +4,7 @@ import { targetCategoryType, targetFrequencyType } from '../../models/targets'
 import { transactionActionType } from '../../models/transactions'
 import { passwordUtils } from '../helpers'
 import { DateHandler } from '../helpers'
+import { frequencyType } from '../../models/groups'
 
 export const loginSchema = z.object({
   email: z.string().email(),
@@ -95,9 +96,9 @@ export const createGroupSchema = z.object({
   }),
   // frequency: z.union([...Object.values(frequency).map((v)=> z.literal(v))]),
   frequency: z.union([
-    z.literal('DAILY'),
-    z.literal('WEEKLY'),
-    z.literal('MONTHLY'),
+    z.literal(frequencyType.DAILY),
+    z.literal(frequencyType.WEEKLY),
+    z.literal(frequencyType.MONTHLY),
   ]),
   maxNumberOfParticipants: z.number().refine((value) => value > 0, {
     message: 'amount must be greater than zero',
@@ -109,7 +110,7 @@ export const createGroupSchema = z.object({
         'The group image url path is required and must be at least 2 characters long',
     })
     .optional(),
-  automaticRestartCycle: z.boolean(),
+  automaticRestartCycle: z.boolean().optional(),
 })
 
 export const joinGroupSchema = z.object({

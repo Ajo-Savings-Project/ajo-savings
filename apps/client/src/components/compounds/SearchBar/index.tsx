@@ -1,7 +1,6 @@
 import styles from './searchBar.module.scss'
 import { Input } from 'components'
 import SearchIcon from './search-altsearchIcon.svg?react'
-// import React from 'react'
 
 const SearchBar = () => {
   return (

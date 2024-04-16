@@ -1,0 +1,34 @@
+.container {
+  padding: 20px;
+  background-color: var(--white);
+  &Text {
+    font-weight: 700;
+    text-align: center;
+  }
+  &Image {
+    margin-top: 20px;
+  }
+  &Form {
+    margin-top: 15px;
+    gap: 5rem;
+    label {
+      margin-top: 1.2rem;
+    }
+    &Btn {
+      margin-top: 1.2rem;
+      width: 100%;
+    }
+  }
+  @media (min-width: 37.5rem) {
+    &Form {
+      &Duration {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      &Button {
+        margin-left: 6rem;
+      }
+    }
+  }
+}
