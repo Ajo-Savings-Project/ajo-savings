@@ -6,7 +6,6 @@ const GroupsPage = () => {
   const location = useLocation()
   const params = new URLSearchParams(location.search)
   const currentPage = params.get('page')
-
   console.log({ currentPage })
 
   if (currentPage === 'explore') {

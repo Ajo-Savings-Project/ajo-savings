@@ -1,0 +1,96 @@
+.Layout {
+  &One {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &Three {
+    display: grid;
+    gap: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  &MainContent {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-areas:
+      'img head head head head head  '
+      'tab tab tab tab tab tab  ';
+    gap: 1rem;
+    max-width: 955px;
+    padding: 1.875rem;
+    background: #fff;
+    align-items: center;
+
+    &One {
+      grid-area: img;
+      align-self: start;
+      position: relative;
+      border-radius: 50%;
+      width: 62px;
+      height: 62px;
+      &After {
+        content: '';
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 2px solid white;
+        border-radius: 50%;
+        top: -0.05rem;
+        right: 0.4rem;
+      }
+    }
+    &Two {
+      grid-area: head;
+    }
+    &Three {
+      grid-area: tab;
+    }
+  }
+  &MainContentTabs {
+    display: grid;
+    gap: 1rem;
+    max-height: 300px;
+  }
+
+  &TabHeader {
+    display: none;
+  }
+  &TabBody {
+    display: grid;
+    gap: 1rem;
+    align-items: left;
+    & > * {
+      display: flex;
+      justify-content: space-between;
+    }
+    &Hide {
+      display: block;
+    }
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .Layout {
+    &MainContent {
+      padding-right: 1rem;
+      align-items: left;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-areas:
+        'img head head head head head head head head head head head   '
+        'img tab tab tab tab tab tab tab tab tab tab tab ';
+    }
+
+    &TabHeader,
+    &TabBody {
+      display: grid;
+      align-items: left;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 0.5rem;
+    }
+    &TabBodyHide {
+      display: none;
+    }
+  }
+}
